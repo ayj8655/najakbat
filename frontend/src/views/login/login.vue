@@ -1,5 +1,5 @@
 <template>
-  
+  <div>충돌!!!</div>
 </template>
 
 <script>
