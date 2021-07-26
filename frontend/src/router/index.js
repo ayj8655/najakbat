@@ -5,6 +5,7 @@ import MyAlerts from "../views/Sidebar/MyAlerts.vue"
 import DirectQuery from "../views/Sidebar/DirectQuery.vue"
 import Settings from "../views/Sidebar/Settings.vue"
 import SidebarMain from "../views/Sidebar/SidebarMain.vue"
+import Login from "../views/Login/Login.vue"
 Vue.use(VueRouter)
 
 const routes = [
@@ -48,6 +49,13 @@ const routes = [
     path: '/sidebarmain',
     name: 'SidebarMain',
     component: SidebarMain,
+  },
+
+  // 기하 라우터
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
   },
 ];
 
