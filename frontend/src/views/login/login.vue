@@ -1,5 +1,5 @@
 <template>
-  
+  <div>하이 기하</div>
 </template>
 
 <script>
