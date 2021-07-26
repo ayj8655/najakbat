@@ -1,5 +1,5 @@
 <template>
-  
+  <h2>SidebarMain</h2>
 </template>
 
 <script>

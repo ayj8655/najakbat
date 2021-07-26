@@ -1,8 +1,11 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-
-Vue.use(VueRouter);
+import Vue from "vue"
+import VueRouter from "vue-router"
+import Home from "../views/Home.vue"
+import MyAlerts from "../views/Sidebar/MyAlerts.vue"
+import DirectQuery from "../views/Sidebar/DirectQuery.vue"
+import Settings from "../views/Sidebar/Settings.vue"
+import SidebarMain from "../views/Sidebar/SidebarMain.vue"
+Vue.use(VueRouter)
 
 const routes = [
   {
@@ -24,6 +27,27 @@ const routes = [
     name: "Community",
     component: () =>
     import(/* webpackChunkName: "about" */ "../views/Community.vue"),
+  },
+  // 준호 라우터
+  {
+    path: '/MyAlerts',
+    name: 'MyAlerts',
+    component: MyAlerts,
+  },
+  {
+    path: '/directquery',
+    name: 'DirectQuery',
+    component: DirectQuery,
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings,
+  },
+  {
+    path: '/sidebarmain',
+    name: 'SidebarMain',
+    component: SidebarMain,
   },
 ];
 
