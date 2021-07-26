@@ -48,12 +48,9 @@ public class UserController {
 	private ResponseEntity<User> signup (@RequestBody User user) throws IOException {
 		logger.info("회원가입");
 		
-		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
 		
-//		Date time = new Date();
-//		String time1 = format1.format(time);
-//		System.out.println(time1);
-//		user.setJoin_date(time1);
+		Date time = new Date();
+		user.setJoin_date(time);
 		
 		System.out.println(user);
 		return new ResponseEntity<User>(userService.save(user), HttpStatus.OK);

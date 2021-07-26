@@ -19,6 +19,7 @@ public class User {
 	private String password;
 	private String nickname;
 	private String email;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date join_date;
 	private String address;
 	private int gold;
