@@ -1,18 +1,24 @@
 package com.mococo.common.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.User;
+import com.mococo.common.service.UserService;
 
 
 //http://localhost:8080/swagger-ui.html/
@@ -28,12 +34,29 @@ public class UserController {
 	private static final String FAIL = "fail";
 	
 	
-	@RequestMapping(value = "/user", method = RequestMethod.POST)
-	private ResponseEntity<String> signup (@RequestBody User user) throws IOException {
+	@Autowired
+	UserService userService;
+	
+	@GetMapping("/hello")
+	public String hello() {
+		return "Main";
+	}
+	
+	
+	
+	@RequestMapping(value = "/", method = RequestMethod.POST)
+	private ResponseEntity<User> signup (@RequestBody User user) throws IOException {
 		logger.info("회원가입");
 		
-		return null;
-
+		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
+		
+//		Date time = new Date();
+//		String time1 = format1.format(time);
+//		System.out.println(time1);
+//		user.setJoin_date(time1);
+		
+		System.out.println(user);
+		return new ResponseEntity<User>(userService.save(user), HttpStatus.OK);
 
 	}
 	
