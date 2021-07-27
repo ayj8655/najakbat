@@ -12,13 +12,29 @@
             <div class="my-5">
                 <div>지역을 선택하고,</div>
                 <div class="mb-3">날씨에 따라 알림을 받아보세요!</div>
-                <div>
-                    <b-button v-b-modal.modal-1 class="btn btn-success">지역 선택하기</b-button>
+                <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button>
 
-                    <b-modal id="modal-1" title="BootstrapVue">
-                        <p class="my-4">Hello from modal!</p>
-                    </b-modal>
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
             </div>
         <router-link to=""><button class="btn btn-success">서비스 시작</button></router-link>
       </form>
