@@ -7,6 +7,7 @@ import SidebarMain from "../views/Sidebar/SidebarMain.vue"
 // 기하 라우터
 import Login from "../views/Login/Login.vue"
 import Signup from "../views/Login/Signup.vue"
+import SignupNext from "../views/Login/SignupNext.vue"
 
 Vue.use(VueRouter)
 
@@ -49,6 +50,11 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup,
+  },
+  {
+    path: '/signupnext',
+    name: 'SignupNext',
+    component: SignupNext,
   },
 ];
 
