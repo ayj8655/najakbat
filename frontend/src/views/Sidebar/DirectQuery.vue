@@ -1,5 +1,8 @@
 <template>
-  <div>DirectQuery</div>
+<div>
+
+  <h2>1:1 문의</h2>
+</div>
 </template>
 
 <script>

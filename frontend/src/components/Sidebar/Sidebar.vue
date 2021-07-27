@@ -5,30 +5,62 @@
     </button>
     <transition name="slide-fade">
       <div class="container greenbg w-75" v-if="sidebar" v-click-outside="onClickOutside">
-        <div class="container infos w-100 h-25">
+        <div class="container infos w-100 h-25 px-0">
           <div class="profile"></div>
           <div class="nickname">닉네임</div>
           <div class="email">email@gmail.com</div>
         </div>
         <div class="d-flex flex-column bd-highlight mb-3">
-          <div class="p-2 bd-highlight">설정</div>
-          <div class="p-2 bd-highlight">1:1 문의</div>
+          <router-link to="/Settings" class="p-2 bd-highlight">설정</router-link>
+          <router-link to="/DirectQuery" class="p-2 bd-highlight">1:1 문의</router-link>
           <div class="p-2 bd-highlight">
-            <div>
-              <b-button v-b-modal.modal-1>로그아웃</b-button>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              로그아웃
+            </button>
 
-              <b-modal id="modal-1" title="BootstrapVue">
-                <p class="my-4">Hello from modal!</p>
-              </b-modal>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <!-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    ...
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="p-2 bd-highlight">
-            <div>
-              <b-button v-b-modal.modal-1>탈퇴하기</b-button>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              탈퇴하기
+            </button>
 
-              <b-modal id="modal-1" title="BootstrapVue">
-                <p class="my-4">Hello from modal!</p>
-              </b-modal>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    ...
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -83,7 +115,7 @@ export default {
 }
 .nickname {
   position: absolute;
-  width: 34px;
+  width: 70px;
   height: 17px;
   left: 127px;
   top: 28px;

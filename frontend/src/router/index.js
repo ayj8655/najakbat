@@ -1,8 +1,11 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
 import Home from "../views/Home.vue"
-
+// 준호 라우터
 import SidebarMain from "../views/Sidebar/SidebarMain.vue"
+import DirectQuery from "../views/Sidebar/DirectQuery.vue"
+import MyAlerts from "../views/Sidebar/MyAlerts.vue"
+import Settings from "../views/Sidebar/Settings.vue"
 
 // 기하 라우터
 import Login from "../views/Login/Login.vue"
@@ -34,6 +37,21 @@ const routes = [
   },
   // 준호 라우터
 
+  {
+    path: '/directquery',
+    name: 'DirectQuery',
+    component: DirectQuery,
+  },
+  {
+    path: '/myalerts',
+    name: 'MyAlerts',
+    component: MyAlerts,
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings,
+  },
   {
     path: '/sidebarmain',
     name: 'SidebarMain',
