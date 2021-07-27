@@ -7,7 +7,10 @@
           <label for="" class="form-label d-flex align-items-start">아이디</label>
           <input type="text" class="form-control mb-3" id="" placeholder="아이디를 입력하세요">
           <label for="" class="form-label d-flex align-items-start">비밀번호</label>
-          <input type="password" class="form-control" id="" placeholder="비밀번호를 입력하세요">
+          <input type="password" class="form-control mb-3" id="" placeholder="비밀번호를 입력하세요">
+          <div class="d-flex flex-row-reverse">
+            <router-link to="/signup">회원가입</router-link>
+          </div>
         </div>
         <button class="btn btn-success">로그인 하기</button>
       </form>
