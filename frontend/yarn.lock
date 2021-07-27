@@ -8286,6 +8286,11 @@
   "resolved" "https://registry.npmjs.org/vue-infinite-loading/-/vue-infinite-loading-2.4.5.tgz"
   "version" "2.4.5"
 
+"vue-js-toggle-button@^1.3.3":
+  "integrity" "sha512-0b920oztgK+1SqlYF26MPiT28hAieL5aAQE7u21XEym5ryfzD4EMer4hLkgDC/1sWsCHb22GvV+t1Kb4AI6QFw=="
+  "resolved" "https://registry.npmjs.org/vue-js-toggle-button/-/vue-js-toggle-button-1.3.3.tgz"
+  "version" "1.3.3"
+
 "vue-loader-v16@npm:vue-loader@^16.1.0":
   "integrity" "sha512-/1GzCuQ6MRORbC+leKTKoTGtpQt60bYe0gDGEextSteA2OM+v201FPha5jzmjQzVhRcwieZeUvezAtG5a/e5cw=="
   "resolved" "https://registry.npmjs.org/vue-loader/-/vue-loader-16.3.3.tgz"
