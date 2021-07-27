@@ -4,11 +4,34 @@
       Toggle render
     </button>
     <transition name="slide-fade">
-      <div class="container greenbg" v-if="sidebar" v-click-outside="onClickOutside">
-        <div class="container infos">
+      <div class="container greenbg w-75" v-if="sidebar" v-click-outside="onClickOutside">
+        <div class="container infos w-100 h-25">
           <div class="profile"></div>
           <div class="nickname">닉네임</div>
           <div class="email">email@gmail.com</div>
+        </div>
+        <div class="d-flex flex-column bd-highlight mb-3">
+          <div class="p-2 bd-highlight">설정</div>
+          <div class="p-2 bd-highlight">1:1 문의</div>
+          <div class="p-2 bd-highlight">
+            <div>
+              <b-button v-b-modal.modal-1>로그아웃</b-button>
+
+              <b-modal id="modal-1" title="BootstrapVue">
+                <p class="my-4">Hello from modal!</p>
+              </b-modal>
+            </div>
+          </div>
+          <div class="p-2 bd-highlight">
+            <div>
+              <b-button v-b-modal.modal-1>탈퇴하기</b-button>
+
+              <b-modal id="modal-1" title="BootstrapVue">
+                <p class="my-4">Hello from modal!</p>
+              </b-modal>
+            </div>
+
+          </div>
         </div>
       </div>
     </transition>
@@ -17,14 +40,15 @@
 
 <script>
 import vClickOutside from 'v-click-outside'
+
 export default {
-  el: 'sidebar-1',
+  name: 'sidebar-1',
   directives: {
     clickOutside: vClickOutside.directive
   },
   data: function () {
     return {
-      sidebar: true,
+      sidebar: false,
     }
   },
   methods: {
@@ -32,6 +56,8 @@ export default {
       this.sidebar = false
     },
   },
+
+
 }
 </script>
 
