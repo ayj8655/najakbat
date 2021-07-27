@@ -15,7 +15,7 @@
           <label for="" class="form-label d-flex align-items-start">이메일</label>
           <input type="email" class="form-control" id="" placeholder="이메일을 입력하세요">
         </div>
-        <button class="btn btn-success">회원가입 하기</button>
+        <router-link to="/signupnext"><button class="btn btn-success">회원가입 하기</button></router-link>
       </form>
     </div>
   </div>
