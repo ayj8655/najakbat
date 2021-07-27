@@ -1,8 +1,15 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Vue from "vue"
+import VueRouter from "vue-router"
+import Home from "../views/Home.vue"
 
-Vue.use(VueRouter);
+import SidebarMain from "../views/Sidebar/SidebarMain.vue"
+
+// 기하 라우터
+import Login from "../views/Login/Login.vue"
+import Signup from "../views/Login/Signup.vue"
+import SignupNext from "../views/Login/SignupNext.vue"
+
+Vue.use(VueRouter)
 
 const routes = [
   {
@@ -17,7 +24,37 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    import(/* webpackChunkName: "about" */ "../views/About.vue"),
+  },
+  {
+    path: "/community",
+    name: "Community",
+    component: () =>
+    import(/* webpackChunkName: "about" */ "../views/Community.vue"),
+  },
+  // 준호 라우터
+
+  {
+    path: '/sidebarmain',
+    name: 'SidebarMain',
+    component: SidebarMain,
+  },
+
+  // 기하 라우터
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup,
+  },
+  {
+    path: '/signupnext',
+    name: 'SignupNext',
+    component: SignupNext,
   },
 ];
 
