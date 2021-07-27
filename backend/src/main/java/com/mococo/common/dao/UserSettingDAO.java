@@ -7,14 +7,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.mococo.common.model.User;
+import com.mococo.common.model.UserSetting;
 
 
 @Repository
-public interface UserDAO extends JpaRepository<User, Integer>{
+public interface UserSettingDAO extends JpaRepository<UserSetting, Integer>{
 
-	public Optional<User> findById(String id);
+	public Optional<UserSetting> findByUserNumber(String userNumber);
+
 	
-	public List<User> findByPassword(String password);
 	
 	
 

@@ -3,6 +3,9 @@ package com.mococo.common.model;
 import java.util.Date;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.*;
 
 
@@ -13,22 +16,18 @@ import lombok.*;
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int user_number;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)//이건 오토인크리먼트일때만 넣어주는거
+	private int userNumber;
 	private String id;
 	private String password;
 	private String nickname;
 	private String email;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date join_date;
+	@Temporal(TemporalType.TIMESTAMP)	//이거 써야 자동으로 시간 넣어줌
+	private Date joinDate;
 	private String address;
 	private int gold;
 	
 	
-	@Override
-	public String toString() {
-		return "User [user_number=" + user_number + ", id=" + id + ", password=" + password + ", nickname=" + nickname
-				+ ", email=" + email + ", join_date=" + join_date + ", address=" + address + ", gold=" + gold + "]";
-	}
+	
 
 }
