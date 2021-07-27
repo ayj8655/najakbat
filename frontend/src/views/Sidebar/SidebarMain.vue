@@ -1,13 +1,32 @@
 <template>
-  <h2>SidebarMain</h2>
+  <div class="container sidebar-bg">
+    <sidebar></sidebar>
+  </div>
 </template>
 
 <script>
-export default {
+import Sidebar from '@/components/Sidebar/Sidebar.vue'
 
+export default {
+  name: 'sidebarmain',
+  data () {
+    return {
+      title: 'SIDEBAR'
+    }
+  },
+  components: {
+    Sidebar
+  }
 }
 </script>
 
-<style>
+<style scoped>
+.sidebar-bg {
+  position: relative;
+  width: 375px;
+  height: 812px;
+  background: #FFFFFF;
+
+}
 
 </style>
