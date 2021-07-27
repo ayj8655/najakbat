@@ -9,9 +9,11 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "bootstrap": "^5.0.2",
+    "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
     "v-click-outside": "^3.1.2",
-    "vue": "^2.6.11",
+    "vue": "^2.6.14",
     "vue-infinite-loading": "^2.4.5",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
