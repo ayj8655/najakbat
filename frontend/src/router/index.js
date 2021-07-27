@@ -5,7 +5,11 @@ import MyAlerts from "../views/Sidebar/MyAlerts.vue"
 import DirectQuery from "../views/Sidebar/DirectQuery.vue"
 import Settings from "../views/Sidebar/Settings.vue"
 import SidebarMain from "../views/Sidebar/SidebarMain.vue"
+
+// 기하 라우터
 import Login from "../views/Login/Login.vue"
+import Signup from "../views/Login/Signup.vue"
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -56,6 +60,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup,
   },
 ];
 
