@@ -98,8 +98,8 @@ public class UserCropController {
 		logger.info("작물 정보 조회");
 		
 		try {
-			List<UserCrop> userCropOpt = userCropService.findAllByUserNumber(userNumber);
-			return new ResponseEntity<>(userCropOpt, HttpStatus.OK);
+			List<UserCrop> userCropList = userCropService.findAllByUserNumber(userNumber);
+			return new ResponseEntity<>(userCropList, HttpStatus.OK);
 			
 		} catch (Exception e) {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
