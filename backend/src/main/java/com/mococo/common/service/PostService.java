@@ -34,9 +34,13 @@ public class PostService {
 	}	
 	
 	
-	public Post insertPost(Post post) {
+	public boolean insertPost(Post post) {
+		Optional<Post> ret = postDAO.findPostByPostNumber(post.getPostNumber());
+		if(ret.isPresent()) {
+			return false;
+		}
 		postDAO.save(post);
-		return post;
+		return true;
 	}
 	
 	public boolean updatePost(Post post) {

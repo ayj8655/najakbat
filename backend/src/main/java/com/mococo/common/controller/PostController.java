@@ -100,10 +100,15 @@ public class PostController {
 		try {
 			logger.info("게시글 등록");
 			System.out.println(post);
-			postService.insertPost(post);
+			boolean ret = postService.insertPost(post);
+			if(ret==false) {
+				logger.info("게시글 등록 실패");
+				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+			}
+			
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		} catch (Exception e) {
-			logger.info("게시글 등록 실패");
+			logger.info("게시글 등록 오류");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
