@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import com.mococo.common.dao.PostDAO;
@@ -27,6 +28,14 @@ public class PostService {
 		List<Post> posts = postDAO.findAll();
 		return posts;
 	}
+	
+	// 무한스크롤으로 포스트를 뽑아주는 service
+	public List<Post> findInfinitePost(int limit){
+		List<Post> posts = postDAO.findInfinitePost(limit);
+		return posts;
+	}
+
+	
 	
 	public List<Post> findPostType(int type){
 		List<Post> posts = postDAO.findAllByPostType(type);
@@ -71,16 +80,16 @@ public class PostService {
 		return true;
 	}
 	
-	public boolean recommendPost(int no) {
-		Optional<Post> ret = postDAO.findPostByPostNumber(no);
-		
-		// 추천할 post가 없는 경우
-		if(!ret.isPresent()) {
-			return false;
-		}
-		ret.get().setRecommend(ret.get().getRecommend()+1);
-		postDAO.save(ret.get());
-		return true;
-		
-	}
+//	public boolean recommendPost(int no) {
+//		Optional<Post> ret = postDAO.findPostByPostNumber(no);
+//		
+//		// 추천할 post가 없는 경우
+//		if(!ret.isPresent()) {
+//			return false;
+//		}
+//		ret.get().setRecommend(ret.get().getRecommend()+1);
+//		postDAO.save(ret.get());
+//		return true;
+//		
+//	}
 }
