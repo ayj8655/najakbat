@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/guide")
+@RequestMapping("/guide/plant")
 
 public class PlantGuideController {
 	
@@ -37,11 +37,10 @@ public class PlantGuideController {
 	private static final String FAIL = "fail";
 	private static final String ERROR = "error";
 	
-	
-	@RequestMapping(value = "/plant", method = RequestMethod.GET)
-	@ApiOperation(value = "모든 작물 요약 정보 검색")
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@ApiOperation(value = "모든 작물 정보 검색")
 	private ResponseEntity<?> searchAllPlant() throws IOException {
-		logger.info("모든 작물 요약 정보 검색");
+		logger.info("모든 작물 정보 검색");
 		
 		try {
 			List<Crop> cropList = cropService.findAll();
@@ -52,10 +51,10 @@ public class PlantGuideController {
 		}
 	}
 	
-	@RequestMapping(value = "/plant/{cropNumber}", method = RequestMethod.GET)
-	@ApiOperation(value = "작물 상세 정보 검색")
+	@RequestMapping(value = "/{cropNumber}", method = RequestMethod.GET)
+	@ApiOperation(value = "작물 정보 검색")
 	private ResponseEntity<?> searchPlant(@PathVariable("cropNumber") String cropNumberString) throws IOException {
-		logger.info("작물 상세 정보 검색");
+		logger.info("작물 정보 검색");
 		
 		try {
 			int cropNumber = Integer.parseInt(cropNumberString);
