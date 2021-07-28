@@ -66,7 +66,7 @@ public class UserController {
 //		System.out.println("이게 내가 파인드바이아이디로 찾은거 " + tempuser);
 		
 		
-		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), true, true, true, true, false);
+		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0);
 		
 //		System.out.println("이건 내가 저장할거" + us);
 		userSettingService.save(us);
@@ -124,7 +124,7 @@ public class UserController {
 		} catch (Exception e) {
 			System.out.println("회원 수정 실패");
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
-		}
+		} 
 
 
 	}

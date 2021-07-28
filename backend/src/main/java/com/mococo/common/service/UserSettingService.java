@@ -21,20 +21,28 @@ public class UserSettingService {
 		return us;
 	}
 
-	public Optional<UserSetting> findByUserNumber(String id) {
+	public Optional<UserSetting> findByUserNumber(int id) {
 
 		Optional<UserSetting> user = userSettingDAO.findByUserNumber(id);
 		user.ifPresent(selectUser -> {
 			System.out.println(selectUser.getUserNumber());
+			
 		});
 
 		return user;
 	}
 
-	public void updateById(String userNumber, UserSetting us) {
+	public void updateByUserNumber(int userNumber, UserSetting us) {
 
 		Optional<UserSetting> updateUserSetting = userSettingDAO.findByUserNumber(userNumber);
 		updateUserSetting.ifPresent(selectUser -> {
+			
+			selectUser.setCommentNotice(us.getCommentNotice());
+			selectUser.setDarkMode(us.getDarkMode());
+			selectUser.setMessageNotice(us.getMessageNotice());
+			selectUser.setRecommendNotice(us.getRecommendNotice());
+			selectUser.setWaterNotice(us.getWaterNotice());
+			
 			userSettingDAO.save(selectUser);
 		});
 
