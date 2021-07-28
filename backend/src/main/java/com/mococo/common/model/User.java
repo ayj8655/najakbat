@@ -16,6 +16,8 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)//이건 오토인크리먼트일때만 넣어주는거
 	private int userNumber;
+	
+	
 	private String id;
 	private String password;
 	private String nickname;

@@ -59,12 +59,23 @@ public class UserController {
 		
 		Date time = new Date();
 		user.setJoinDate(time);
-		userService.save(user);
 		
-		Optional<User> tempuser = userService.findById(user.getId());
+		try {
+			boolean ret = userService.insertUser(user);
+			if(!ret) {
+				logger.info("회원가입실패");
+				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+			}
+			
+		} catch (Exception e) {
+			System.out.println("회원 가입 오류");
+			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
+		}
+		
+		
+		Optional<User> tempuser = userService.findById(user.getId());	
 		
 //		System.out.println("이게 내가 파인드바이아이디로 찾은거 " + tempuser);
-		
 		
 		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0);
 		
@@ -99,17 +110,23 @@ public class UserController {
 	}
 	
 	
-	@RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-	private ResponseEntity<String> withdraw (@PathVariable String userId) throws IOException {
+	@RequestMapping(value = "/{userNumber}", method = RequestMethod.DELETE)
+	private ResponseEntity<String> withdraw (@PathVariable int userNumber) throws IOException {
 		logger.info("회원 탈퇴");
 		
 		try {
-			userService.deleteById(userId);
+			boolean ret =  userService.deleteById(userNumber);
+			
+			if(!ret) {
+				logger.info("회원탈퇴 실패");
+				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+			}
+			
 			System.out.println("회원 탈퇴 성공");
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
-			System.out.println("회원 탈퇴 실패");
-			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+			System.out.println("회원 탈퇴 오류");
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -118,12 +135,19 @@ public class UserController {
 	private ResponseEntity<String> updateUser (@RequestBody User user) throws IOException {
 		logger.info("회원수정");
 		try {
-			userService.updateById(user.getId(), user);
+			boolean ret = userService.updateById(user);
+			
+			if(!ret) {
+				logger.info("게시글 수정 실패");
+				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+			}
+			
 			System.out.println("회원 수정 성공");
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
-			System.out.println("회원 수정 실패");
-			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+			System.out.println("회원 수정 에러");
+			//e.printStackTrace();
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
 		} 
 
 

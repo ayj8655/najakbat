@@ -34,18 +34,68 @@ public class UserService {
 		return user;
 	}
 	
-	public void deleteById(String userId) {
-		Optional<User> deleteUser = userDAO.findById(userId);
-		deleteUser.ifPresent(selectUser ->{
-			userDAO.delete(selectUser);
+	public Optional<User> findByUserNumber(int userNumber) {
+		
+		Optional<User> user = userDAO.findByUserNumber(userNumber);
+		
+		user.ifPresent(selectUser -> {
+			System.out.println(selectUser.getNickname());
 		});
-	}
-
-	public User save(User user) {
-		userDAO.save(user);
+		
 		return user;
 	}
+	
+	
+//	public void deleteById(String userId) {
+//		Optional<User> deleteUser = userDAO.findById(userId);
+//		
+//		deleteUser.ifPresent(selectUser ->{
+//			userDAO.delete(selectUser);
+//		});
+//	}
 
+	
+	public boolean deleteById(int userNumber) {
+		Optional<User> ret = userDAO.findByUserNumber(userNumber);
+
+		// delete할 post가 없는 경우
+		if (!ret.isPresent()) {
+			return false;
+		}
+		userDAO.deleteById(userNumber);
+		return true;
+	}
+	
+//	public User save(User user) {
+//		userDAO.save(user);
+//		return user;
+//	}
+	
+	public boolean insertUser(User user) {
+		Optional<User> ret = userDAO.findByUserNumber(user.getUserNumber());
+		if(ret.isPresent()) {
+			return false;
+		}
+		userDAO.save(user);
+		return true;
+	}
+	
+
+	public boolean updateById(User user) {
+		
+		Optional<User> updateUser = userDAO.findByUserNumber(user.getUserNumber());
+		System.out.println(user);
+		System.out.println(updateUser);
+		
+		// update할 post가 없는 경우
+		if(!updateUser.isPresent()) {
+			return false;
+		}
+		userDAO.save(user);	
+		return true;
+	}
+	
+	/*
 	public void updateById(String userId, User user) {
 		
 		Optional<User> updateUser = userDAO.findById(userId);
@@ -57,8 +107,10 @@ public class UserService {
 			selectUser.setAddress(user.getAddress());
 			selectUser.setPassword(user.getPassword());
 			userDAO.save(selectUser);	
-		});
-
-	}
+			
+		});	
+		
+		
+	}*/
 
 }
