@@ -8,7 +8,7 @@ import lombok.*;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED) 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name="post")
 public class Post {
 
@@ -25,7 +25,7 @@ public class Post {
 	private Date date;
 	private String content;
 	private String keyword;
-	private int isDelete; // 게시글이 지워졌는지 여부 - 지워졌어도 db에는 존재
+	private boolean isDelete; // 게시글이 지워졌는지 여부 - 지워졌어도 db에는 존재
 	
 	
 }

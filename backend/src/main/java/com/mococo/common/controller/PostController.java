@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.Post;
@@ -37,31 +38,52 @@ public class PostController {
 	@Autowired
 	PostService postService;
 	
-
+	//하나의 게시물의 내용 조회
 	@RequestMapping(value = "/{no}", method = RequestMethod.GET)
-	private ResponseEntity<Optional<Post>> searchPost (@PathVariable String postno) throws IOException {
+	private ResponseEntity<Optional<Post>> searchPost (@PathVariable String no) throws IOException {
 		logger.info("게시물 내용 조회");
-		int post_number = Integer.parseInt(postno);
-		
+		int post_number = Integer.parseInt(no);
 		return new ResponseEntity<Optional<Post>>(postService.findPostByPostNumber(post_number),HttpStatus.OK);
 	}
 	
-	// 리스트로 리턴되는 것은 프론트에서 리스트 길이로 처리하기로함.
-	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	private ResponseEntity<?> searchAllPost () throws IOException {
+	
+	
+	
+	
+	/*
+	 * // 게시물 전체 조회
+	 * 
+	 * @RequestMapping(value = "/all", method = RequestMethod.GET) private
+	 * ResponseEntity<?> searchAllPost () throws IOException { try {
+	 * 
+	 * logger.info("게시물 전체 조회");
+	 * 
+	 * return new ResponseEntity<List<Post>>(postService.findAllPost(),
+	 * HttpStatus.OK); } catch (Exception e){ e.printStackTrace();
+	 * logger.info("게시물 전체 조회 에러"); return new
+	 * ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); }
+	 * 
+	 * }
+	 */
+	
+	// 게시물 n개씩 조회해서 보내주는 것
+	@RequestMapping(value = "/infinite", method = RequestMethod.GET)
+	private ResponseEntity<?> searchInfinitePost (@RequestParam("limit") int limit) throws IOException {
 		try {
 
-			logger.info("게시물 전체 조회");
-			
-			return new ResponseEntity<List<Post>>(postService.findAllPost(), HttpStatus.OK);
+			logger.info("게시물 무한스크롤 조회");
+			return new ResponseEntity<List<Post>>(postService.findInfinitePost(limit), HttpStatus.OK);
 		}
 		catch (Exception e){
 			e.printStackTrace();
-			logger.info("게시물 전체 조회 에러");
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			logger.info("게시물 무한스크롤 에러");
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-	}
+	}	
+	
+	
+	
 	
 	// 자유1,정보2, 질문3, 나눔4  
 	@RequestMapping(value = "/type/{type}", method = RequestMethod.GET)
@@ -84,24 +106,24 @@ public class PostController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			logger.info("게시물 분류 조회 에러");
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 			
 		}
 
 	}
 	
 	// 사용자가 쓴 게시글 모음
-	@RequestMapping(value = "/user/{user_number}", method = RequestMethod.GET)
-	private ResponseEntity<?> searchPostUser (@PathVariable String user_number) throws IOException {
+	@RequestMapping(value = "/user/{userno}", method = RequestMethod.GET)
+	private ResponseEntity<?> searchPostUser (@PathVariable String userno) throws IOException {
 		logger.info("사용자 게시물 조회");
-		int userno = Integer.parseInt(user_number);
 		try {
-			return new ResponseEntity<List<Post>>(postService.findPostUser(userno), HttpStatus.OK);
+			int user_number = Integer.parseInt(userno);
+			return new ResponseEntity<List<Post>>(postService.findPostUser(user_number), HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			logger.info("사용자 게시물 조회 에러");
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 			
 		}
 
@@ -141,15 +163,14 @@ public class PostController {
 		try {
 			logger.info("게시글 삭제");
 			int post_number = Integer.parseInt(postno);
-			
 			boolean ret = postService.deletePost(post_number);
 			if(ret == false) {
-				logger.info("게시글 수정 실패");
+				logger.info("게시글 삭제 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.info("게시글 수정 오류");
+			logger.info("게시글 삭제 오류");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -180,29 +201,28 @@ public class PostController {
 	
 	
 	
-	@RequestMapping(value = "/recommend/{postno}", method = RequestMethod.PUT)
-	private ResponseEntity<String> recommendPost (@PathVariable String postno) throws IOException {
-		
-		try {
-			logger.info("게시글 추천");
-			int post_number =Integer.parseInt(postno);
-			boolean ret = postService.recommendPost(post_number);
-			if(ret == false) {
-
-				logger.info("게시글 추천 실패");
-				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
-			}
-			
-			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			logger.info("게시글 추천 오류");
-			e.printStackTrace();
-			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-
-	}
+//	@RequestMapping(value = "/recommend/{postno}", method = RequestMethod.PUT)
+//	private ResponseEntity<String> recommendPost (@PathVariable int post_number, @RequestParam("user_number") int user_number) throws IOException {
+//		
+//		try {
+//			logger.info("게시글 추천");
+//			boolean ret = postService.recommendPost(post_number);
+//			if(ret == false) {
+//
+//				logger.info("게시글 추천 실패");
+//				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+//			}
+//			
+//			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			logger.info("게시글 추천 오류");
+//			e.printStackTrace();
+//			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//
+//
+//	}
 	
 	
 	
