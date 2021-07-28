@@ -32,6 +32,7 @@ public class PostController {
 	private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
+	private static final String ERROR = "error";
 	
 	@Autowired
 	PostService postService;
@@ -47,7 +48,7 @@ public class PostController {
 	
 	// 리스트로 리턴되는 것은 프론트에서 리스트 길이로 처리하기로함.
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	private ResponseEntity<List<Post>> searchAllPost () throws IOException {
+	private ResponseEntity<?> searchAllPost () throws IOException {
 		try {
 
 			logger.info("게시물 전체 조회");
@@ -57,14 +58,14 @@ public class PostController {
 		catch (Exception e){
 			e.printStackTrace();
 			logger.info("게시물 전체 조회 에러");
-			return new ResponseEntity<List<Post>>(postService.findAllPost(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 	
 	// 자유1,정보2, 질문3, 나눔4  
 	@RequestMapping(value = "/type/{type}", method = RequestMethod.GET)
-	private ResponseEntity<List<Post>> searchPostType (@PathVariable String type) throws IOException {
+	private ResponseEntity<?> searchPostType (@PathVariable String type) throws IOException {
 		logger.info("게시물 분류 조회");
 		int postType = 0;
 		if(type.equals("자유")) {
@@ -83,11 +84,28 @@ public class PostController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			logger.info("게시물 분류 조회 에러");
-			return new ResponseEntity<List<Post>>(postService.findPostType(postType), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			
 		}
 
 	}
+	
+	// 사용자가 쓴 게시글 모음
+	@RequestMapping(value = "/user/{user_number}", method = RequestMethod.GET)
+	private ResponseEntity<?> searchPostUser (@PathVariable String user_number) throws IOException {
+		logger.info("사용자 게시물 조회");
+		int userno = Integer.parseInt(user_number);
+		try {
+			return new ResponseEntity<List<Post>>(postService.findPostUser(userno), HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			logger.info("사용자 게시물 조회 에러");
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+
+	}	
 	
 	
 	
@@ -103,15 +121,15 @@ public class PostController {
 			boolean ret = postService.insertPost(post);
 			if(ret==false) {
 				logger.info("게시글 등록 실패");
-				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
 			
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.info("게시글 등록 오류");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<String>(ERROR, HttpStatus.NOT_ACCEPTABLE);
 		}
 		
 
@@ -127,14 +145,14 @@ public class PostController {
 			boolean ret = postService.deletePost(post_number);
 			if(ret == false) {
 				logger.info("게시글 수정 실패");
-				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.info("게시글 수정 오류");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	@RequestMapping(value = "/{postno}", method = RequestMethod.PUT)
@@ -148,15 +166,15 @@ public class PostController {
 			if(ret == false) {
 
 				logger.info("게시글 수정 실패");
-				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
 			
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.info("게시글 수정 오류");
 			e.printStackTrace();
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -172,15 +190,15 @@ public class PostController {
 			if(ret == false) {
 
 				logger.info("게시글 추천 실패");
-				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
 			
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.info("게시글 추천 오류");
 			e.printStackTrace();
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 

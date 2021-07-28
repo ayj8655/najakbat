@@ -33,6 +33,10 @@ public class PostService {
 		return posts;
 	}	
 	
+	public List<Post> findPostUser(int no){
+		List<Post> posts = postDAO.findAllByUserNumber(no);
+		return posts;
+	}	
 	
 	public boolean insertPost(Post post) {
 		Optional<Post> ret = postDAO.findPostByPostNumber(post.getPostNumber());

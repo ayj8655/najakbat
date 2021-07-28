@@ -26,14 +26,17 @@ public class CommentController {
 	private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
+	private static final String ERROR = "error";
+	
+	
+	
 	
 	@RequestMapping(value = "/{postno}", method = RequestMethod.GET)
-	private ResponseEntity<String> searchComment (@PathVariable String postno) throws IOException {
+	private ResponseEntity<?> searchComment (@PathVariable String postno) throws IOException {
 		logger.info("게시물별 댓글 조회");
 		
+		
 		return null;
-
-
 	}
 	
 	//여기 링크 없어서 수정해야됨

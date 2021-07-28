@@ -14,5 +14,6 @@ public interface PostDAO extends JpaRepository<Post, Integer>{
 	public Optional<Post> findPostByPostNumber(int no);
 	public List<Post> findAll();
 	public List<Post> findAllByPostType(int type);
+	public List<Post> findAllByUserNumber(int no);
 	
 }

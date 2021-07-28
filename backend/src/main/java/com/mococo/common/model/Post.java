@@ -25,7 +25,7 @@ public class Post {
 	private Date date;
 	private String content;
 	private String keyword;
-	private int isdeleted; // 게시글이 지워졌는지 여부 - 지워졌어도 db에는 존재
+	private int isDelete; // 게시글이 지워졌는지 여부 - 지워졌어도 db에는 존재
 	
 	
 }
