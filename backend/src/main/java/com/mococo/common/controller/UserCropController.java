@@ -36,25 +36,26 @@ public class UserCropController {
 	private static final Logger logger = LoggerFactory.getLogger(UserCropController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
+	private static final String ERROR = "error";
 	
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ApiOperation(value = "작물 등록")
 	private ResponseEntity<String> insertCrop (@RequestBody UserCrop userCrop) throws IOException {
 		logger.info("작물 등록");
-		userCrop.setPlantedDate(new Date());
-		
-		boolean result = userCropService.insertCrop(userCrop);
 		
 		try {
-	        if (result) {
-	            return new ResponseEntity<>("success", HttpStatus.OK);
-	        } else {
-	            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-	        }
-		} catch(Exception e){
-			System.out.println("test");
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			userCrop.setPlantedDate(new Date());
+			boolean result = userCropService.insertCrop(userCrop);
+			
+			if (result) {
+				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+			}
+			
+		} catch(Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -62,42 +63,46 @@ public class UserCropController {
 	@ApiOperation(value = "작물 삭제")
 	private ResponseEntity<String> deleteCrop (@RequestBody int userCropNumber) throws IOException {
 		logger.info("작물 삭제");
-		userCropService.deleteCrop(userCropNumber);
 		
-		ResponseEntity response = null;
-		
-        response = new ResponseEntity<>("success", HttpStatus.OK);
-		
-		return response;
+		try {
+			userCropService.deleteCrop(userCropNumber);
+			return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+			
+		} catch(Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.PUT)
 	@ApiOperation(value = "작물 정보 수정")
 	private ResponseEntity<String> updateCrop (@RequestBody UserCrop userCrop) throws IOException {
 		logger.info("작물 정보 수정");
-		boolean result = userCropService.updateCrop(userCrop);
 		
-		ResponseEntity response = null;
-		
-        if (result) {
-            response = new ResponseEntity<>("success", HttpStatus.OK);
-        } else {
-            response = new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-        }
-		
-		return response;
+		try {
+			boolean result = userCropService.updateCrop(userCrop);
+			
+			if (result) {
+				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+			}
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@ApiOperation(value = "작물 정보 조회")
-	private ResponseEntity<String> searchCrop (@RequestParam int userNumber) throws IOException {
+	private ResponseEntity<?> searchCrop (@RequestParam int userNumber) throws IOException {
 		logger.info("작물 정보 조회");
-		List<UserCrop> userCropOpt = userCropService.findAllByUserNumber(userNumber);
 		
-		ResponseEntity response = null;
-		response = new ResponseEntity<>(userCropOpt, HttpStatus.OK);
-		
-		return response;
+		try {
+			List<UserCrop> userCropOpt = userCropService.findAllByUserNumber(userNumber);
+			return new ResponseEntity<>(userCropOpt, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-
 }
