@@ -1,6 +1,11 @@
 <template>
   <div class="row">
-    <div class="row-2"></div>
+    <div class="row-2">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Curved_Arrow.svg/2290px-Curved_Arrow.svg.png"
+        width="25px"
+      />
+    </div>
     <div class="col-10">
       <div v-if="this.modifyComment != null" class="regist_form">
         <textarea
@@ -33,13 +38,13 @@
 export default {
   name: "CommentChildWrite",
   props: {
-    modifyComment: { type: Object },
+    modifyCommentChild: { type: Object },
   },
   data() {
     return {
-      no: this.$route.params.no,
-      id: "",
-      content: "",
+      // no: this.$route.params.no,
+      // id: "",
+      // content: "",
     };
   },
   methods: {},

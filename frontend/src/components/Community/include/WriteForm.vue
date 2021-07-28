@@ -34,8 +34,9 @@
     </div>
     <form>
   <div class="custom-file">
+      <label for="customFile">사진첨부:</label>
     <input type="file" class="custom-file-input" id="customFile">
-    <label class="custom-file-label" for="customFile">첨부할 사진을 선택하세요.</label>
+    <label class="custom-file-label" for="customFile">첨부할 사진을 선택하세요. (최대 5개)</label>
   </div>
 </form>
     <div class="form-group" align="left">
