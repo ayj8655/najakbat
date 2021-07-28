@@ -14,7 +14,11 @@ import com.mococo.common.model.User;
 public interface NoticeDAO extends JpaRepository<Notice, Integer>{
 
 	public Optional<Notice> findByUserNumber(int userNumber);
-	
+
+	public Optional<Notice> findByNoticeNumber(int noticeNumber);
+
+	public List<Notice> findAllByUserNumber(int userNumber);
+
 	
 	
 	

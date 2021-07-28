@@ -19,8 +19,8 @@ public class Notice {
 	
 	private int userNumber;
 	
-	@Column(name="read", columnDefinition = "TINYINT", length=1)
-	private int read;
+	@Column(name="is_read", columnDefinition = "TINYINT", length=1)//read가 예약어라서 바꿈
+	private int isRead;
 	
 	@Temporal(TemporalType.TIMESTAMP)	//이거 써야 자동으로 시간 넣어줌
 	private Date date;
