@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="container">
   <h2>1:1 문의</h2>
   <h3>문의사항 분류</h3>
   <select v-model="selected">
