@@ -11,6 +11,9 @@ import Settings from "../views/Sidebar/Settings.vue"
 import Login from "../views/Login/Login.vue"
 import Signup from "../views/Login/Signup.vue"
 import SignupNext from "../views/Login/SignupNext.vue"
+import FindId from "../views/Login/FindId.vue"
+import FindIdNext from "../views/Login/FindIdNext.vue"
+import FindPassword from "../views/Login/FindPassword.vue"
 
 Vue.use(VueRouter)
 
@@ -99,6 +102,21 @@ const routes = [
     path: '/signupnext',
     name: 'SignupNext',
     component: SignupNext,
+  },
+  {
+    path: '/findid',
+    name: 'FindId',
+    component: FindId,
+  },
+  {
+    path: '/findidnext',
+    name: 'FindIdNext',
+    component: FindIdNext,
+  },
+  {
+    path: '/findpassword',
+    name: 'FindPassword',
+    component: FindPassword,
   },
 ];
 
