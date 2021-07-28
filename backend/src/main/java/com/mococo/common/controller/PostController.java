@@ -40,9 +40,9 @@ public class PostController {
 	
 	//하나의 게시물의 내용 조회
 	@RequestMapping(value = "/{no}", method = RequestMethod.GET)
-	private ResponseEntity<Optional<Post>> searchPost (@PathVariable int post_number) throws IOException {
+	private ResponseEntity<Optional<Post>> searchPost (@PathVariable String no) throws IOException {
 		logger.info("게시물 내용 조회");
-		
+		int post_number = Integer.parseInt(no);
 		return new ResponseEntity<Optional<Post>>(postService.findPostByPostNumber(post_number),HttpStatus.OK);
 	}
 	
@@ -113,10 +113,11 @@ public class PostController {
 	}
 	
 	// 사용자가 쓴 게시글 모음
-	@RequestMapping(value = "/user/{user_number}", method = RequestMethod.GET)
-	private ResponseEntity<?> searchPostUser (@PathVariable int user_number) throws IOException {
+	@RequestMapping(value = "/user/{userno}", method = RequestMethod.GET)
+	private ResponseEntity<?> searchPostUser (@PathVariable String userno) throws IOException {
 		logger.info("사용자 게시물 조회");
 		try {
+			int user_number = Integer.parseInt(userno);
 			return new ResponseEntity<List<Post>>(postService.findPostUser(user_number), HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -157,11 +158,11 @@ public class PostController {
 
 	}
 	@RequestMapping(value = "/{postno}", method = RequestMethod.DELETE)
-	private ResponseEntity<String> deletePost (@PathVariable int post_number) throws IOException {
+	private ResponseEntity<String> deletePost (@PathVariable String postno) throws IOException {
 		
 		try {
 			logger.info("게시글 삭제");
-			
+			int post_number = Integer.parseInt(postno);
 			boolean ret = postService.deletePost(post_number);
 			if(ret == false) {
 				logger.info("게시글 삭제 실패");

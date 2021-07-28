@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.Comment;
-import com.mococo.common.model.User;
 import com.mococo.common.service.CommentService;
 
 
@@ -40,9 +39,9 @@ public class CommentController {
 	CommentService commentService;
 	
 	@RequestMapping(value = "/{postno}", method = RequestMethod.GET)
-	private ResponseEntity<?> searchComment (@PathVariable int post_number) throws IOException {
+	private ResponseEntity<?> searchComment (@PathVariable String postno) throws IOException {
 		logger.info("게시물별 댓글 조회");
-		
+		int post_number = Integer.parseInt(postno);
 		return new ResponseEntity<List<Comment>>(commentService.findAllByPostNumber(post_number), HttpStatus.OK);
 		
 	}
@@ -79,7 +78,7 @@ public class CommentController {
 	}
 	
 	@RequestMapping(value = "/{commentno}", method = RequestMethod.PUT)
-	private ResponseEntity<String> updateComment (@PathVariable Comment comment) throws IOException {
+	private ResponseEntity<String> updateComment (@RequestBody Comment comment) throws IOException {
 		logger.info("댓글 수정");
 		try {
 			
@@ -104,12 +103,12 @@ public class CommentController {
 	
 	
 	@RequestMapping(value = "/{comment_number}", method = RequestMethod.DELETE)
-	private ResponseEntity<String> deleteComment (@PathVariable int comment_number) throws IOException {
+	private ResponseEntity<String> deleteComment (@PathVariable String comment_number) throws IOException {
 		logger.info("댓글 삭제");
 		
 		try {
-			
-			boolean ret = commentService.deleteComment(comment_number);
+			int commentno = Integer.parseInt(comment_number);
+			boolean ret = commentService.deleteComment(commentno);
 			if(ret == false) {
 				logger.info("댓글 삭제 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
