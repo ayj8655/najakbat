@@ -44,5 +44,4 @@ public class UserCropService {
 	public List<UserCrop> findAllByUserNumber(int userNumber) {
 		return userCropDAO.findAllByUserNumber(userNumber);
 	}
-	
 }
