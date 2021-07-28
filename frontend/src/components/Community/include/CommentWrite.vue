@@ -34,8 +34,7 @@ export default {
   },
   data() {
     return {
-      no: this.$route.params.no,
-      id: "",
+      no: null,
       content: "",
     };
   },

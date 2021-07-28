@@ -14,10 +14,14 @@
         <div v-html="enterToBr(article.content)"></div>
       </div>
       <div id="post-foot">
-          <span>{{post.recommend}}</span>
-          <span>{{this.comments.length}}</span>
-          <div class="modifyBtn">수정</div>
-          <div class="deleteBtn">삭제</div>
+        <span>{{ post.recommend }}</span>
+        <span>{{ this.comments.length }}</span>
+        <div v-if="this.$store.user.user_number == this.post.user_number">
+          <span>
+            <div class="modifyBtn" @click="modifyPost">수정</div>
+            <div class="deleteBtn" @click="deletePost">삭제</div>
+          </span>
+        </div>
       </div>
     </div>
     <div id="comments-area">
@@ -62,9 +66,9 @@ export default {
     };
   },
   created() {
-      // http.get(`/post/${this.no}`).then(({ data }) => {
-      //   this.post = data;
-      // });
+    // http.get(`/post/${this.no}`).then(({ data }) => {
+    //   this.post = data;
+    // });
     //   http.get(`/comment/${this.no}`).then(({ data }) => {
     //     this.comments = data;
     //   });
@@ -73,6 +77,17 @@ export default {
     enterToBr(str) {
       if (str) return str.replace(/(?:\r\n|\r|\n)/g, "<br />");
     },
+    modifyPost() {
+      this.$router.push(`/community/modify/${this.post.post_number}`);
+    },
+    deletePost() {
+        if (confirm("정말로 삭제하시겠습니까?")) {
+          // http.delete(`/post/${this.post.post_number}`).then(() => {
+          //   alert("삭제되었습니다.");
+          //   this.$router.push("/community/list");
+          // });
+        }
+      },
     onModifyComment(comment) {
       this.modifyComment = comment;
       this.isModifyShow = true;

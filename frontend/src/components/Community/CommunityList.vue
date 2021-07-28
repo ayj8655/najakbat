@@ -16,17 +16,64 @@
         <span class="write" @click="postWrite">글쓰기</span>
       </div>
     </div>
+    <div class="post-area">
+      <list-row
+        v-for="(post, index) in list"
+        :key="index"
+        :post="post"
+      ></list-row>
+      <infinite-loading
+        @infinite="infiniteHandler"
+        spinner="circles"
+      ></infinite-loading>
+    </div>
     <hr class="line1" />
     <div></div>
   </div>
 </template>
 
 <script>
+// import http from "@/util/http-common";
+import ListRow from "@/components/Community/include/ListRow.vue";
+import InfiniteLoading from "vue-infinite-loading";
+
 export default {
+  data() {
+    return {
+      list: [],
+      limit: 0,
+    };
+  },
+  components: {
+    ListRow,
+    InfiniteLoading,
+  },
+  created: {},
   methods: {
     postWrite() {
       this.$router.push("/community/write");
     },
+    // infiniteHandler($state) {
+      // http.get("/post/", {
+      //   params: {
+      //       limit: this.limit,
+      //     },
+      //   })
+      //   .then((response) => {
+      //     setTimeout(() => {
+      //       if (response.data.length) {
+      //         this.list = this.list.concat(response.data);
+      //         this.limit += 3;
+      //         $state.loaded();
+      //       } else {
+      //         $state.complete();
+      //       }
+      //     }, 1000);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+    // },
   },
 };
 </script>
