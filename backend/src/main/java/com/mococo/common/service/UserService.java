@@ -23,13 +23,22 @@ public class UserService {
 		return user;
 	}
 
-	public Optional<User> findById(int user_number) {
-		Optional<User> user = userDAO.findById(user_number);
+	public Optional<User> findById(String id) {
+		
+		Optional<User> user = userDAO.findById(id);
+		
+		user.ifPresent(selectUser -> {
+			System.out.println(selectUser.getNickname());
+		});
+		
 		return user;
 	}
-
-	public void deleteById(int user_number) {
-		userDAO.deleteById(user_number);
+	
+	public void deleteById(String userId) {
+		Optional<User> deleteUser = userDAO.findById(userId);
+		deleteUser.ifPresent(selectUser ->{
+			userDAO.delete(selectUser);
+		});
 	}
 
 	public User save(User user) {
@@ -37,13 +46,19 @@ public class UserService {
 		return user;
 	}
 
-	public void updateById(int user_number, User user) {
-		Optional<User> e = userDAO.findById(user_number);
-		if (e.isPresent()) {
-			e.get().setId(user.getId());
-			e.get().setPassword(user.getPassword());
-			userDAO.save(user);
-		}
+	public void updateById(String userId, User user) {
+		
+		Optional<User> updateUser = userDAO.findById(userId);
+		
+		updateUser.ifPresent(selectUser -> {
+			
+			selectUser.setNickname(user.getNickname());
+			selectUser.setJoinDate(user.getJoinDate());
+			selectUser.setAddress(user.getAddress());
+			selectUser.setPassword(user.getPassword());
+			userDAO.save(selectUser);	
+		});
+
 	}
 
 }

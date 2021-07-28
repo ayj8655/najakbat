@@ -6,15 +6,16 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.mococo.common.model.Notice;
 import com.mococo.common.model.User;
 
 
 @Repository
-public interface UserDAO extends JpaRepository<User, Integer>{
+public interface NoticeDAO extends JpaRepository<Notice, Integer>{
 
-	public Optional<User> findById(String id);
+	public Optional<Notice> findByUserNumber(int userNumber);
 	
-	public List<User> findByPassword(String password);
+	
 	
 	
 
