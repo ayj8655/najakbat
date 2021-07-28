@@ -29,12 +29,38 @@ const routes = [
     component: () =>
     import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
-  {
-    path: "/community",
-    name: "Community",
-    component: () =>
-    import(/* webpackChunkName: "about" */ "../views/Community.vue"),
-  },
+// 수정 라우터
+
+{
+  path: "/community",
+  name: "Community",
+  component: () => import("../views/Community.vue"),
+  children : [
+    {
+      path: "/community/list",
+      name: "CommunityList",
+      component: () => import("../components/Community/CommunityList.vue")
+    },
+    {
+      path: "/community/write",
+      name: "CommunityWrite",
+      component: () => import("../components/Community/CommunityWrite.vue")
+    },
+    {
+      path: "/community/modify/:no",
+      name: "CommunityModify",
+      component: () => import("../components/Community/CommunityModify.vue")
+    },
+    {
+      path: "/community/detail/:no",
+      name: "CommunityDetail",
+      component: () => import("../components/Community/CommunityDetail.vue")
+    },
+  ],
+  redirect: () => {
+    return "/community/list";
+  }
+},
   // 준호 라우터
 
   {
