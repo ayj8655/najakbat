@@ -89,7 +89,7 @@ public class PlantGuideController {
 	@RequestMapping(value = "/recipe/{cropNumber}", method = RequestMethod.GET)
 	@ApiOperation(value = "작물로 만들 수 있는 모든 요리 검색")
 	private ResponseEntity<?> searchAllRecipeByCropNumber(@PathVariable("cropNumber") String cropNumberString) throws IOException {
-		logger.info("요리 레시피에 들어가는 모든 작물 검색");
+		logger.info("작물로 만들 수 있는 모든 요리 검색");
 		
 		try {
 			int cropNumber = Integer.parseInt(cropNumberString);
