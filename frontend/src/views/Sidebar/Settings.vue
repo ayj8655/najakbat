@@ -94,6 +94,9 @@ export default {
     }
   
   },
+    created() {
+    this.$store.dispatch('getNoticeSettings')
+  },
   watch: {
     mywater_notice: function () {
       if (this.changes) {
