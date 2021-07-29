@@ -1,6 +1,7 @@
 package com.mococo.common.controller;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,8 @@ public class UserSettingController {
 	@Autowired
 	UserSettingService userSettingService;
 	
+	
+	//유저세팅을 보내면 한번에 업데이트함
 	@RequestMapping(value = "/setting/notice", method = RequestMethod.PUT)
 	private ResponseEntity<String> updateNotice (@RequestBody UserSetting userSetting) throws IOException {
 		logger.info("알림 상태 수정");
@@ -45,8 +48,21 @@ public class UserSettingController {
 			System.out.println("알림 상태 수정 실패");
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 		} 
+	}
+	
+	//유저 넘버를 보내주면 알림상태를 반환함
+	@RequestMapping(value = "/setting/notice", method = RequestMethod.GET)
+	private ResponseEntity<UserSetting> getNotice (@RequestBody User user) throws IOException {
+		logger.info("알림 상태 전송");
 		
-
+		try {
+			Optional<UserSetting> userSetting = userSettingService.findByUserNumber(user.getUserNumber());
+			System.out.println("알림 상태 전송 성공");
+			return new ResponseEntity<UserSetting>(userSetting.get(), HttpStatus.OK);
+		} catch (Exception e) {
+			System.out.println("알림 상태 전송 오류");
+			return new ResponseEntity<UserSetting>(HttpStatus.NO_CONTENT);
+		} 
 	}
 	
 	@RequestMapping(value = "/setting/mode", method = RequestMethod.PUT)
