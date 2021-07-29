@@ -24,4 +24,5 @@ public class Crop {
 	private int sun;
 	private int water;
 	private double temperature;
+	private String image;
 }
