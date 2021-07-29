@@ -19,6 +19,10 @@ public class CropService {
 		return cropDAO.findAll();
 	}
 	
+	public List<Object> findAllSummary() {
+		return cropDAO.findAllSummary();
+	}
+	
 	public Optional<Crop> findByCropNumber(int cropNumber) {
 		return cropDAO.findByCropNumber(cropNumber);
 	}

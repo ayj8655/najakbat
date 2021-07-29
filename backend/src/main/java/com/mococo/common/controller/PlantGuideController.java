@@ -51,6 +51,20 @@ public class PlantGuideController {
 		}
 	}
 	
+	@RequestMapping(value = "/summary", method = RequestMethod.GET)
+	@ApiOperation(value = "모든 작물 요약 정보 검색(cropNumber, name, image)")
+	private ResponseEntity<?> searchAllPlantSummary() throws IOException {
+		logger.info("모든 작물 요약 정보 검색");
+		
+		try {
+			List<Object> cropList = cropService.findAllSummary();
+			return new ResponseEntity<>(cropList, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	@RequestMapping(value = "/{cropNumber}", method = RequestMethod.GET)
 	@ApiOperation(value = "작물 정보 검색")
 	private ResponseEntity<?> searchPlant(@PathVariable("cropNumber") String cropNumberString) throws IOException {
