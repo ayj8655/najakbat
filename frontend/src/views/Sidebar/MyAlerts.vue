@@ -22,11 +22,6 @@ export default {
       notices: this.$store.state.searchNotices
     }
   },
-  computed: {
-    mynotices() {
-      return this.$store.state.searchNotices
-    }
-  },
   created() {
     this.$store.dispatch('getSearchNotice')
   }

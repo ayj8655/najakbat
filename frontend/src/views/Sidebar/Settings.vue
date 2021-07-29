@@ -48,7 +48,7 @@
                @change="changeNightmode ()"/>
     
     </div>
-    <button type="button" class="btn btn-success mb-2" v-if="changes">저장</button>
+    <button type="button" class="btn btn-success mb-2" v-if="changes" @click="settingsUpdate">저장</button>
     <button type="button" class="btn btn-success" v-else disabled>저장</button>
   </div>  
 
