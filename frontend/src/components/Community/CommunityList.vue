@@ -18,7 +18,7 @@
     </div>
     <div class="post-area">
       <list-row
-        v-for="(post, index) in list"
+        v-for="(post, index) in this.list"
         :key="index"
         :post="post"
       ></list-row>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-// import http from "@/util/http-common";
+import axios from "axios";
 import ListRow from "@/components/Community/include/ListRow.vue";
 import InfiniteLoading from "vue-infinite-loading";
 
@@ -53,27 +53,27 @@ export default {
     postWrite() {
       this.$router.push("/community/write");
     },
-    // infiniteHandler($state) {
-      // http.get("/post/", {
-      //   params: {
-      //       limit: this.limit,
-      //     },
-      //   })
-      //   .then((response) => {
-      //     setTimeout(() => {
-      //       if (response.data.length) {
-      //         this.list = this.list.concat(response.data);
-      //         this.limit += 3;
-      //         $state.loaded();
-      //       } else {
-      //         $state.complete();
-      //       }
-      //     }, 1000);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-    // },
+    infiniteHandler($state) {
+      axios.get("post/infinite", {
+          params: {
+            limit: this.limit,
+          },
+        })
+        .then((response) => {
+          setTimeout(() => {
+            if (response.data.length) {
+              this.list = this.list.concat(response.data);
+              this.limit += 3;
+              $state.loaded();
+            } else {
+              $state.complete();
+            }
+          }, 1000);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>

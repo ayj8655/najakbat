@@ -3,20 +3,21 @@
     <div id="post-area">
       <div id="post-head">
         <div id="category"></div>
-        <div>{{ post.title }}</div>
+        <div>{{ this.post.title }}</div>
         <div>
-          <span>{{ post.user_number }}</span>
-          <span>{{ post.view }} | {{ post.regtime }}</span>
+          <span>{{ this.post.userNickname }}</span>
+          <span>{{ this.post.view }} | {{ this.post.regtime }}</span>
         </div>
         <hr />
       </div>
       <div id="post-body">
-        <div v-html="enterToBr(article.content)"></div>
+        <div v-html="enterToBr(this.post.content)"></div>
       </div>
       <div id="post-foot">
-        <span>{{ post.recommend }}</span>
+        <span>{{ this.post.recommend }}</span>
         <span>{{ this.comments.length }}</span>
-        <div v-if="this.$store.user.user_number == this.post.user_number">
+        <div>
+        <!-- <div v-if="this.$store.user.userNumber == this.post.userNumber"> -->
           <span>
             <div class="modifyBtn" @click="modifyPost">수정</div>
             <div class="deleteBtn" @click="deletePost">삭제</div>
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-//   import http from "@/util/http-common";
+import axios from "axios";
 import Comment from "@/components/Community/include/Comment.vue";
 import CommentWrite from "@/components/Community/include/CommentWrite.vue";
 
@@ -66,26 +67,26 @@ export default {
     };
   },
   created() {
-    // http.get(`/post/${this.no}`).then(({ data }) => {
-    //   this.post = data;
-    // });
-    //   http.get(`/comment/${this.no}`).then(({ data }) => {
-    //     this.comments = data;
-    //   });
+    axios.get(`post/${this.no}`).then(({ data }) => {
+      this.post = data;
+    });
+      axios.get(`comment/${this.no}`).then(({ data }) => {
+        this.comments = data;
+      });
   },
   methods: {
     enterToBr(str) {
       if (str) return str.replace(/(?:\r\n|\r|\n)/g, "<br />");
     },
     modifyPost() {
-      this.$router.push(`/community/modify/${this.post.post_number}`);
+      this.$router.push(`/community/modify/${this.post.postNumber}`);
     },
     deletePost() {
         if (confirm("정말로 삭제하시겠습니까?")) {
-          // http.delete(`/post/${this.post.post_number}`).then(() => {
-          //   alert("삭제되었습니다.");
-          //   this.$router.push("/community/list");
-          // });
+          axios.delete(`post/${this.post.postNumber}`).then(() => {
+            alert("삭제되었습니다.");
+            this.$router.push("/community/list");
+          });
         }
       },
     onModifyComment(comment) {

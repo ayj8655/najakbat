@@ -26,7 +26,7 @@
 </template>
 
 <script>
-// import http from "@/util/http-common";
+import axios from "axios";
 export default {
   name: "CommentWrite",
   props: {
@@ -34,38 +34,39 @@ export default {
   },
   data() {
     return {
-      no: null,
+      no: this.$route.params.no,
       content: "",
     };
   },
   methods: {
     registComment() {
+      axios
+        .post(`comment/`, {
+          no: this.no,
+          // userNumber: 1,
+          // userNickname: "hi",
+          content: this.content,
+        })
+        .then(() => {
+          alert("댓글이 등록되었습니다.");
+          window.location.reload();
+        });
       // if (this.$store.state.userinfo.id) {
-      //   http
-      //     .post(`/comment/${this.no}`, {
-      //       no: this.no,
-      //       id: this.$store.state.userinfo.id,
-      //       content: this.content,
-      //     })
-      //     .then(() => {
-      //       alert("댓글이 등록되었습니다.");
-      //       window.location.reload();
-      //     });
       // } else {
       //   alert("로그인 후 이용해주세요.");
       //   this.$router.push("/user/login");
       // }
     },
     updateComment() {
-      // http
-      //   .put(`/comment/{this.modifycomment.comment_number}`, {
-      //     comment_number: this.modifycomment.comment_number,
-      //     content: this.modifyComment.content,
-      //   })
-      //   .then(() => {
-      //     alert("댓글이 수정되었습니다.");
-      //     window.location.reload();
-      //   });
+      axios
+        .put(`comment/${this.modifycomment.comment_number}`, {
+          comment_number: this.modifycomment.comment_number,
+          content: this.modifyComment.content,
+        })
+        .then(() => {
+          alert("댓글이 수정되었습니다.");
+          window.location.reload();
+        });
     },
     updateCommentCancel() {
       this.$emit("modify-comment-cancel", false);
