@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.Notice;
 import com.mococo.common.model.User;
+import com.mococo.common.model.UserSetting;
 import com.mococo.common.service.NoticeService;
+
+import io.swagger.annotations.ApiOperation;
 
 
 //http://localhost:8080/swagger-ui.html/
@@ -37,6 +40,7 @@ public class UserNoticeController {
 	NoticeService noticeService;
 	
 	@RequestMapping(value = "/notice/{userNumber}", method = RequestMethod.GET)
+	@ApiOperation(value = "유저번호를 입력하면 해당하는 유저의 알림을 모두 반환한다", response = List.class)
 	private ResponseEntity<List<Notice>> searchNotice (@PathVariable int userNumber) throws IOException {
 		logger.info("알림 기록 전체 조회");
 		
@@ -54,6 +58,7 @@ public class UserNoticeController {
 	}
 	
 	@RequestMapping(value = "/notice/{no}", method = RequestMethod.PUT)
+	@ApiOperation(value = "알림 번호를 입력하면 해당하는 알림을 읽음처리하여 성공 실패 여부를 반환한다.", response = String.class)
 	private ResponseEntity<String> readNotice (@PathVariable int no) throws IOException {
 		logger.info("알림 선택 시 읽음표시 변경");
 		
