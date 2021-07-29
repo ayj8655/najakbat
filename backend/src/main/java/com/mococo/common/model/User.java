@@ -1,6 +1,8 @@
 package com.mococo.common.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -15,6 +17,7 @@ public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)//이건 오토인크리먼트일때만 넣어주는거
+	@Column(name = "user_number")
 	private int userNumber;
 	
 	
@@ -27,6 +30,13 @@ public class User {
 	private String address;
 	private int gold;
 	
+	@ManyToMany
+	@JoinTable(
+			name ="post_recommend",
+			joinColumns = @JoinColumn(name ="user_number"),
+			inverseJoinColumns = @JoinColumn(name = "post_number")
+			)
+	private List<Post> posts = new ArrayList<>();
 	
 	
 

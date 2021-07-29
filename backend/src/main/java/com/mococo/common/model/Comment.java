@@ -25,6 +25,7 @@ public class Comment {
 	private int commentNumber;
 	private int postNumber;
 	private int userNumber;
+	private String userNickname;
 	private String parent;
 	private String content;
 	private int recommend;

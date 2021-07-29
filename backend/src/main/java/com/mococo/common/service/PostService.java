@@ -9,13 +9,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import com.mococo.common.dao.PostDAO;
+import com.mococo.common.dao.PostRecommendDAO;
 import com.mococo.common.model.Post;
+import com.mococo.common.model.PostRecommend;
+import com.mococo.common.model.PostRecommendPK;
+import com.mococo.common.model.User;
 
 @Service
 public class PostService {
 	
 	@Autowired
 	PostDAO postDAO;
+	
+	@Autowired
+	PostRecommendDAO postrecommendDAO;
 	
 	// 게시글 번호로 해당 Post 리턴
 	public Optional<Post> findPostByPostNumber(int no){
@@ -80,16 +87,47 @@ public class PostService {
 		return true;
 	}
 	
-//	public boolean recommendPost(int no) {
-//		Optional<Post> ret = postDAO.findPostByPostNumber(no);
-//		
-//		// 추천할 post가 없는 경우
-//		if(!ret.isPresent()) {
-//			return false;
-//		}
-//		ret.get().setRecommend(ret.get().getRecommend()+1);
-//		postDAO.save(ret.get());
-//		return true;
-//		
-//	}
+	public boolean recommendPost(int postno, int userno) {
+		Optional<Post> ret = postDAO.findPostByPostNumber(postno);
+
+		// 추천할 post가 없는 경우 - 잘못된 접근
+		if(!ret.isPresent()) {
+			return false;
+		}
+		
+		boolean isRecommend= false;
+		for(User user :ret.get().getUsers()) {
+			// 이미 추천되어있으면 추천 취소
+			if(user.getUserNumber() == userno) {
+				isRecommend =true;
+			}
+
+		}
+		// 이번 요청으로 추천을 누르는 경우
+		if(isRecommend == false) {
+			// 게시글 테이블의 추천수 컬럼 +1
+			ret.get().setRecommend(ret.get().getRecommend()+1);
+			postDAO.save(ret.get());
+			
+			// POST RECOMMNED 테이블에 이번에 누른 정보를 insert
+			PostRecommend pr = new PostRecommend(postno,userno);
+			postrecommendDAO.save(pr);
+			return true;
+		}
+		
+		// 이번 요청으로 추천을 취소 하는 경우
+		else {
+			// 게시글 테이블의 추천수 컬럼 -1
+			ret.get().setRecommend(ret.get().getRecommend()-1);
+			postDAO.save(ret.get());
+			
+			// POST RECOMMNED 테이블에 이번에 누른 정보를 delete
+			postrecommendDAO.deleteByPostNumberAndUserNumber(postno, userno);
+			return true;
+		}
+
+		
+	}
+
+
 }
