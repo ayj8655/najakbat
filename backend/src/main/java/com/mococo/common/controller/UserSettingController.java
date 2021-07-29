@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,12 +52,12 @@ public class UserSettingController {
 	}
 	
 	//유저 넘버를 보내주면 알림상태를 반환함
-	@RequestMapping(value = "/setting/notice", method = RequestMethod.GET)
-	private ResponseEntity<UserSetting> getNotice (@RequestBody User user) throws IOException {
+	@RequestMapping(value = "/setting/notice/{userNumber}", method = RequestMethod.GET)
+	private ResponseEntity<UserSetting> getNotice (@PathVariable int userNumber) throws IOException {
 		logger.info("알림 상태 전송");
 		
 		try {
-			Optional<UserSetting> userSetting = userSettingService.findByUserNumber(user.getUserNumber());
+			Optional<UserSetting> userSetting = userSettingService.findByUserNumber(userNumber);
 			System.out.println("알림 상태 전송 성공");
 			return new ResponseEntity<UserSetting>(userSetting.get(), HttpStatus.OK);
 		} catch (Exception e) {
