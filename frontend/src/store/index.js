@@ -49,7 +49,21 @@ export default new Vuex.Store({
     },
 
     // Settings actions
-    
+    getNoticeSettings(context, userNumber) {
+      axios({
+        method: 'get',
+        url: `user/setting/notice`,
+        data: {
+          userNumber: userNumber
+        }
+      })
+      .then(res => {
+        context.commit('GET_NOTICE_SETTINGS', res.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    },
 
     updateNotice(context, water_notice, recommendedinfo_notice, newcomments_notice, newtwits_notice, nightmode_notice) {
       axios({
