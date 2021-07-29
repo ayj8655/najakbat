@@ -201,28 +201,29 @@ public class PostController {
 	
 	
 	
-//	@RequestMapping(value = "/recommend/{postno}", method = RequestMethod.PUT)
-//	private ResponseEntity<String> recommendPost (@PathVariable int post_number, @RequestParam("user_number") int user_number) throws IOException {
-//		
-//		try {
-//			logger.info("게시글 추천");
-//			boolean ret = postService.recommendPost(post_number);
-//			if(ret == false) {
-//
-//				logger.info("게시글 추천 실패");
-//				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
-//			}
-//			
-//			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			logger.info("게시글 추천 오류");
-//			e.printStackTrace();
-//			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//
-//
-//	}
+	@RequestMapping(value = "/recommend/{postno}", method = RequestMethod.PUT)
+	private ResponseEntity<String> recommendPost (@PathVariable String postno, @RequestParam("user_number") int user_number) throws IOException {
+		
+		try {
+			logger.info("게시글 추천 올리기");
+			int post_number = Integer.parseInt(postno);
+			boolean ret = postService.recommendPost(post_number,user_number);
+			if(ret == false) {
+
+				logger.info("게시글 추천 내리기");
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			}
+			
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.info("게시글 추천 올리기 오류");
+			e.printStackTrace();
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+
+	}
 	
 	
 	
