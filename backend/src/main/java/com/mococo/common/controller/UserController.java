@@ -161,10 +161,20 @@ public class UserController {
 		System.out.println(map.get("userId"));
 		System.out.println(map.get("userPwd"));
 		
-		
-		
-		
-		
+		try {
+			User user = userService.login(map);
+			System.out.println(user);
+			if (user != null) {
+				System.out.println("로그인성공 세션생성");
+
+				return new ResponseEntity<User>(user, HttpStatus.OK);
+			} else {
+				System.out.println("로그인실패 ");
+				return new ResponseEntity<User>(user, HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return null;
 	}
