@@ -30,4 +30,8 @@ public class CropService {
 	public Optional<Crop> findByCropNumber(int cropNumber) {
 		return cropDAO.findByCropNumber(cropNumber);
 	}
+	
+	public List<Object> findAllRecipeByCropNumber(int cropNumber) {
+		return materialDAO.findAllRecipeByCropNumber(cropNumber);
+	}
 }
