@@ -2,6 +2,7 @@ package com.mococo.common.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,16 @@ public class UserService {
 		}
 		userDAO.save(user);	
 		return true;
+	}
+
+	public User login(Map<String, String> map) {
+		
+		Optional<User> loginUser = userDAO.findByIdAndPassword(map.get("userId"),map.get("userPwd"));
+		if(!loginUser.isPresent()) {
+			return null;
+		}
+		
+		return loginUser.get();
 	}
 	
 	/*
