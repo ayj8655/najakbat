@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mococo.common.dao.CropDAO;
+import com.mococo.common.dao.MaterialDAO;
 import com.mococo.common.model.Crop;
 
 @Service
@@ -14,6 +15,9 @@ public class CropService {
 	
 	@Autowired
 	CropDAO cropDAO;
+	
+	@Autowired
+	MaterialDAO materialDAO;
 	
 	public List<Crop> findAll() {
 		return cropDAO.findAll();
