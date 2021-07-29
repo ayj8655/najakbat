@@ -16,6 +16,9 @@ public interface MaterialDAO extends JpaRepository<Material, Integer>{
 			+ "WHERE m.recipeNumber = :recipeNumber ")
 	public List<Object> findAllCropByRecipeNumber(int recipeNumber);
 	
-//	@Query("")
-//	public List<Object> findAllRecipeByCropNumber();
+	@Query("SELECT new Map(m.recipeNumber as recipeNumber, m.cropNumber as cropNumber, r.name as name) "
+			+ "FROM material m LEFT JOIN recipe r "
+			+ "ON m.recipeNumber = r.recipeNumber "
+			+ "WHERE m.cropNumber = :cropNumber ")
+	public List<Object> findAllRecipeByCropNumber(int cropNumber);
 }
