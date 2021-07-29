@@ -23,13 +23,12 @@ public class UserSettingService {
 
 	public Optional<UserSetting> findByUserNumber(int id) {
 
-		Optional<UserSetting> user = userSettingDAO.findByUserNumber(id);
-		user.ifPresent(selectUser -> {
+		Optional<UserSetting> userSetting = userSettingDAO.findByUserNumber(id);
+		userSetting.ifPresent(selectUser -> {
 			System.out.println(selectUser.getUserNumber());
-			
 		});
 
-		return user;
+		return userSetting;
 	}
 
 	public void updateByUserNumber(int userNumber, UserSetting us) {
