@@ -5,8 +5,8 @@
       <form action="">
         <div class="mb-3 container w-75">
           <label for="" class="form-label d-flex align-items-start">아이디</label>
-          <input type="text" class="form-control mb-3" id="" placeholder="아이디를 입력하세요" v-model="credentials.username">
-          <button>중복 확인</button>
+          <input type="text" class="form-control mb-3" placeholder="아이디를 입력하세요" v-model="credentials.username" @change="IdConfirmation">
+          <button @click.prevent="checkId">중복 확인</button>
           <label for="" class="form-label d-flex align-items-start">비밀번호</label>
           <input type="password" class="form-control mb-3" v-validate="'min:8'" name="min_field" placeholder="최소 8글자 이상 입력하세요" v-model="credentials.password">
           <span v-if="errors.first('min_field')">올바른 정보가 아닙니다</span>
@@ -19,7 +19,8 @@
           <label for="" class="form-label d-flex align-items-start">휴대폰 번호</label>
           <input type="text" class="form-control" v-validate="'digits:11'" name="digits_field" placeholder="휴대폰 번호를 입력하세요" v-model="credentials.phone">
           <span v-if="errors.first('digits_field')">올바른 정보가 아닙니다</span>
-          <button @click="checkPhone">인증번호 받기</button>
+          <button @click.prevent="checkPhone">인증번호 받기</button>
+          <PhoneCertified />
         </div>
         <router-link to="/signupnext"><button class="btn btn-success">회원가입 하기</button></router-link>
       </form>
@@ -29,9 +30,13 @@
 
 <script>
 import axios from 'axios'
+import PhoneCertified from '@/components/Login/PhoneCertified.vue'
 
 export default {
   name: 'Signup',
+  components: {
+    PhoneCertified
+  },
   data() {
     return {
       credentials: {
@@ -41,13 +46,26 @@ export default {
         phone: null
       },
       passwordConfirmation: null,
+      phoneCertified: false,
+      idConfirmation: false
     }
   },
   methods: {
+    IdConfirmation() {
+      this.idConfirmation = false
+      console.log(this.idConfirmation)
+    },
+    checkId() {
+      this.idConfirmation = true
+      console.log(this.idConfirmation)
+    },
     checkPhone() {
-      axios.post('http://localhost:8080/user/phone', this.phone)
+      axios.post('http://localhost:8080/user/phone', {
+        phone: this.credentials.phone
+      })
       .then(res => {
         console.log(res)
+        // const phoneNum = res.data
       })
       .catch(err => {
         console.error(err);
