@@ -32,8 +32,14 @@ const routes = [
     component: () =>
     import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
-// 수정 라우터
-
+  // 수정 라우터
+  
+  {
+    path: "/main",
+    name: "Main",
+    component: () =>
+    import("../views/Main.vue"),
+  },
 {
   path: "/community",
   name: "Community",
