@@ -15,7 +15,7 @@
       </div>
       <div id="post-foot">
         <span>{{ this.post.recommend }}</span>
-        <span>{{ this.comments.length }}</span>
+        <span>{{ this.post.commentCount }}</span>
         <div>
         <!-- <div v-if="this.$store.user.userNumber == this.post.userNumber"> -->
           <span>
@@ -27,18 +27,18 @@
     </div>
     <div id="comments-area">
       <hr />
-      <comment
-        v-for="(comment, index) in comments"
-        :key="index"
-        :v-if="!comment.parent"
-        :comment="comment"
-        @modify-comment="onModifyComment"
-      ></comment>
       <comment-write
         v-if="isModifyShow && this.modifyComment != null"
         :modifyComment="this.modifyComment"
         @modify-comment-cancel="onModifyCommentCancel"
       />
+      <comment
+        v-for="(comment, index) in comments"
+        :key="index"
+        :comment="comment"
+        :v-if="comment.parent!=null"
+        @modify-comment="onModifyComment"
+      ></comment>
       <comment-write :no="this.no"></comment-write>
     </div>
   </div>
@@ -72,6 +72,7 @@ export default {
     });
       axios.get(`comment/${this.no}`).then(({ data }) => {
         this.comments = data;
+        // console.log(data);
       });
   },
   methods: {

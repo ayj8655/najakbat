@@ -1,6 +1,6 @@
 <template>
-  <div v-show="isShow" class="comment">
-    <div class="comment-area">
+  <div class="comment">
+    <div v-show="isShow" class="comment-area">
       <div class="head">
         <span>{{ comment.user_number }}</span>
         <span><img id="messageBtn" /></span>
@@ -19,9 +19,7 @@
         </div>
         <div
           class="btn"
-          v-if="
-            comment.id == this.$store.state.userinfo.id && !comment.isdeleted
-          "
+          v-if="!comment.isdeleted"
         >
           <label @click="modifyCommentView">수정</label> |
           <label @click="deleteComment">삭제</label>
