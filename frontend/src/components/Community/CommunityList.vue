@@ -5,11 +5,11 @@
     </div>
     <div class="menu">
       <div class="category">
-        <span class="all">전체</span>
-        <span class="free">자유</span>
-        <span class="info">정보</span>
-        <span class="question">질문</span>
-        <span class="share">나눔</span>
+        <span class="all" @click="showAllPost">전체</span>
+        <span class="free" @click="changeType(1, '자유')">자유</span>
+        <span class="info" @click="changeType(2, '정보')">정보</span>
+        <span class="question" @click="changeType(3, '질문')">질문</span>
+        <span class="share" @click="changeType(4, '나눔')">나눔</span>
       </div>
       <div class="etc">
         <span class="search">검색</span>
@@ -25,6 +25,7 @@
       <infinite-loading
         @infinite="infiniteHandler"
         spinner="circles"
+        v-if="this.type == 0"
       ></infinite-loading>
     </div>
     <hr class="line1" />
@@ -42,6 +43,7 @@ export default {
     return {
       list: [],
       limit: 0,
+      type: 0,
     };
   },
   components: {
@@ -53,8 +55,23 @@ export default {
     postWrite() {
       this.$router.push("/community/write");
     },
+    showAllPost() {
+      this.type = 0;
+      this.limit = 0;
+      this.list = [];
+    },
+    changeType(type, text) {
+      this.type = type;
+      axios.get(`post/type/${text}`).then(({ res }) => {
+        this.list = res.data;
+      })
+      .catch((error) => {
+          console.log(error);
+        });
+    },
     infiniteHandler($state) {
-      axios.get("post/infinite", {
+      axios
+        .get("post/infinite", {
           params: {
             limit: this.limit,
           },

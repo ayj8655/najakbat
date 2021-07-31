@@ -12,7 +12,7 @@
     <div id="post-foot">
         <span>{{post.view}}</span>
         <span>{{post.recommend}}</span>
-        <span>{{}}</span>
+        <span>{{post.commentCount}}</span>
     </div>
     <hr>
   </div>

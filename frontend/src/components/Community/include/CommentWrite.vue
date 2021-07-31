@@ -42,9 +42,9 @@ export default {
     registComment() {
       axios
         .post(`comment/`, {
-          no: this.no,
-          // userNumber: 1,
-          // userNickname: "hi",
+          postNumber: this.no,
+          userNumber: 1,
+          userNickname: "ssafy",
           content: this.content,
         })
         .then(() => {

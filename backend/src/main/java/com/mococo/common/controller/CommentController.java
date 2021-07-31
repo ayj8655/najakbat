@@ -49,7 +49,7 @@ public class CommentController {
 	//여기 링크 없어서 수정해야됨
 	//무슨 링크지?
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	private ResponseEntity<String> insertComment (@RequestBody Comment comment, @RequestParam("user_number") int user_number) throws IOException {
+	private ResponseEntity<String> insertComment (@RequestBody Comment comment) throws IOException {
 		logger.info("댓글 등록");
 		
 		Date time = new Date();
@@ -57,7 +57,7 @@ public class CommentController {
 		comment.setDate(time);
 		try {
 			
-			comment.setUserNumber(user_number);
+			comment.setUserNumber(1);
 			boolean ret = commentService.insertComment(comment);
 			if(ret==false) {
 				logger.info("댓글 등록 실패");
