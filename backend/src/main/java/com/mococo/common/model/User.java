@@ -24,7 +24,7 @@ public class User {
 	private String id;
 	private String password;
 	private String nickname;
-	private String email;
+	private String phone;
 	@Temporal(TemporalType.TIMESTAMP)	//이거 써야 자동으로 시간 넣어줌
 	private Date joinDate;
 	private String address;

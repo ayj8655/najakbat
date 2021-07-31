@@ -85,7 +85,7 @@ public class UserService {
 	//핸드폰번호로 유저 검색
 	public Optional<User> findByPhone(String phoneNumber) {
 
-		Optional<User> user = userDAO.findByEmail(phoneNumber);
+		Optional<User> user = userDAO.findByPhone(phoneNumber);
 
 		user.ifPresent(selectUser -> {
 			System.out.println(selectUser.getId());

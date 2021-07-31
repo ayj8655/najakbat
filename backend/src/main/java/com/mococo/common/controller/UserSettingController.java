@@ -19,6 +19,8 @@ import com.mococo.common.model.User;
 import com.mococo.common.model.UserSetting;
 import com.mococo.common.service.UserSettingService;
 
+import io.swagger.annotations.ApiOperation;
+
 
 //http://localhost:8080/swagger-ui.html/
 
@@ -37,7 +39,9 @@ public class UserSettingController {
 	
 	
 	//유저세팅을 보내면 한번에 업데이트함
+	
 	@RequestMapping(value = "/setting/notice", method = RequestMethod.PUT)
+	@ApiOperation(value = "유저세팅을 입력하면 상태를 수정하여 성공 실패 여부 반환한다.", response = String.class)
 	private ResponseEntity<String> updateNotice (@RequestBody UserSetting userSetting) throws IOException {
 		logger.info("알림 상태 수정");
 		
@@ -53,6 +57,7 @@ public class UserSettingController {
 	
 	//유저 넘버를 보내주면 알림상태를 반환함
 	@RequestMapping(value = "/setting/notice/{userNumber}", method = RequestMethod.GET)
+	@ApiOperation(value = "유저번호를 입력하면 해당하는 유저의 설정 정보를 반환한다.", response = UserSetting.class)
 	private ResponseEntity<UserSetting> getNotice (@PathVariable int userNumber) throws IOException {
 		logger.info("알림 상태 전송");
 		
@@ -66,14 +71,4 @@ public class UserSettingController {
 		} 
 	}
 	
-	@RequestMapping(value = "/setting/mode", method = RequestMethod.PUT)
-	private ResponseEntity<String> updateMode (@RequestBody UserSetting userSetting) throws IOException {
-		logger.info("다크모드  on/off");
-		
-		return null;
-
-
-	}
-	
-
 }

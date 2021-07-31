@@ -5,11 +5,11 @@
     </div>
     <div class="menu">
       <div class="category">
-        <span class="all">전체</span>
-        <span class="free">자유</span>
-        <span class="info">정보</span>
-        <span class="question">질문</span>
-        <span class="share">나눔</span>
+        <span class="all" @click="showAllPost">전체</span>
+        <span class="free" @click="changeType(1, '자유')">자유</span>
+        <span class="info" @click="changeType(2, '정보')">정보</span>
+        <span class="question" @click="changeType(3, '질문')">질문</span>
+        <span class="share" @click="changeType(4, '나눔')">나눔</span>
       </div>
       <div class="etc">
         <span class="search">검색</span>
@@ -18,13 +18,14 @@
     </div>
     <div class="post-area">
       <list-row
-        v-for="(post, index) in list"
+        v-for="(post, index) in this.list"
         :key="index"
         :post="post"
       ></list-row>
       <infinite-loading
         @infinite="infiniteHandler"
         spinner="circles"
+        v-if="this.type == 0"
       ></infinite-loading>
     </div>
     <hr class="line1" />
@@ -33,7 +34,7 @@
 </template>
 
 <script>
-// import http from "@/util/http-common";
+import axios from "axios";
 import ListRow from "@/components/Community/include/ListRow.vue";
 import InfiniteLoading from "vue-infinite-loading";
 
@@ -42,6 +43,7 @@ export default {
     return {
       list: [],
       limit: 0,
+      type: 0,
     };
   },
   components: {
@@ -53,27 +55,42 @@ export default {
     postWrite() {
       this.$router.push("/community/write");
     },
-    // infiniteHandler($state) {
-      // http.get("/post/", {
-      //   params: {
-      //       limit: this.limit,
-      //     },
-      //   })
-      //   .then((response) => {
-      //     setTimeout(() => {
-      //       if (response.data.length) {
-      //         this.list = this.list.concat(response.data);
-      //         this.limit += 3;
-      //         $state.loaded();
-      //       } else {
-      //         $state.complete();
-      //       }
-      //     }, 1000);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-    // },
+    showAllPost() {
+      this.type = 0;
+      this.limit = 0;
+      this.list = [];
+    },
+    changeType(type, text) {
+      this.type = type;
+      axios.get(`post/type/${text}`).then(({ res }) => {
+        this.list = res.data;
+      })
+      .catch((error) => {
+          console.log(error);
+        });
+    },
+    infiniteHandler($state) {
+      axios
+        .get("post/infinite", {
+          params: {
+            limit: this.limit,
+          },
+        })
+        .then((response) => {
+          setTimeout(() => {
+            if (response.data.length) {
+              this.list = this.list.concat(response.data);
+              this.limit += 3;
+              $state.loaded();
+            } else {
+              $state.complete();
+            }
+          }, 1000);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>

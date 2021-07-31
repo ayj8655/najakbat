@@ -54,7 +54,7 @@ public class UserController {
 	private ResponseEntity<String> idFind(@RequestBody User user) throws IOException {
 		logger.info("id찾기");
 
-		String userPhone = user.getEmail();// db바뀌면 이메일이 아니라 Phone으로수정해야함
+		String userPhone = user.getPhone();// db바뀌면 이메일이 아니라 Phone으로수정해야함
 
 		System.out.println(userPhone);
 
@@ -81,7 +81,7 @@ public class UserController {
 	private ResponseEntity<String> phoneaCertification(@RequestBody User user) throws IOException {
 		logger.info("핸드폰인증");
 
-		String userPhone = user.getEmail();// db바뀌면 이메일이 아니라 Phone으로수정해야함
+		String userPhone = user.getPhone();// db바뀌면 이메일이 아니라 Phone으로수정해야함
 
 		Random rd = new Random();// 랜덤 객체 생성
 		int ran = (rd.nextInt(888888) + 111111);// 111111~999999 사이 랜덤값

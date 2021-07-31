@@ -74,4 +74,22 @@ public class RecipeGuideController {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@RequestMapping(value = "/crop/{recipeNumber}", method = RequestMethod.GET)
+	@ApiOperation(value = "요리 레시피에 들어가는 모든 작물 검색")
+	private ResponseEntity<?> searchAllCropByRecipeNumber(@PathVariable("recipeNumber") String recipeNumberString) throws IOException {
+		logger.info("요리 레시피에 들어가는 모든 작물 검색");
+		
+		try {
+			int recipeNumber = Integer.parseInt(recipeNumberString);
+			List<Object> cropList = recipeService.findAllCropByRecipeNumber(recipeNumber);
+			
+			return new ResponseEntity<>(cropList, HttpStatus.OK);
+			
+		} catch (NumberFormatException e) {
+			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
