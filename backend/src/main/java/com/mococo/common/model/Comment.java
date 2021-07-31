@@ -31,12 +31,12 @@ public class Comment {
 	private int postNumber;
 	private int userNumber;
 	private String userNickname;
-	private String parent;
+	private int parent;
 	private String content;
 	private int recommend;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
-	private boolean isDelete; 
+	private boolean isDelete;
 	
 	@ManyToMany(mappedBy = "comments")
 	private List<User> users = new ArrayList<>();
