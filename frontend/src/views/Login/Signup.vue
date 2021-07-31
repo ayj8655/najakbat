@@ -27,6 +27,7 @@
         <button
          class="btn btn-success"
          :disabled="!(this.check.id && this.check.password && this.check.nickname && this.check.phone && (this.password === this.passwordConfirmation))"
+         @click.prevent=""
         >회원가입 하기</button>
       </form>
     </div>
