@@ -200,7 +200,7 @@ public class PostController {
 	}
 	
 	
-	
+	// 사용자가 게시글 추천을 누르면 게시글의 좋아요가 하나 늘어나고, 몇번 유저가 몇번 게시글에 좋아요를 눌렀는지 post_recommend table에 추가한다.
 	@RequestMapping(value = "/recommend/{postno}", method = RequestMethod.PUT)
 	private ResponseEntity<String> recommendPost (@PathVariable String postno, @RequestParam("user_number") int user_number) throws IOException {
 		
