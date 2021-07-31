@@ -1,34 +1,76 @@
 <template>
-  <div>
-      <button type="button" class="btn btn-primary" :disabled="counting" @click="startCountdown">
-        <countdown v-if="counting" :left-time="5000">
-            <span
-            slot="process"
-            slot-scope="{ timeObj }">
-                {{ timeObj.ceil.s }}
-            </span>
-            <span slot="finish">Done!</span>
-        </countdown>
-        <span v-else>Fetch Verification Code</span>
-      </button>
+  <div class="my-3">
+    <div class="d-flex justify-content-end">
+        <span v-if="!counting && numberConfirmation" class="me-auto">시간이 초과되었습니다</span>
+        <button type="button" class="btn btn-success" :disabled="counting" @click="startCountdown" v-if="!certifiedPhone">
+            <countdown v-if="counting" :left-time="180000" @finish="(countdown) => finish(countdown)">
+                <span
+                slot="process"
+                slot-scope="{ timeObj }">
+                    {{ timeObj.ceil.s }}초 남았습니다
+                </span>
+            </countdown>
+            <span v-else-if="!counting && !numberConfirmation">인증번호 받기</span>
+            <span v-else-if="!counting && numberConfirmation">인증번호 다시받기</span>
+        </button>
+        <button v-else class="btn btn-success" :disabled="certifiedPhone">인증되었습니다</button>
+    </div>
+      <div v-if="counting && !certifiedPhone" class="form-floating mt-3">
+          <input type="text" class="form-control" id="floatingInput" placeholder="Password" v-model="certifiedInput">
+          <label for="floatingInput">인증번호 6자리를 입력하세요</label>
+          <div class="mt-3 d-flex justify-content-end">
+              <span class="me-auto" v-if="!missCertifiedNumber">인증번호가 다릅니다</span>
+              <button class="btn btn-success" @click.prevent="checkCertifiedInput">인증하기</button>
+          </div>
+      </div>
   </div>
 </template>
 
 <script>
+// import axios from 'axios'
+
 export default {
     name: 'PhoneCertified',
+    props: ['phoneNum'],
     data() {
         return {
             counting: false,
+            numberConfirmation: false,
+            certifiedNumber: '123123',
+            certifiedInput: null,
+            certifiedPhone: false,
+            missCertifiedNumber: true
         };
     },
     methods: {
-        startCountdown: function () {
+        startCountdown() {
             this.counting = true;
+            this.numberConfirmation = true
+            // axios.post('http://localhost:8080/user/phone', {
+            //     phone: this.$props.phoneNum
+            // })
+            // .then(res => {
+            //     console.log(res)
+            //     this.certifiedNumber = res.data
+            //     console.log(this.certifiedNumber)
+            // })
+            // .catch(err => {
+            //     console.error(err);
+            // })
         },
-        onCountdownEnd: function () {
-            this.counting = false;
+        finish(countdown) {
+            countdown.attrs.disabled = false
+            this.counting = false
         },
+        checkCertifiedInput() {
+            if(this.certifiedNumber === this.certifiedInput) {
+                this.certifiedPhone = true
+                this.$emit('phonecertified', true)
+            }
+            else {
+                this.missCertifiedNumber = false
+            }
+        }
     },
 
 }

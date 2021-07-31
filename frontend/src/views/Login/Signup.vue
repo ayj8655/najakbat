@@ -4,32 +4,36 @@
       <h2 class="mb-5">회원가입</h2>
       <form action="">
         <div class="mb-3 container w-75">
-          <label for="" class="form-label d-flex align-items-start">아이디</label>
-          <input type="text" class="form-control mb-3" placeholder="아이디를 입력하세요" v-model="credentials.username" @change="IdConfirmation">
-          <button @click.prevent="checkId">중복 확인</button>
-          <label for="" class="form-label d-flex align-items-start">비밀번호</label>
-          <input type="password" class="form-control mb-3" v-validate="'min:8'" name="min_field" placeholder="최소 8글자 이상 입력하세요" v-model="credentials.password">
-          <span v-if="errors.first('min_field')">올바른 정보가 아닙니다</span>
-          <label for="" class="form-label d-flex align-items-start">비밀번호 확인</label>
+          <label class="form-label d-flex align-items-start">아이디</label>
+          <input type="text" class="form-control mb-3" placeholder="아이디를 입력하세요" v-model="username">
+          <label class="form-label d-flex align-items-start">비밀번호</label>
+          <input type="password" class="form-control mb-3" v-validate="'min:8'" name="min_field" placeholder="최소 8글자 이상 입력하세요" v-model="password">
+          <span v-if="errors.first('min_field')">비밀번호가 너무 짧습니다</span>
+          <label class="form-label d-flex align-items-start">비밀번호 확인</label>
           <input type="password" class="form-control  mb-3" placeholder="비밀번호를 한번 더 입력하세요" v-model="passwordConfirmation">
-          <span v-if="credentials.password != passwordConfirmation">비밀번호가 서로 다릅니다</span>
-          <label for="" class="form-label d-flex align-items-start">닉네임</label>
-          <input type="text" class="form-control  mb-3" name="between_field" placeholder="12자 이내로 입력하세요" v-model="credentials.nickname">
-          <span v-if="credentials.nickname && credentials.nickname.length > 12">닉네임이 너무 길어요</span>
-          <label for="" class="form-label d-flex align-items-start">휴대폰 번호</label>
-          <input type="text" class="form-control" v-validate="'digits:11'" name="digits_field" placeholder="휴대폰 번호를 입력하세요" v-model="credentials.phone">
-          <span v-if="errors.first('digits_field')">올바른 정보가 아닙니다</span>
-          <button @click.prevent="checkPhone">인증번호 받기</button>
-          <PhoneCertified />
+          <span v-if="password != passwordConfirmation">비밀번호가 서로 다릅니다</span>
+          <label class="form-label d-flex align-items-start">닉네임</label>
+          <input type="text" class="form-control  mb-3" name="between_field" placeholder="12자 이내로 입력하세요" v-model="nickname">
+          <span v-if="nickname && nickname.length > 12">닉네임이 너무 길어요</span>
+          <label class="form-label d-flex align-items-start">휴대폰 번호</label>
+          <input type="text" class="form-control" v-validate="'digits:11'" name="digits_field" placeholder="휴대폰 번호를 입력하세요" v-model="phone">
+          <!-- <span class="me-auto" v-if="errors.first('digits_field')">올바른 정보가 아닙니다</span> -->
+          <div class="d-flex justify-content-end my-3" v-if="errors.first('digits_field') || !this.phone">
+            <button class="btn btn-success" :disabled=true>인증번호 받기</button>
+          </div>
+          <PhoneCertified :phoneNum="phone" v-else @phonecertified="phonecertified" />
+         
         </div>
-        <router-link to="/signupnext"><button class="btn btn-success">회원가입 하기</button></router-link>
+        <button
+         class="btn btn-success"
+         :disabled="!(this.check.id && this.check.password && this.check.nickname && this.check.phone && (this.password === this.passwordConfirmation))"
+        >회원가입 하기</button>
       </form>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import PhoneCertified from '@/components/Login/PhoneCertified.vue'
 
 export default {
@@ -39,37 +43,40 @@ export default {
   },
   data() {
     return {
-      credentials: {
-        username: null,
-        password: null,
-        nickname: null,
-        phone: null
+      check: {
+        id: true,
+        password: false,
+        nickname: true,
+        phone:false
       },
+      username: null,
+      password: null,
       passwordConfirmation: null,
-      phoneCertified: false,
-      idConfirmation: false
+      nickname: null,
+      phone: null,
     }
   },
   methods: {
-    IdConfirmation() {
-      this.idConfirmation = false
-      console.log(this.idConfirmation)
+    phonecertified() {
+      this.check.phone = true
     },
-    checkId() {
-      this.idConfirmation = true
-      console.log(this.idConfirmation)
+  },
+  watch: {
+    // username() {
+    //   this.check.id = false
+    //   console.log(this.check.id)
+    // },
+    phone() {
+      this.check.phone = false
     },
-    checkPhone() {
-      axios.post('http://localhost:8080/user/phone', {
-        phone: this.credentials.phone
-      })
-      .then(res => {
-        console.log(res)
-        // const phoneNum = res.data
-      })
-      .catch(err => {
-        console.error(err);
-      })
+    passwordConfirmation() {
+      if (this.password && !this.errors.first('min_field')) {
+        if (this.password === this.passwordConfirmation) {
+          this.check.password = true
+          return
+        }
+      }
+      this.check.password = false
     }
   }
 }
