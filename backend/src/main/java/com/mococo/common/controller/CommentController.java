@@ -124,26 +124,27 @@ public class CommentController {
 	}
 	
 	
-//	@RequestMapping(value = "/recommend/{commentno}", method = RequestMethod.PUT)
-//	private ResponseEntity<String> recommentComment (@PathVariable int comment_number, @PathVariable int user_number) throws IOException {
-//		logger.info("댓글 추천");
-//		
-//		try {
-//			
-//			boolean ret = commentService.recommendComment(comment_number,user_number);
-//			if(ret == false) {
-//				logger.info("댓글 추천 실패");
-//				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
-//			}
-//			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-//		} catch (Exception e) {
-//			logger.info("댓글 추천 오류");
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//
-//	}
+	@RequestMapping(value = "/recommend/{commentno}", method = RequestMethod.PUT)
+	private ResponseEntity<String> recommentComment (@PathVariable String commentno, @RequestParam int user_number) throws IOException {
+		
+		
+		try {
+			logger.info("댓글 추천 올리기");
+			int comment_number = Integer.parseInt(commentno);
+			boolean ret = commentService.recommendComment(comment_number,user_number);
+			if(ret == false) {
+				logger.info("댓글 추천 내리기");
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
+			}
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.info("댓글 추천 오류");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
 	
 	
 	

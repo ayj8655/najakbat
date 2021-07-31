@@ -29,7 +29,8 @@ public class User {
 	private Date joinDate;
 	private String address;
 	private int gold;
-	
+
+	// 유저와 post recommend는 N:M관계
 	@ManyToMany
 	@JoinTable(
 			name ="post_recommend",
@@ -38,6 +39,13 @@ public class User {
 			)
 	private List<Post> posts = new ArrayList<>();
 	
-	
+	// 유저와 comment recommend는 N:M관계
+	@ManyToMany
+	@JoinTable(
+			name ="comment_recommend",
+			joinColumns = @JoinColumn(name ="user_number"),
+			inverseJoinColumns = @JoinColumn(name = "comment_number")
+			)
+	private List<Comment> comments = new ArrayList<>();
 
 }
