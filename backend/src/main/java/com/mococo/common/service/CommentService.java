@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mococo.common.dao.CommentDAO;
 import com.mococo.common.dao.CommentRecommendDAO;
+import com.mococo.common.dao.PostDAO;
 import com.mococo.common.dao.PostRecommendDAO;
 import com.mococo.common.model.Comment;
 import com.mococo.common.model.CommentRecommend;
@@ -20,7 +21,10 @@ public class CommentService {
 	
 	@Autowired
 	CommentDAO commentDAO;
-
+	
+	@Autowired
+	PostDAO postDAO;
+	
 	@Autowired
 	CommentRecommendDAO commentrecommendDAO;
 	
@@ -35,7 +39,35 @@ public class CommentService {
 		if(ret.isPresent()) {
 			return false;
 		}
+		
+
+		System.out.println(1);
+		// 게시글에 댓글이 달리거나 댓글에 대댓글 달리면 게시글에 comment_count+1
+		Optional<Post> post = postDAO.findPostByPostNumber(comment.getPostNumber());
+
+		System.out.println(2);
+		int commentCount = post.get().getCommentCount();
+
+		System.out.println(3);
+		post.get().setCommentCount(commentCount+1);
+
+		System.out.println(4);
+		postDAO.save(post.get());
+		System.out.println(5);
+
+
+		// 대댓글이면 바로 상위 댓글에 comment_count+1
+		if(comment.getParent()!=0) {
+			Optional<Comment> c = commentDAO.findCommentByCommentNumber(comment.getParent());
+			commentCount = c.get().getCommentCount();
+			c.get().setCommentCount(commentCount+1);
+			commentDAO.save(c.get());
+		}
+		
+
 		commentDAO.save(comment);
+		
+		
 		return true;
 	}
 

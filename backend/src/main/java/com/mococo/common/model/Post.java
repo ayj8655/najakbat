@@ -23,6 +23,7 @@ public class Post {
 	private int postType; // 1:자유, 2:정보, 3:질문, 4:나눔
 	private String title;
 	private int recommend;
+	private int commentCount;
 	private int view;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
