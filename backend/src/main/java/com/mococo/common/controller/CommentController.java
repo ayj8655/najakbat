@@ -46,10 +46,10 @@ public class CommentController {
 		
 	}
 	
-	//여기 링크 없어서 수정해야됨
-	//무슨 링크지?
+	// request param 은 댓글이 게시글의 댓글인지 댓글의 대댓글인지 구분. 게시글의 댓글: parent=0, 댓글의 대댓글: parent = 댓글의 comment_number 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	private ResponseEntity<String> insertComment (@RequestBody Comment comment, @RequestParam("user_number") int user_number) throws IOException {
+	private ResponseEntity<String> insertComment (@RequestBody Comment comment, @RequestParam("user_number") int user_number
+													, @RequestParam("parent") int parent, @RequestParam("postno") int postno) throws IOException {
 		logger.info("댓글 등록");
 		
 		Date time = new Date();
@@ -58,11 +58,18 @@ public class CommentController {
 		try {
 			
 			comment.setUserNumber(user_number);
+			comment.setPostNumber(postno);
+			comment.setParent(parent);
+
 			boolean ret = commentService.insertComment(comment);
 			if(ret==false) {
 				logger.info("댓글 등록 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
+			
+			
+			
+			
 			
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {

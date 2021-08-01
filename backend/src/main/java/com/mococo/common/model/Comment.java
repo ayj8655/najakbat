@@ -32,6 +32,7 @@ public class Comment {
 	private int userNumber;
 	private String userNickname;
 	private int parent;
+	private int commentCount;
 	private String content;
 	private int recommend;
 	@Temporal(TemporalType.TIMESTAMP)
