@@ -25,6 +25,8 @@ import com.mococo.common.model.UserSetting;
 import com.mococo.common.service.UserService;
 import com.mococo.common.service.UserSettingService;
 
+import io.swagger.annotations.ApiOperation;
+
 //http://localhost:8080/swagger-ui.html/
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
@@ -49,8 +51,62 @@ public class UserController {
 		return "Main";
 	}
 
+	//비밀번호 찾기
+	
+	
+	//아이디 받아서 중복확인 
+	@RequestMapping(value = "/confirmId/{userId}", method = RequestMethod.GET)
+	@ApiOperation(value = "아이디 입력하면 중복여부 확인후 성공 실패 반환", response = String.class)
+	private ResponseEntity<String> confirmUserId(@PathVariable String userId) throws IOException {
+		logger.info("아이디 중복체크");
+
+		try {
+			Optional<User> user = userService.findById(userId);
+			
+			if (!user.isPresent()) {
+				logger.info("id중복 없음");
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
+			}
+			
+			System.out.println("id중복 있음");
+			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println("id중복 검사 오류");
+			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
+		}
+
+	}
+	
+	//번호 받아서 중복확인
+	@RequestMapping(value = "/confirmPhone/{userPhone}", method = RequestMethod.GET)
+	@ApiOperation(value = "핸드폰번호 입력하면 중복여부 확인후 성공 실패 반환", response = String.class)
+	private ResponseEntity<String> confirmUserPhone(@PathVariable String userPhone) throws IOException {
+		logger.info("핸드폰번호 중복체크");
+
+		try {
+			Optional<User> user = userService.findByPhone(userPhone);
+			
+			if (!user.isPresent()) {
+				logger.info("핸드폰번호중복 없음");
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
+			}
+			
+			System.out.println("핸드폰번호중복 있음");
+			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println("핸드폰번호중복 검사 오류");
+			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
+		}
+
+	}
+	
+	
+	
 	// 핸드폰번호 받고 받은 폰 번호로 아이디 찾고 찾은 아이디 전송 (핸드폰번호만 받으면됨)
 	@RequestMapping(value = "/idFind", method = RequestMethod.POST)
+	@ApiOperation(value = "핸드폰번호를 받아서 아이디를 찾고 성공시 id 실패시 fail 반환", response = String.class)
 	private ResponseEntity<String> idFind(@RequestBody User user) throws IOException {
 		logger.info("id찾기");
 
@@ -78,6 +134,7 @@ public class UserController {
 
 	// 핸드폰번호 받음 -> 랜덤숫자만듦 -> 메시지 보냄 -> 숫자 프론트에 보냄
 	@RequestMapping(value = "/phone", method = RequestMethod.POST)
+	@ApiOperation(value = "헨드폰인증 -> 번호입력후 인증번호 생성 후 메시지보내고 인증번호를 프론트로 전송", response = String.class)
 	private ResponseEntity<String> phoneaCertification(@RequestBody User user) throws IOException {
 		logger.info("핸드폰인증");
 
@@ -110,6 +167,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@ApiOperation(value = "회원가입- 유저정보로 가입하고 자동으로 세팅까지 생성한다 성공실패 반환.", response = String.class)
 	private ResponseEntity<String> signup(@RequestBody User user) throws IOException {
 		// 우선 회원가입 하고 가입한 아이디로 유저를 찾은다음 찾은 유저에서 유저넘버를 찾고 그걸 기준으로 세팅을 만들고 그걸 새로 저장
 		logger.info("회원가입");
@@ -140,6 +198,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+	@ApiOperation(value = "유저 아이디를 받아 검색된 유저 정보 반환.", response = User.class)
 	private ResponseEntity<User> searchUser(@PathVariable String userId) throws IOException {
 		logger.info("회원검색");
 
@@ -154,6 +213,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	@ApiOperation(value = "모든 회원정보 검색.", response = User.class)
 	private List<User> searchAllUser() throws IOException {
 		logger.info("전체회원검색");
 		return userService.findAll();
@@ -161,6 +221,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/{userNumber}", method = RequestMethod.DELETE)
+	@ApiOperation(value = "유저번호를 입력하면 회원탈퇴 진행.", response = String.class)
 	private ResponseEntity<String> withdraw(@PathVariable int userNumber) throws IOException {
 		logger.info("회원 탈퇴");
 
@@ -181,6 +242,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.PUT)
+	@ApiOperation(value = "유저정보를 입력받고 회원정보를 수정한다. 성공실패 반환.", response = String.class)
 	private ResponseEntity<String> updateUser(@RequestBody User user) throws IOException {
 		logger.info("회원수정");
 		try {
@@ -202,6 +264,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/login", method = { RequestMethod.POST })
+	@ApiOperation(value = "아이디 비밀번호를 입력받아 비교후 해당하는 유저 정보 반환", response = User.class)
 	private ResponseEntity<User> login(@RequestBody Map<String, String> map) {
 		logger.info("login 메소드 실행");
 		System.out.println(map.get("userId"));
@@ -220,9 +283,10 @@ public class UserController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 
-		return null;
+		
 	}
 
 }
