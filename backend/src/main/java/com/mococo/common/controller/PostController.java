@@ -1,10 +1,18 @@
 package com.mococo.common.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +24,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mococo.common.model.Post;
+import com.mococo.common.model.PostPhoto;
+import com.mococo.common.service.PostPhotoService;
 import com.mococo.common.service.PostService;
 
 
@@ -37,6 +50,9 @@ public class PostController {
 	
 	@Autowired
 	PostService postService;
+	
+	@Autowired
+	PostPhotoService postphotoService;
 	
 	//하나의 게시물의 내용 조회
 	@RequestMapping(value = "/{no}", method = RequestMethod.GET)
@@ -133,18 +149,75 @@ public class PostController {
 	
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	private ResponseEntity<String> insertPost (@RequestBody Post post) throws IOException {
-		
+	private ResponseEntity<String> insertPost (@RequestParam (value = "type")String type,
+												@RequestParam(value = "content")String content,
+												@RequestParam(value = "title")String title,
+												@RequestParam(value = "keyword")String keyword,
+												@RequestParam(value = "user_nickname")String user_nickname,
+												@RequestParam(value = "user_number")int user_number,
+												@RequestPart MultipartFile mfile) throws IOException {
+		Post post = new Post();
+		post.setContent(content);
+		int postType=0;
+		if(type.equals("자유")) {
+			postType=1;
+		} else if(type.equals("정보")) {
+			postType=2;
+		} else if(type.equals("질문")) {
+			postType=3;
+		} else if(type.equals("나눔")) {
+			postType=4;
+		}
+		post.setPostType(postType);
+		post.setTitle(title);
+		post.setKeyword(keyword);
+		post.setUserNickname(user_nickname);
+		post.setUserNumber(user_number);
 		Date time = new Date();
 		post.setDate(time);
+	
+		
+		
+		List<PostPhoto> photoInfos = new ArrayList<PostPhoto>();
 		try {
 			logger.info("게시글 등록");
-			System.out.println(post);
-			boolean ret = postService.insertPost(post);
-			if(ret==false) {
+			
+			//for(MultipartFile mfile : files) {
+				PostPhoto photo = new PostPhoto();
+				String originalFileName = mfile.getOriginalFilename();
+				if (!originalFileName.isEmpty()) {
+					String sourceFileName = mfile.getOriginalFilename();
+					String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase(); 
+					File destinationFile; 
+	        		String destinationFileName;
+	        		String fileUrl = "C:\\SSAFY\\Mococo\\backend\\src\\main\\resources\\photos\\";
+	        		do { 
+	            			destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension; 
+	            			destinationFile = new File(fileUrl + destinationFileName); 
+	        		} while (destinationFile.exists()); 
+	        
+	        		destinationFile.getParentFile().mkdirs(); 
+	        		mfile.transferTo(destinationFile);
+	        
+	        		photo.setSaveFile(destinationFileName);
+	        		photo.setOriginFile(sourceFileName);
+	        		photo.setSaveFolder(fileUrl);
+	        		
+				}
+
+				Post ret = postService.insertPost(post);
+				
+				photoInfos.add(photo);
+				photo.setPost(ret);
+				postphotoService.save(photo);
+			//}
+	
+			if(ret==null) {
 				logger.info("게시글 등록 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
+			
+			
 			
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {

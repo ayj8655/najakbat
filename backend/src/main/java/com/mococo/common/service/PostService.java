@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
@@ -54,13 +56,15 @@ public class PostService {
 		return posts;
 	}	
 	
-	public boolean insertPost(Post post) {
+	public Post insertPost(Post post) {
 		Optional<Post> ret = postDAO.findPostByPostNumber(post.getPostNumber());
 		if(ret.isPresent()) {
-			return false;
+			return null;
 		}
-		postDAO.save(post);
-		return true;
+		
+		
+		Post p = postDAO.save(post);
+		return p;
 	}
 	
 	public boolean updatePost(Post post) {
