@@ -10,7 +10,7 @@ import lombok.*;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity(name="post")
 public class Post {
 
@@ -31,6 +31,18 @@ public class Post {
 	private String keyword;
 	private boolean isDelete; // 게시글이 지워졌는지 여부 - 지워졌어도 db에는 존재
 	
+	
 	 @ManyToMany(mappedBy = "posts")
 	 private List<User> users = new ArrayList<>();
+	 
+	 
+	 
+     @OneToMany(
+     	   mappedBy = "post",
+     	   cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+     	   orphanRemoval = true
+     )
+     private List<PostPhoto> photos = new ArrayList<>();
+     
+ 	
 }
