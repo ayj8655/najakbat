@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.UserCrop;
+import com.mococo.common.model.UserCropRecord;
+import com.mococo.common.service.UserCropRecordService;
 import com.mococo.common.service.UserCropService;
 
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +34,9 @@ public class UserCropController {
 	
 	@Autowired
 	UserCropService userCropService;
+	
+	@Autowired
+	UserCropRecordService userCropRecordService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserCropController.class);
 	private static final String SUCCESS = "success";
@@ -93,13 +98,47 @@ public class UserCropController {
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	@ApiOperation(value = "작물 정보 조회")
+	@ApiOperation(value = "모든 작물 정보 조회")
 	private ResponseEntity<?> searchCrop (@RequestParam int userNumber) throws IOException {
-		logger.info("작물 정보 조회");
+		logger.info("모든 작물 정보 조회");
 		
 		try {
 			List<UserCrop> userCropList = userCropService.findAllByUserNumber(userNumber);
 			return new ResponseEntity<>(userCropList, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/record", method = RequestMethod.POST)
+	@ApiOperation(value = "작물 상태 기록")
+	private ResponseEntity<String> insertCropRecord (@RequestBody UserCropRecord userCropRecord) throws IOException {
+		logger.info("작물 상태 기록");
+		
+		try {
+			userCropRecord.setRecordDate(new Date());
+			boolean result = userCropRecordService.insertCropRecord(userCropRecord);
+			
+			if (result) {
+				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+			}
+			
+		} catch(Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/record", method = RequestMethod.GET)
+	@ApiOperation(value = "해당 작물의 모든 상태 기록 조회")
+	private ResponseEntity<?> searchAllCropRecord (@RequestParam int userCropNumber) throws IOException {
+		logger.info("해당 작물의 모든 상태 기록 조회");
+		
+		try {
+			List<UserCropRecord> userCropRecordList = userCropRecordService.findAllByUserCropNumber(userCropNumber);
+			return new ResponseEntity<>(userCropRecordList, HttpStatus.OK);
 			
 		} catch (Exception e) {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
