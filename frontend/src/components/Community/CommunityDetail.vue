@@ -5,8 +5,11 @@
         <div id="category"></div>
         <div>{{ this.post.title }}</div>
         <div>
-          <span>{{ this.post.userNickname }}</span>
-          <span>{{ this.post.view }} | {{ this.post.regtime }}</span>
+          <span>{{ this.post.userNickname }}</span> |
+          <span>
+            <!-- <img src="@/assets/view.png"/> -->
+            {{ this.post.view }} | {{ this.post.regtime }}
+          </span>
         </div>
         <hr />
       </div>
@@ -14,31 +17,31 @@
         <div v-html="enterToBr(this.post.content)"></div>
       </div>
       <div id="post-foot">
-        <span>{{ this.post.recommend }}</span>
-        <span>{{ this.post.commentCount }}</span>
+        <span><img />{{ this.post.recommend }}</span> |
+        <span>
+          <!-- <img src="@/assets/comment.png"/> -->
+          {{ this.post.commentCount }}
+        </span>
         <div>
-        <!-- <div v-if="this.$store.user.userNumber == this.post.userNumber"> -->
-          <span>
-            <div class="modifyBtn" @click="modifyPost">수정</div>
-            <div class="deleteBtn" @click="deletePost">삭제</div>
-          </span>
+          <!-- <div v-if="this.$store.user.userNumber == this.post.userNumber"> -->
+          <span class="modifyBtn" @click="modifyPost">수정</span> |
+          <span class="deleteBtn" @click="deletePost">삭제</span>
         </div>
       </div>
     </div>
     <div id="comments-area">
       <hr />
+      <comment
+        v-for="(comment, index) in comments"
+        :key="index"
+        :comment="comment"
+        @modify-comment="onModifyComment"
+      ></comment>
       <comment-write
         v-if="isModifyShow && this.modifyComment != null"
         :modifyComment="this.modifyComment"
         @modify-comment-cancel="onModifyCommentCancel"
       />
-      <comment
-        v-for="(comment, index) in comments"
-        :key="index"
-        :comment="comment"
-        :v-if="comment.parent!=null"
-        @modify-comment="onModifyComment"
-      ></comment>
       <comment-write :no="this.no"></comment-write>
     </div>
   </div>
@@ -70,10 +73,10 @@ export default {
     axios.get(`post/${this.no}`).then(({ data }) => {
       this.post = data;
     });
-      axios.get(`comment/${this.no}`).then(({ data }) => {
-        this.comments = data;
-        // console.log(data);
-      });
+    axios.get(`comment/${this.no}`).then(({ data }) => {
+      this.comments = data;
+      console.log(data);
+    });
   },
   methods: {
     enterToBr(str) {
@@ -83,13 +86,13 @@ export default {
       this.$router.push(`/community/modify/${this.post.postNumber}`);
     },
     deletePost() {
-        if (confirm("정말로 삭제하시겠습니까?")) {
-          axios.delete(`post/${this.post.postNumber}`).then(() => {
-            alert("삭제되었습니다.");
-            this.$router.push("/community/list");
-          });
-        }
-      },
+      if (confirm("정말로 삭제하시겠습니까?")) {
+        axios.delete(`post/${this.post.postNumber}`).then(() => {
+          alert("삭제되었습니다.");
+          this.$router.push("/community/list");
+        });
+      }
+    },
     onModifyComment(comment) {
       this.modifyComment = comment;
       this.isModifyShow = true;

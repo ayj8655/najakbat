@@ -1,17 +1,6 @@
 <template>
   <div>
-    <div v-if="this.modifyComment != null" class="regist_form">
-      <textarea
-        id="content"
-        name="content"
-        v-model="modifyComment.content"
-        cols="35"
-        rows="2"
-      ></textarea>
-      <button class="small" @click="updateCommentCancel">취소</button>
-      <button class="small" @click="updateComment">수정</button>
-    </div>
-    <div v-else class="regist_form">
+    <div class="regist_form">
       <textarea
         id="content"
         name="content"
@@ -43,8 +32,8 @@ export default {
       axios
         .post(`comment/`, {
           postNumber: this.no,
-          userNumber: 1,
-          userNickname: "ssafy",
+          // userNumber: 1,
+          // userNickname: "ssafy",
           content: this.content,
         })
         .then(() => {
