@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.UserCrop;
 import com.mococo.common.model.UserCropRecord;
+import com.mococo.common.model.WaterRecord;
 import com.mococo.common.service.UserCropRecordService;
 import com.mococo.common.service.UserCropService;
+import com.mococo.common.service.WaterRecordService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -38,6 +40,9 @@ public class UserCropController {
 	@Autowired
 	UserCropRecordService userCropRecordService;
 	
+	@Autowired
+	WaterRecordService waterRecordService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(UserCropController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
@@ -46,7 +51,7 @@ public class UserCropController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ApiOperation(value = "작물 등록")
-	private ResponseEntity<String> insertCrop (@RequestBody UserCrop userCrop) throws IOException {
+	private ResponseEntity<String> insertCrop(@RequestBody UserCrop userCrop) throws IOException {
 		logger.info("작물 등록");
 		
 		try {
@@ -66,7 +71,7 @@ public class UserCropController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.DELETE)
 	@ApiOperation(value = "작물 삭제")
-	private ResponseEntity<String> deleteCrop (@RequestBody int userCropNumber) throws IOException {
+	private ResponseEntity<String> deleteCrop(@RequestBody int userCropNumber) throws IOException {
 		logger.info("작물 삭제");
 		
 		try {
@@ -80,7 +85,7 @@ public class UserCropController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.PUT)
 	@ApiOperation(value = "작물 정보 수정")
-	private ResponseEntity<String> updateCrop (@RequestBody UserCrop userCrop) throws IOException {
+	private ResponseEntity<String> updateCrop(@RequestBody UserCrop userCrop) throws IOException {
 		logger.info("작물 정보 수정");
 		
 		try {
@@ -99,7 +104,7 @@ public class UserCropController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@ApiOperation(value = "모든 작물 정보 조회")
-	private ResponseEntity<?> searchCrop (@RequestParam int userNumber) throws IOException {
+	private ResponseEntity<?> searchCrop(@RequestParam int userNumber) throws IOException {
 		logger.info("모든 작물 정보 조회");
 		
 		try {
@@ -113,7 +118,7 @@ public class UserCropController {
 	
 	@RequestMapping(value = "/record", method = RequestMethod.POST)
 	@ApiOperation(value = "작물 상태 기록")
-	private ResponseEntity<String> insertCropRecord (@RequestBody UserCropRecord userCropRecord) throws IOException {
+	private ResponseEntity<String> insertCropRecord(@RequestBody UserCropRecord userCropRecord) throws IOException {
 		logger.info("작물 상태 기록");
 		
 		try {
@@ -133,12 +138,46 @@ public class UserCropController {
 	
 	@RequestMapping(value = "/record", method = RequestMethod.GET)
 	@ApiOperation(value = "해당 작물의 모든 상태 기록 조회")
-	private ResponseEntity<?> searchAllCropRecord (@RequestParam int userCropNumber) throws IOException {
+	private ResponseEntity<?> searchAllCropRecord(@RequestParam int userCropNumber) throws IOException {
 		logger.info("해당 작물의 모든 상태 기록 조회");
 		
 		try {
 			List<UserCropRecord> userCropRecordList = userCropRecordService.findAllByUserCropNumber(userCropNumber);
 			return new ResponseEntity<>(userCropRecordList, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/water", method = RequestMethod.POST)
+	@ApiOperation(value = "해당 작물에 물을 준 것으로 처리")
+	private ResponseEntity<String> insertWaterRecord(@RequestBody int userCropNumber) throws IOException {
+		logger.info("해당 작물에 물을 준 것으로 처리");
+		
+		try {
+			WaterRecord waterRecord = new WaterRecord(userCropNumber, new Date());
+			boolean result = waterRecordService.insertWaterRecord(waterRecord);
+			
+			if (result) {
+				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+			}
+			
+		} catch(Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/water", method = RequestMethod.GET)
+	@ApiOperation(value = "해당 작물에게 물 준 기록 조회")
+	private ResponseEntity<?> searchAllWaterRecord(@RequestParam int userCropNumber) throws IOException {
+		logger.info("해당 작물에게 물 준 기록 조회");
+		
+		try {
+			List<WaterRecord> waterRecordList = waterRecordService.findAllByUserCropNumber(userCropNumber);
+			return new ResponseEntity<>(waterRecordList, HttpStatus.OK);
 			
 		} catch (Exception e) {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
