@@ -1,6 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import router from "../router"
+
 Vue.use(Vuex);
 axios.defaults.baseURL = 'http://localhost:8080/'
 export default new Vuex.Store({
@@ -18,6 +20,9 @@ export default new Vuex.Store({
 
     // Alerts 변수
     searchNotices: '',
+
+    // signup 정보
+    userId: localStorage.getItem('userId') || '',
   },
   mutations: {
 
@@ -32,7 +37,7 @@ export default new Vuex.Store({
 
     GET_SEARCH_NOTICE(state, searchNotice) {
       state.searchNotices = searchNotice
-    }
+    },
   },
 
   actions: {
@@ -78,9 +83,33 @@ export default new Vuex.Store({
         .catch(err => {
           console.error(err)
         })
-      }
+      },
     
-    
+      // Signup actions
+      signup({ commit }, credentials) {
+        // console.log(credentials);
+        axios.post('user/', {
+          id: credentials[0],
+          password: credentials[1],
+          nickname: credentials[2],
+          phone: credentials[3]
+        })
+        .then(res => {
+          console.log(res.data);
+          commit
+          axios.get(`user/${credentials[0]}/`)
+          .then(res => {
+            localStorage.setItem('userId', res.data.id)
+            router.push({ name: 'SignupNext' })
+          })
+        .catch(err => {
+            console.error(err);
+          })
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      },
   },
 
   modules: {},

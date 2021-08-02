@@ -5,7 +5,7 @@
       <form action="">
         <div class="mb-3 container w-75 text-center">
             <div class="my-5">
-                <div><strong>닉네임</strong>님,</div>
+                <div><strong>{{ this.nickname }}</strong>님,</div>
                 <p>회원가입을 축하드립니다.</p>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                                     <option value="광주특별시">광주특별시</option>
                                     <option value="제주특별자치도">제주특별자치도</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-if="this.region === '서울특별시'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-if="this.userInformation.region === '서울특별시'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="강남구">강남구</option>
                                     <option value="강동구">강동구</option>
@@ -74,7 +74,7 @@
                                     <option value="중구">중구</option>
                                     <option value="중랑구">중랑구</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '인천광역시'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '인천광역시'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="강화군">강화군</option>
                                     <option value="계양구">계양구</option>
@@ -87,7 +87,7 @@
                                     <option value="옹진군">옹진군</option>
                                     <option value="중구">중구</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '경기도'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '경기도'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="가평군">가평군</option>
                                     <option value="고양시">고양시</option>
@@ -121,7 +121,7 @@
                                     <option value="하남시">하남시</option>
                                     <option value="화성시">화성시</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '강원도'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '강원도'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="강릉시">강릉시</option>
                                     <option value="고성군">고성군</option>
@@ -141,7 +141,7 @@
                                     <option value="화천군">화천군</option>
                                     <option value="횡성군">횡성군</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '충청북도'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '충청북도'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="괴산군">괴산군</option>
                                     <option value="단양군">단양군</option>
@@ -155,7 +155,7 @@
                                     <option value="청주시">청주시</option>
                                     <option value="충주시">충주시</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '충청남도'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '충청남도'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="계룡시">계룡시</option>
                                     <option value="공주시">공주시</option>
@@ -173,7 +173,7 @@
                                     <option value="태안군">태안군</option>
                                     <option value="홍성군">홍성군</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '대전광역시'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '대전광역시'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="대덕구">대덕구</option>
                                     <option value="동구">동구</option>
@@ -181,7 +181,7 @@
                                     <option value="유성구">유성구</option>
                                     <option value="중구">중구</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '경상북도'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '경상북도'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="경산시">경산시</option>
                                     <option value="경주시">경주시</option>
@@ -207,7 +207,7 @@
                                     <option value="칠곡군">칠곡군</option>
                                     <option value="포항시">포항시</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '경상남도'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '경상남도'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="거제시">거제시</option>
                                     <option value="거창군">거창군</option>
@@ -228,7 +228,7 @@
                                     <option value="함양군">함양군</option>
                                     <option value="합천군">합천군</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '대구광역시'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '대구광역시'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="남구">남구</option>
                                     <option value="달서구">달서구</option>
@@ -239,7 +239,7 @@
                                     <option value="중구">중구</option>
                                     <option value="달성군">달성군</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '울산광역시'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '울산광역시'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="남구">남구</option>
                                     <option value="동구">동구</option>
@@ -247,7 +247,7 @@
                                     <option value="중구">중구</option>
                                     <option value="울주군">울주군</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '부산광역시'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '부산광역시'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="강서구">강서구</option>
                                     <option value="금정구">금정구</option>
@@ -266,7 +266,7 @@
                                     <option value="해운대구">해운대구</option>
                                     <option value="기장군">기장군</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '전라북도'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '전라북도'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="고창군">고창군</option>
                                     <option value="군산시">군산시</option>
@@ -283,7 +283,7 @@
                                     <option value="정읍시">정읍시</option>
                                     <option value="진안군">진안군</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '전라남도'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '전라남도'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="강진군">강진군</option>
                                     <option value="고흥군">고흥군</option>
@@ -308,7 +308,7 @@
                                     <option value="해남군">해남군</option>
                                     <option value="화순군">화순군</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '광주광역시'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '광주광역시'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="광산구">광산구</option>
                                     <option value="남구">남구</option>
@@ -316,31 +316,30 @@
                                     <option value="북구">북구</option>
                                     <option value="서구">서구</option>
                                 </select>
-                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.region === '제주특별자치도'" @change="selectCity($event)">
+                                <select class="form-select form-select-lg m-2" aria-label=".form-select-lg example" v-else-if="this.userInformation.region === '제주특별자치도'" @change="selectCity($event)">
                                     <option value="" selected>시/군/구</option>
                                     <option value="서귀포시">서귀포시</option>
                                     <option value="제주시">제주시</option>
                                 </select>
                             </div>
                             <div class="modal-footer">
-                                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                                <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="saveRegion()" v-if="this.region === '세종특별자치시'">저장</button>
-                                <button type="button" class="btn btn-secondary" v-else-if="!this.region || !this.city">저장</button>
-                                <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="saveRegion()" v-else>저장</button>
+                                <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="saveRegion()" v-if="this.userInformation.region === '세종특별자치시'">저장</button>
+                                <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="saveRegion()" v-else :disabled="!this.userInformation.region || !this.userInformation.city">저장</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="container mb-5">
-                <div v-if="this.region === '세종'">
-                    지역이 <b>{{ this.region }}</b>로 설정되었습니다.
+                <div v-if="this.userInformation.region === '세종특별자치시'">
+                    지역이 <b>{{ this.userInformation.region }}</b>로 설정되었습니다.
                 </div>
-                <div v-else-if="this.region && this.city">
-                    지역이 <b>{{ this.region }}</b> / <b>{{ this.city }}</b>(으)로 설정되었습니다.
+                <div v-else-if="this.userInformation.region && this.userInformation.city">
+                    지역이 <b>{{ this.userInformation.region }}</b> / <b>{{ this.userInformation.city }}</b>(으)로 설정되었습니다.
                 </div>
             </div>
-        <router-link to=""><button class="btn btn-success">서비스 시작</button></router-link>
+        <button class="btn btn-success" @click.prevent="saveAddress">서비스 시작</button>
+        <p class="my-3"><router-link to="/">나중에 설정하기</router-link></p>
       </form>
     </div>
 
@@ -348,34 +347,78 @@
 </template>
 
 <script>
+import axios from "axios"
+
 export default {
     name: "SignupNext",
     data() {
         return {
-            region: '',
-            city: ''
+            userInformation: {
+                region: null,
+                city: null,
+            },
+            address: null,
+            userNumber: null,
+            id: null,
+            password: null,
+            nickname: null,
+            phone: null,
+            joinDate: null,
         }
     },
     methods: {
         selectRegion(event) {
-            // console.log(event.target.value);
-            this.region = event.target.value
-            // console.log(this.region);
-            this.city = ''
+            this.userInformation.region = event.target.value
+            this.userInformation.city = null
         },
         selectCity(event) {
-            // console.log(event.target.value)
-            this.city = event.target.value
+            this.userInformation.city = event.target.value
         },
         saveRegion() {
-            // console.log(event);
-            console.log(this.region)
-            console.log(this.city)
+            this.address = this.userInformation.region + this.userInformation.city
+        },
+        saveAddress() {
+            axios.put('http://localhost:8080/user/',{
+                userNumber: this.userNumber,
+                id: this.id,
+                password: this.password,
+                nickname: this.nickname,
+                phone: this.phone,
+                joinDate: this.joinDate,
+                address: this.address
+            })
+            .then(res => {
+                console.log(res)
+            })
+            .catch(err => {
+                console.error(err);
+            })
         }
+    },
+    created() {
+        axios.get(`http://localhost:8080/user/${localStorage.getItem('userId')}/`)
+        .then(res => {
+            this.userNumber = res.data.userNumber
+            this.id = res.data.id
+            this.password = res.data.password
+            this.nickname = res.data.nickname
+            this.phone = res.data.phone
+            this.joinDate = res.data.joinDate
+        })
+        .catch(err => {
+            console.error(err);
+        })
     }
 }
 </script>
 
-<style>
-
+<style scoped>
+.mycontainer {
+  background: none;
+  /* width: 500px; */
+  /* margin: 8rem auto 0; */
+  /* text-align: center; */
+  box-shadow: 0 1rem 1rem 0 rgba(0, 0, 0, .15);
+  position: relative;
+}
 </style>
