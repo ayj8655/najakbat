@@ -17,7 +17,6 @@
           <span v-if="nickname && nickname.length > 12">닉네임이 너무 길어요</span>
           <label class="form-label d-flex align-items-start">휴대폰 번호</label>
           <input type="text" class="form-control" v-validate="'digits:11'" name="digits_field" placeholder="휴대폰 번호를 입력하세요" v-model="phone">
-          <!-- <span class="me-auto" v-if="errors.first('digits_field')">올바른 정보가 아닙니다</span> -->
           <div class="d-flex justify-content-end my-3" v-if="errors.first('digits_field') || !this.phone">
             <button class="btn btn-success" :disabled=true>인증번호 받기</button>
           </div>

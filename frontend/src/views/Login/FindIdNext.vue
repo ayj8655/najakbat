@@ -3,7 +3,7 @@
     <div class="mycontainer py-4 text-center">
       <div class="my-5">
         <p>회원님의 아이디는</p>
-        <h4>아이디</h4>
+        <h4>{{ viewId }}</h4>
         <p>입니다</p>
       </div>
       <div class="d-flex flex-row-reverse">
@@ -17,7 +17,18 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
+  name: 'FindIdNext',
+  computed: {
+    ...mapState([
+      'myId'
+    ]),
+    viewId() {
+      return this.myId
+    }
+  }
 
 }
 </script>

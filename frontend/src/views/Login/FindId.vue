@@ -4,20 +4,42 @@
       <h2 class="mb-5">아이디 찾기</h2>
       <form action="">
         <div class="mb-3 container w-75">
-          <label for="" class="form-label d-flex align-items-start">이메일</label>
-          <input type="text" class="form-control mb-3" id="" placeholder="이메일을 입력하세요">
-          <label for="" class="form-label d-flex align-items-start">인증번호</label>
-          <input type="text" class="form-control mb-3" id="" placeholder="인증번호를 입력하세요">
+          <label class="form-label d-flex align-items-start">휴대폰 번호</label>
+          <input type="text" class="form-control" v-validate="'digits:11'" name="digits_field" placeholder="휴대폰 번호를 입력하세요" v-model="phone">
+          <div class="d-flex justify-content-end my-3" v-if="errors.first('digits_field') || !this.phone">
+            <button class="btn btn-success" :disabled=true>인증번호 받기</button>
+          </div>
+          <PhoneCertified :phoneNum="phone" v-else @phonecertified="phonecertified" />
         </div>
-        <router-link to="/findidnext"><button class="btn btn-success">아이디 찾기</button></router-link>
+        <button class="btn btn-success" :disabled="!checkPhone" @click.prevent="findMyId(phone)">아이디 찾기</button>
       </form>
     </div>
   </div>
 </template>
 
 <script>
-export default {
+import PhoneCertified from '@/components/Login/PhoneCertified.vue'
+import { mapActions } from 'vuex'
 
+export default {
+  name: 'FindId',
+  components: {
+    PhoneCertified,
+  },
+  data() {
+    return {
+      checkPhone: false,
+      phone: null
+    }
+  },
+  methods: {
+    ...mapActions([
+      'findMyId'
+    ]),
+    phonecertified() {
+      this.checkPhone = true
+    },
+  }
 }
 </script>
 
