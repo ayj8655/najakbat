@@ -51,6 +51,13 @@ public class UserController {
 		return "Main";
 	}
 
+	
+	
+	
+	
+	
+	
+	
 	//비밀번호 찾기
 	
 	

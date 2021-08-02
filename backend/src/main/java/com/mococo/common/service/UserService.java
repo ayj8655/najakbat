@@ -50,9 +50,7 @@ public class UserService {
 		}
 	}
 	
-	
-	
-	
+
 	
 	public List<User> findAll() {
 		List<User> user = new ArrayList<>();

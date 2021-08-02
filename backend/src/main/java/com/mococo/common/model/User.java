@@ -3,6 +3,7 @@ package com.mococo.common.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -29,6 +30,7 @@ public class User {
 	private Date joinDate;
 	private String address;
 	private int gold;
+	private boolean activated;
 
 	// 유저와 post recommend는 N:M관계
 	@ManyToMany
@@ -47,5 +49,15 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name = "comment_number")
 			)
 	private List<Comment> comments = new ArrayList<>();
+	
+	
+	@ManyToMany
+	   @JoinTable(
+	      name = "user_authority",
+	      joinColumns = {@JoinColumn(name = "user_number", referencedColumnName = "user_number")},
+	      inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
+	   private Set<Authority> authorities;
+	
+	
 
 }
