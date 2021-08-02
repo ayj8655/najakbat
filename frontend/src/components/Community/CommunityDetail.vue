@@ -17,10 +17,9 @@
         <div v-html="enterToBr(this.post.content)"></div>
       </div>
       <div id="post-foot">
-        <span><img />{{ this.post.recommend }}</span> |
+        <span><img src="@/assets/leaf_lightgreen.png" width="15px">{{ this.post.recommend }}</span> |
         <span>
-          <!-- <img src="@/assets/comment.png"/> -->
-          {{ this.post.commentCount }}
+          <img src="@/assets/comment_green.png" width="15px">{{ this.post.commentCount }}
         </span>
         <div>
           <!-- <div v-if="this.$store.user.userNumber == this.post.userNumber"> -->
@@ -67,6 +66,8 @@ export default {
       comments: [],
       isModifyShow: false,
       modifyComment: Object,
+      recommended: "@/assets/leaf_lightgreen.png",
+      notRecommended: "@/assets/leaf_gray.png"
     };
   },
   created() {
