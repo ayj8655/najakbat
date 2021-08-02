@@ -23,6 +23,7 @@ export default new Vuex.Store({
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
+    myId: null
   },
   mutations: {
 
@@ -38,6 +39,11 @@ export default new Vuex.Store({
     GET_SEARCH_NOTICE(state, searchNotice) {
       state.searchNotices = searchNotice
     },
+
+    // Find Id
+    FIND_ID(state, myId) {
+      state.myId = myId
+    }
   },
 
   actions: {
@@ -87,7 +93,6 @@ export default new Vuex.Store({
     
       // Signup actions
       signup({ commit }, credentials) {
-        // console.log(credentials);
         axios.post('user/', {
           id: credentials[0],
           password: credentials[1],
@@ -95,7 +100,7 @@ export default new Vuex.Store({
           phone: credentials[3]
         })
         .then(res => {
-          console.log(res.data);
+          res
           commit
           axios.get(`user/${credentials[0]}/`)
           .then(res => {
@@ -110,6 +115,16 @@ export default new Vuex.Store({
           console.error(err);
         })
       },
+      findMyId({ commit }, myPhone) {
+        axios.post('http://localhost:8080/user/idFind/', {phone: myPhone})
+        .then(res => {
+          commit('FIND_ID', res.data)
+          router.push({ name: 'FindIdNext' })
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      }
   },
 
   modules: {},
