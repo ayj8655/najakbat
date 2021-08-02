@@ -14,7 +14,7 @@
       <div v-else class="body" v-html="enterToBr(comment.content)"></div>
       <div class="foot">
         <div>
-          <span>{{ comment.recommend }}</span>
+          <span><img src="@/assets/leaf_gray.png" width="15px">{{ comment.recommend }}</span>
           <!-- <span>{{ comment.commentCount }}</span> -->
         </div>
         <div class="btn" v-if="!comment.isdeleted">
@@ -59,7 +59,7 @@
       <div v-else class="body" v-html="enterToBr(comment.content)"></div>
       <div class="foot">
         <div>
-          <span>{{ comment.recommend }}</span>
+          <span><img src="@/assets/leaf_gray.png" width="15px">{{ comment.recommend }}</span>
           <span></span>
         </div>
         <div class="btn" v-if="!comment.isdeleted">

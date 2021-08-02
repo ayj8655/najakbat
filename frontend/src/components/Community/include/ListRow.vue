@@ -10,9 +10,9 @@
         <span id="more" @click="movePage">...더보기</span>
     </div>
     <div id="post-foot">
-        <span>{{post.view}}</span>
-        <span>{{post.recommend}}</span>
-        <span>{{post.commentCount}}</span>
+        <span><img src="@/assets/view_green.png" width="15px">{{post.view}}</span>
+        <span><img src="@/assets/leaf_lightgreen.png" width="15px">{{post.recommend}}</span>
+        <span><img src="@/assets/comment_green.png" width="15px">{{post.commentCount}}</span>
     </div>
     <hr>
   </div>
