@@ -27,7 +27,7 @@
         <button
          class="btn btn-success"
          :disabled="!(this.check.id && this.check.password && this.check.nickname && this.check.phone && (this.password === this.passwordConfirmation))"
-         @click.prevent=""
+         @click.prevent="signup([username, password, nickname, phone])"
         >회원가입 하기</button>
       </form>
     </div>
@@ -36,6 +36,7 @@
 
 <script>
 import PhoneCertified from '@/components/Login/PhoneCertified.vue'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Signup',
@@ -58,6 +59,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'signup'
+    ]),
     phonecertified() {
       this.check.phone = true
     },
