@@ -1,11 +1,11 @@
 <template>
   <div id="menubar">
     <nav>
-      <router-link to="/main"><img src="@/assets/menu_home.png"></router-link>
-      <router-link to="/dict"><img src="@/assets/menu_dict.png"></router-link>
-      <router-link to="/mylist"><img src="@/assets/menu_mylist.png"></router-link>
-      <router-link to="/community"><img src="@/assets/menu_community.png"></router-link>
-      <router-link to="/sidebarmain"><img src="@/assets/menu_etc.png"></router-link>
+      <router-link to="/main"><img src="@/assets/menu_home.png" id="menu_icon"></router-link>
+      <router-link to="/dict"><img src="@/assets/menu_dict.png" id="menu_icon"></router-link>
+      <router-link to="/mylist"><img src="@/assets/menu_mylist.png" id="menu_icon"></router-link>
+      <router-link to="/community"><img src="@/assets/menu_community.png" id="menu_icon"></router-link>
+      <router-link to="/sidebarmain"><img src="@/assets/menu_etc.png" id="menu_icon"></router-link>
     </nav>
   </div>
 </template>
@@ -15,7 +15,7 @@ export default {};
 </script>
 
 <style>
-img {
+#menu_icon {
     width: 18%;
     margin: 10px 2px;
 }

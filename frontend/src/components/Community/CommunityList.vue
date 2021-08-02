@@ -15,6 +15,7 @@
         <span class="search">검색</span>
         <span class="write" @click="postWrite">글쓰기</span>
       </div>
+      <hr>
     </div>
     <div class="post-area">
       <list-row
