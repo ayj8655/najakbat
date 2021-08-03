@@ -2,28 +2,28 @@
 <div>
 
   <div>MyAlerts</div>
-  <div v-for="notice in notices" :key="notice.noticeNumber">
+  <div v-for="searchNotice in searchNotices" :key="searchNotice.noticeNumber">
     <div>
-      {{notice.content}}
+      {{searchNotice.content}}
     </div>
     <div>
-      {{notice.date}}
+      {{searchNotice.date}}
     </div>
   </div>
 </div>
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'Myalerts',
-  data () {
-    return {
-      notices: this.$store.state.searchNotices
-    }
-  },
   created() {
     this.$store.dispatch('getSearchNotice')
+  },
+  computed: {
+    ...mapState([
+      'searchNotices',
+    ])
   }
 }
 </script>

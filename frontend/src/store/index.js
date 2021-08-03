@@ -60,8 +60,8 @@ export default new Vuex.Store({
   actions: {
     // Alerts actions
 
-    getSearchNotice(context, userNumber) {
-      axios.get(`user/notice/${userNumber}`)
+    getSearchNotice(context) {
+      axios.get(`user/notice/1`)
       .then(res => {
         context.commit('GET_SEARCH_NOTICE', res.data)
       })
