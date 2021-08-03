@@ -19,7 +19,8 @@ export default new Vuex.Store({
     nightmode_notice: false,
 
     // Alerts 변수
-    searchNotices: '',
+    searchNotices: [],
+    // noticeIsreads: [],
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
@@ -43,7 +44,16 @@ export default new Vuex.Store({
 
     GET_SEARCH_NOTICE(state, searchNotice) {
       state.searchNotices = searchNotice
+      // for (let key in searchNotice) {
+      //   const value = searchNotice[key]
+      //   state.noticeIsreads.push(value.isRead)
+      // }
     },
+
+    // Myalerts mutations
+    // GET_NOTICE_ISREAD(state, data) {
+    //   state.noticeIsread = data.isRead
+    // },
 
     // Find Id
     FIND_ID(state, myId) {
@@ -119,6 +129,26 @@ export default new Vuex.Store({
           console.error(err)
         })
       },
+    // Myalerts actions
+    updateIsread(context, mynoticeStatus) {
+      mynoticeStatus[0] = (mynoticeStatus[0])? 1:0;
+      console.log(mynoticeStatus)
+      // this.state.searchNotices[mynoticeStatus[1] - 1].isRead = mynoticeStatus[0] 
+      axios({
+        method: 'put',
+        url: `user/notice/${mynoticeStatus[1]}`,
+        data: {
+          isRead: mynoticeStatus[0],
+          userNumber: 1,
+        }
+      })
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
     
       // Signup actions
       signup({ commit }, credentials) {
