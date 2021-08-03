@@ -107,7 +107,7 @@
     <div class="m-5">
       <h2>커뮤니티 인기 게시글</h2>
       <h6>인기 있는 게시글을 추천 받아 보세요!</h6>
-      <p>{{ this.id }}</p>
+      <div></div>
     </div>
     <div id="foot"></div>
     <menubar id="menubar"></menubar>

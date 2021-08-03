@@ -13,7 +13,7 @@
       </div>
       <div class="etc">
         <span class="search">검색</span>
-        <span class="write" @click="postWrite">글쓰기</span>
+        <span class="write" v-if="this.$state.store.userNumber" @click="postWrite">글쓰기</span>
       </div>
       <hr>
     </div>

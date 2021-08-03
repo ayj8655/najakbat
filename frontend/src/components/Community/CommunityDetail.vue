@@ -17,12 +17,18 @@
         <div v-html="enterToBr(this.post.content)"></div>
       </div>
       <div id="post-foot">
-        <span><img src="@/assets/leaf_lightgreen.png" width="15px">{{ this.post.recommend }}</span> |
+        <span
+          ><img src="@/assets/leaf_lightgreen.png" width="15px" />{{
+            this.post.recommend
+          }}</span
+        >
+        |
         <span>
-          <img src="@/assets/comment_green.png" width="15px">{{ this.post.commentCount }}
+          <img src="@/assets/comment_green.png" width="15px" />{{
+            this.post.commentCount
+          }}
         </span>
-        <div>
-          <!-- <div v-if="this.$store.user.userNumber == this.post.userNumber"> -->
+        <div v-if="this.$store.userNumber == this.post.userNumber">
           <span class="modifyBtn" @click="modifyPost">수정</span> |
           <span class="deleteBtn" @click="deletePost">삭제</span>
         </div>
@@ -67,7 +73,7 @@ export default {
       isModifyShow: false,
       modifyComment: Object,
       recommended: "@/assets/leaf_lightgreen.png",
-      notRecommended: "@/assets/leaf_gray.png"
+      notRecommended: "@/assets/leaf_gray.png",
     };
   },
   created() {
@@ -76,7 +82,7 @@ export default {
     });
     axios.get(`comment/${this.no}`).then(({ data }) => {
       this.comments = data;
-      console.log(data);
+      // console.log(data);
     });
   },
   methods: {
