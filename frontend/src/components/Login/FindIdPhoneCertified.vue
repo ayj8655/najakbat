@@ -19,7 +19,7 @@
           <input type="text" class="form-control" id="floatingInput" placeholder="Password" v-model="certifiedInput">
           <label for="floatingInput">인증번호 6자리를 입력하세요</label>
           <div class="mt-3 d-flex justify-content-end">
-              <span class="me-auto text-danger" v-if="!missCertifiedNumber">인증번호가 다릅니다</span>
+              <span class="me-auto" v-if="!missCertifiedNumber">인증번호가 다릅니다</span>
               <button class="btn btn-success" @click.prevent="checkCertifiedInput">인증하기</button>
           </div>
       </div>
@@ -45,24 +45,24 @@ export default {
     methods: {
         startCountdown() {
             let phone = this.$props.phoneNum
-            
+
             axios.get(`http://localhost:8080/user/confirmPhone/${phone}`)
             .then(res => {
                 if (res.data === 'fail') {
-                    alert('이미 가입된 번호입니다')
+                  this.counting = true;
+                  this.numberConfirmation = true
+                  // axios.post('http://localhost:8080/user/phone', {
+                  //     phone: this.$props.phoneNum
+                  // })
+                  // .then(res => {
+                  //     this.certifiedNumber = res.data
+                  // })
+                  // .catch(err => {
+                  //     console.error(err);
+                  // })
                 }
                 else {
-                    this.counting = true;
-                    this.numberConfirmation = true
-                    // axios.post('http://localhost:8080/user/phone', {
-                    //     phone: this.$props.phoneNum
-                    // })
-                    // .then(res => {
-                    //     this.certifiedNumber = res.data
-                    // })
-                    // .catch(err => {
-                    //     console.error(err);
-                    // })
+                    alert('해당 번호로 가입된 아이디가 없습니다')
                 }
             })
             .catch(err => {
