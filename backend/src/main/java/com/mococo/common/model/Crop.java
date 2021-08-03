@@ -26,5 +26,7 @@ public class Crop {
 	private int sun;
 	private int water;
 	private double temperature;
+	private int growingPeriod;  // 평균적으로 심은 후 수확까지 키우는 일수
+	private String grownDuration; // 키우기 좋은 월 마스킹
 	private String image;
 }
