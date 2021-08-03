@@ -12,11 +12,11 @@ export default new Vuex.Store({
     // sidebar 변수
     
     // Settings 변수
-    water_notice: true,
-    recommendedinfo_notice: true,
-    newcomments_notice: true,
-    newtwits_notice: true,
-    nightmode_notice: true,
+    water_notice: false,
+    recommendedinfo_notice: false,
+    newcomments_notice: false,
+    newtwits_notice: false,
+    nightmode_notice: false,
 
     // Alerts 변수
     searchNotices: '',
@@ -28,12 +28,12 @@ export default new Vuex.Store({
   mutations: {
 
     // Settings mutations
-    GET_NOTICE_SETTINGS(state, waterNotice, recommendNotice, commentNotice, messageNotice, darkMode) {
-      state.water_notice = waterNotice
-      state.recommendedinfo_notice = recommendNotice
-      state.newcomments_notice = commentNotice
-      state.newtwits_notice = messageNotice
-      state.nightmode_notice = darkMode
+    GET_NOTICE_SETTINGS(state, data) {
+      state.water_notice = (data.waterNotice)? true:false;
+      state.recommendedinfo_notice = (data.recommendNotice)? true: false;
+      state.newcomments_notice = (data.commentNotice)? true:false;
+      state.newtwits_notice = (data.messageNotice)? true:false;
+      state.nightmode_notice = (data.darkMode)? true:false;
     },
 
     GET_SEARCH_NOTICE(state, searchNotice) {
@@ -45,6 +45,7 @@ export default new Vuex.Store({
       state.myId = myId
     }
   },
+
 
   actions: {
     // Alerts actions
@@ -60,31 +61,37 @@ export default new Vuex.Store({
     },
 
     // Settings actions
-    getNoticeSettings(context, userNumber) {
-      axios.get(`user/setting/notice/${userNumber}`)        
+    getNoticeSettings(context) {
+      axios.get(`user/setting/notice/1`)        
       .then(res => {
         context.commit('GET_NOTICE_SETTINGS', res.data)
+        // console.log(this.state)
       })
       .catch(err => {
         console.error(err)
       })
     },
-
-    updateNotice(context, water_notice, recommendedinfo_notice, newcomments_notice, newtwits_notice, nightmode_notice, userNumber) {
+    updateNotice(context, settingsStatus) {  
+      settingsStatus[0] = (settingsStatus[0])? 1:0;
+      settingsStatus[1] = (settingsStatus[1])? 1:0;
+      settingsStatus[2] = (settingsStatus[2])? 1:0;
+      settingsStatus[3] = (settingsStatus[3])? 1:0;
+      settingsStatus[4] = (settingsStatus[4])? 1:0;
       axios({
         method: 'put',
         url: `user/setting/notice`,
         data: {
-          waterNotice: water_notice,
-          recommendNotice: recommendedinfo_notice,
-          commentNotice: newcomments_notice,
-          messageNotice: newtwits_notice,
-          darkMode: nightmode_notice,
-          userNumber: userNumber
+          waterNotice: settingsStatus[0],
+          recommendNotice: settingsStatus[1],
+          commentNotice: settingsStatus[2],
+          messageNotice: settingsStatus[3],
+          darkMode: settingsStatus[4],
+          userNumber: 1,
         }
       })
         .then(res => {
-          console.log(res)
+          console.log(settingsStatus)
+          console.log(res.data)
         })
         .catch(err => {
           console.error(err)

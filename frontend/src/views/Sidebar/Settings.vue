@@ -8,7 +8,7 @@
     <div class="p-2 d-flex bd-highlight">
     <!-- <toggle-button @change="onChangeEventHandler"/> -->
     <h2>물 주기 알림</h2>
-    <toggle-button :value="mywater_notice"
+    <toggle-button :value="water_notice"
                color="#82C7EB"
                :sync="true"
                :labels="true"
@@ -17,7 +17,7 @@
     <div class="p-2 d-flex bd-highlight">
     <h2>추천 정보 알림</h2>
     <!-- <toggle-button v-model="myDataVariable"/> -->
-    <toggle-button :value="myrecommendedinfo_notice"
+    <toggle-button :value="recommendedinfo_notice"
                color="#82C7EB"
                :sync="true"
                :labels="true"
@@ -25,7 +25,7 @@
     </div>
     <div class="p-2 d-flex bd-highlight">
     <h3>커뮤니티 새 댓글 알림</h3>
-    <toggle-button :value="mynewcomments_notice"
+    <toggle-button :value="newcomments_notice"
                color="#82C7EB"
                :sync="true"
                :labels="true"
@@ -33,7 +33,7 @@
     </div>
     <div class="p-2 d-flex bd-highlight">
     <h2>새 쪽지 알림</h2>
-    <toggle-button :value="mynewtwits_notice"
+    <toggle-button :value="newtwits_notice"
                color="#82C7EB"
                :sync="true"
                :labels="true"
@@ -41,7 +41,7 @@
     </div>
     <div class="p-2 d-flex bd-highlight">
     <h2>나이트모드</h2>
-    <toggle-button :value="mynightmode_notice"
+    <toggle-button :value="nightmode_notice"
                color="#82C7EB"
                :sync="true"
                :labels="true"
@@ -49,6 +49,7 @@
     
     </div>
     <button type="button" class="btn btn-success mb-2" v-if="changes" @click="settingsUpdate">저장</button>
+    <!-- <button type="button" class="btn btn-success mb-2" v-if="changes" @click="updateNotice ([this.water_notice, this.recommendedinfo_notice, this.newcomments_notice, this.newtwits_notice, this.nightmode_notice])">저장</button> -->
     <button type="button" class="btn btn-success" v-else disabled>저장</button>
   </div>  
 
@@ -59,76 +60,81 @@
 </template>
 
 <script>
-// import { mapState } from 'vuex'
+import { mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'AlertsSettings',
   data() {
     return {
-      mywater_notice: this.$store.state.water_notice,
-      myrecommendedinfo_notice: this.$store.state.recommendedinfo_notice,
-      mynewcomments_notice: this.$store.state.newcomments_notice,
-      mynewtwits_notice: this.$store.state.newtwits_notice,
-      mynightmode_notice: this.$store.state.nightmode_notice,
+      // mywater_notice: this.$store.state.water_notice,
       changes: false,
     }
   },
   methods: {
+    ...mapActions ([
+      'updateNotice',
+    ]),
     changeWaterNotice () {
-      this.mywater_notice = !this.mywater_notice
+      this.$store.state.water_notice = !this.$store.state.water_notice
     },
     changeRecommendedinfoNotice () {
-      this.myrecommendedinfo_notice = !this.myrecommendedinfo_notice
+      this.$store.state.recommendedinfo_notice = !this.$store.state.recommendedinfo_notice
     },
     changeNewcommentsNotice () {
-      this.mynewcomments_notice = !this.mynewcomments_notice
+      this.$store.state.newcomments_notice = !this.$store.state.newcomments_notice
     },
     changeNewtwitsNotice () {
-      this.mynewtwits_notice = !this.mynewtwits_notice
+      this.$store.state.newtwits_notice = !this.$store.state.newtwits_notice
     },
     changeNightmode () {
-      this.mynightmode_notice = !this.mynightmode_notice
+      this.$store.state.nightmode_notice = !this.$store.state.nightmode_notice
     },
+    // test () {
+    //   console.log(this.$store.state)
+    // }
     settingsUpdate() {
-      this.$store.dispatch('updateNotcie', this.mywater_notice, this.myrecommendedinfo_notice, this.mynewcomments_notice, this.mynewtwits_notice, this.mynightmode_notice)
-    }
-  
+      const settingsStatus = [this.water_notice, this.recommendedinfo_notice, this.newcomments_notice, this.newtwits_notice, this.nightmode_notice]
+      this.$store.dispatch('updateNotice', settingsStatus)
+    },
+
+
   },
-    created() {
-    this.$store.dispatch('getNoticeSettings')
+  created() {
+    this.$store.dispatch('getNoticeSettings');
   },
+
   watch: {
-    mywater_notice: function () {
+    water_notice: function () {
       if (this.changes) {
         this.changes = true
       } else {
         this.changes = ! this.changes
       }
     },
-    myrecommendedinfo_notice: function () {
+    recommendedinfo_notice: function () {
       if (this.changes) {
         this.changes = true
       } else {
         this.changes = ! this.changes
       }
     },
-    mynewcomments_notice: function () {
+    newcomments_notice: function () {
+      if (this.changes) {
+        this.changes = true
+      } else {
+        this.changes = ! this.changes
+      }
+    },
+    newtwits_notice: function () {
+      if (this.changes) {
+        this.changes = true
+      } else {
+        this.changes = ! this.changes
+      }
       
-      if (this.changes) {
-        this.changes = true
-      } else {
-        this.changes = ! this.changes
-      }
     },
-    mynewtwits_notice: function () {
-      if (this.changes) {
-        this.changes = true
-      } else {
-        this.changes = ! this.changes
-      }
-      
-    },
-    mynightmode_notice: function () {
+    nightmode_notice: function () {
       if (this.changes) {
         this.changes = true
       } else {
@@ -137,17 +143,17 @@ export default {
       
     },
 
-  }
-  // computed: {
-  //   ...mapState([
-  //     'water_alerts',
-  //     'recommendedinfo_alerts',
-  //     'newcomments_alerts',
-  //     'newtwits_alerts',
-  //     'nightmode_alerts',
-  //   ]),
-  }
-
+  },
+  computed: {
+    ...mapState([
+      'water_notice',
+      'recommendedinfo_notice',
+      'newcomments_notice',
+      'newtwits_notice',
+      'nightmode_notice',
+    ]),
+  },
+}
 
 </script>
 
