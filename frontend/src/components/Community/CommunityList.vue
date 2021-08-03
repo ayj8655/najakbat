@@ -1,20 +1,20 @@
 <template>
-  <div class="container">
+  <div class="container mt-4">
     <div style="text-align: center">
-      <h4 class="community">커뮤니티</h4>
+      <h4 class="mb-5 community">커뮤니티</h4>
     </div>
     <div class="menu">
-      <div class="category">
+      <span class="category">
         <span class="all" @click="showAllPost">전체</span>
         <span class="free" @click="changeType(1, '자유')">자유</span>
         <span class="info" @click="changeType(2, '정보')">정보</span>
         <span class="question" @click="changeType(3, '질문')">질문</span>
         <span class="share" @click="changeType(4, '나눔')">나눔</span>
-      </div>
-      <div class="etc">
+      </span>
+      <span class="etc">
         <span class="search">검색</span>
-        <span class="write" v-if="this.$state.store.userNumber" @click="postWrite">글쓰기</span>
-      </div>
+        <span class="write" v-if="this.$store.userNumber" @click="postWrite">글쓰기</span>
+      </span>
       <hr>
     </div>
     <div class="post-area">
@@ -51,7 +51,6 @@ export default {
     ListRow,
     InfiniteLoading,
   },
-  created: {},
   methods: {
     postWrite() {
       this.$router.push("/community/write");
@@ -93,7 +92,32 @@ export default {
         });
     },
   },
+  computed: {
+
+  },
 };
 </script>
 
-<style></style>
+<style scoped>
+.container > * {
+  font-family: Noto Sans KR;
+  font-style: normal;
+}
+.community {
+  font-weight: bold;
+}
+.menu {
+  text-align: left;
+}
+.category span {
+  margin-right: 5px;
+  color:#B6C790;
+}
+.etc {
+  float: right;
+  display: inline-block;
+}
+.etc span {
+  margin-left: 5px;
+}
+</style>
