@@ -9,7 +9,7 @@
           <div class="d-flex justify-content-end my-3" v-if="errors.first('digits_field') || !this.phone">
             <button class="btn btn-success" :disabled=true>인증번호 받기</button>
           </div>
-          <PhoneCertified :phoneNum="phone" v-else @phonecertified="phonecertified" />
+          <FindIdPhoneCertified :phoneNum="phone" v-else @phonecertified="phonecertified" />
         </div>
         <button class="btn btn-success" :disabled="!checkPhone" @click.prevent="findMyId(phone)">아이디 찾기</button>
       </form>
@@ -18,13 +18,13 @@
 </template>
 
 <script>
-import PhoneCertified from '@/components/Login/PhoneCertified.vue'
+import FindIdPhoneCertified from '@/components/Login/FindIdPhoneCertified.vue'
 import { mapActions } from 'vuex'
 
 export default {
   name: 'FindId',
   components: {
-    PhoneCertified,
+    FindIdPhoneCertified,
   },
   data() {
     return {
