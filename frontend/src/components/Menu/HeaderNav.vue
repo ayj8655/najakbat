@@ -4,14 +4,25 @@
       <router-link to="/main"><img src="@/assets/mococo.png"/></router-link>
       </div>
       <div id="right">
-      <router-link to="/profile"><img alt="프로필" /></router-link>
+      <router-link :to="'/profile/' + myId"><img alt="프로필" /></router-link>
       <router-link to="/myalerts"><img src="@/assets/noti.png" /></router-link>
       </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapState } from 'vuex'
+
+export default {
+  computed: {
+    ...mapState([
+      'userId'
+    ]),
+    myId() {
+      return this.userId
+    }
+  }
+};
 </script>
 
 <style scoped>

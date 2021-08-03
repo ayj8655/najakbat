@@ -24,7 +24,11 @@ export default new Vuex.Store({
     // signup 정보
     userId: localStorage.getItem('userId') || '',
     myId: null,
-    loginCheck: false
+    loginCheck: false,
+
+    // profile 정보
+    targetUser: [],
+    targetPosts: [],
   },
   mutations: {
 
@@ -53,6 +57,14 @@ export default new Vuex.Store({
         state.loginCheck = false
       }
       console.log(state.loginCheck);
+    },
+
+    // Profile
+    GET_PROFILE(state, payload) {
+      state.targetUser = [payload['id'], payload['nickname'], payload['gold']]
+      state.targetPosts = payload.posts
+      console.log(state.targetUser)
+      console.log(state.targetPosts)
     }
   },
 
@@ -150,10 +162,23 @@ export default new Vuex.Store({
         .then(res => {
           if(res.data) {
             commit('CHECK_LOGIN', res.data)
+            localStorage.setItem('userId', res.data.id)
           }
           else {
             commit('CHECK_LOGIN', res.data)
           }
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      },
+
+      // Profile actions
+      getProfile({ commit }, username) {
+        axios.get(`user/${username}`)
+        .then(res => {
+          console.log(res.data);
+          commit('GET_PROFILE', res.data)
         })
         .catch(err => {
           console.error(err);
