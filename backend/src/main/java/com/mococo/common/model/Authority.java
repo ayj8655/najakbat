@@ -16,6 +16,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class Authority {
 
+	//권한 테이블
    @Id
    @Column(name = "authority_name", length = 50)
    private String authorityName;

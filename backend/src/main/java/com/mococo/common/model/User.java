@@ -11,6 +11,7 @@ import lombok.*;
 
 
 @Data 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED) 
 @Entity(name="user")
@@ -19,7 +20,7 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)//이건 오토인크리먼트일때만 넣어주는거
 	@Column(name = "user_number")
-	private int userNumber;
+	private Integer userNumber;
 	
 	
 	private String id;
@@ -29,8 +30,8 @@ public class User {
 	@Temporal(TemporalType.TIMESTAMP)	//이거 써야 자동으로 시간 넣어줌
 	private Date joinDate;
 	private String address;
-	private int gold;
-	private boolean activated;
+	private Integer gold;
+	private Boolean activated;
 
 	// 유저와 post recommend는 N:M관계
 	@ManyToMany
@@ -50,9 +51,9 @@ public class User {
 			)
 	private List<Comment> comments = new ArrayList<>();
 	
-	
+	// 다대다 조인테이블 -> 유저 권한을 위해 생성
 	@ManyToMany
-	   @JoinTable(
+	@JoinTable(
 	      name = "user_authority",
 	      joinColumns = {@JoinColumn(name = "user_number", referencedColumnName = "user_number")},
 	      inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
