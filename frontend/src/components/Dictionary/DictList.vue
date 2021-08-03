@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <h2 class="m-5">농작물 도감</h2>
+    <h3 class="m-5 dict">농작물 도감</h3>
     <div class="" id="search-area">
       <img src="@/assets/search.png" width="20px" />
       <span>
@@ -22,7 +22,7 @@
         @click="movePage(crop.cropNumber)"
       >
         <div>
-          <img id="thumbnail" src="@/assets/thumbnail.png" width="45px" />
+          <img id="thumbnail" :src="cropImg[index]" width="45px" />
           <strong>{{ crop.name }}</strong>
         </div>
         <hr />
@@ -39,12 +39,15 @@ export default {
     return {
       searchKey: "",
       crops: [],
+      cropImg: [],
     };
   },
   created() {
     axios.get("guide/plant/summary").then((data) => {
       this.crops = data.data;
-      //   console.log(data);
+      this.crops.forEach((c, index) => {
+        this.cropImg[index] = (this.crops[index].image)? require("@/assets/crop/"+this.crops[index].image):require("@/assets/thumbnail.png");
+      });
     });
   },
   methods: {
@@ -56,6 +59,13 @@ export default {
 </script>
 
 <style>
+.container > * {
+  font-family: Noto Sans KR;
+  font-style: normal;
+}
+.dict {
+  font-weight: bold;
+}
 #search-area > * {
   display: inline-block;
 }
