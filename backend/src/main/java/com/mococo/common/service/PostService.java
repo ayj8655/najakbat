@@ -51,8 +51,9 @@ public class PostService {
 		return posts;
 	}	
 	
-	public List<Post> findPostUser(int no){
-		List<Post> posts = postDAO.findAllByUserNumber(no);
+	// 유저 별로 게시글 쓴거 불러오기
+	public List<Post> findPostUser(int no,int limit){
+		List<Post> posts = postDAO.findAllByUserNumber(no,limit);
 		return posts;
 	}	
 	

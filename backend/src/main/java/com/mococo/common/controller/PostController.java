@@ -133,13 +133,15 @@ public class PostController {
 
 	}
 	
-	// 사용자가 쓴 게시글 모음
+	// 사용자가 쓴 게시글 모음 인피니티 스크롤로 변경
+	// limit =0 일때 첫번째 post부터 3개 보내줌. limit = 3일 때 4번째부터 post를 3개 보내줌 - 최근 글이 위로 오게 보낸다.
 	@RequestMapping(value = "/user/{userno}", method = RequestMethod.GET)
-	private ResponseEntity<?> searchPostUser (@PathVariable String userno) throws IOException {
+	private ResponseEntity<?> searchPostUser (@RequestParam String limit,@PathVariable String userno) throws IOException {
 		logger.info("사용자 게시물 조회");
 		try {
 			int user_number = Integer.parseInt(userno);
-			return new ResponseEntity<List<Post>>(postService.findPostUser(user_number), HttpStatus.OK);
+			int limit_number = Integer.parseInt(limit);
+			return new ResponseEntity<List<Post>>(postService.findPostUser(user_number, limit_number), HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
