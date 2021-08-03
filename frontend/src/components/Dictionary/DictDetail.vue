@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+      <h3>{{this.crop.name}}</h3>
+  </div>
 </template>
 
 <script>
