@@ -15,7 +15,7 @@
       <div class="foot">
         <span class="recc">
           <span><img src="@/assets/leaf_gray.png" width="15px">{{ comment.recommend }}</span>
-          <!-- <span>{{ comment.commentCount }}</span> -->
+          <span><img src="@/assets/comment.png" width="15px">{{ comment.commentCount }}</span>
         </span>
         <span class="btn" v-if="!comment.isdeleted">
           <label @click="modifyCommentView">수정</label> |
@@ -60,7 +60,6 @@
       <div class="foot">
         <span class="recc">
           <span><img src="@/assets/leaf_gray.png" width="15px">{{ comment.recommend }}</span>
-          <!-- <span>{{ comment.commentCount }}</span> -->
         </span>
         <span class="btn" v-if="!comment.isdeleted">
           <label @click="modifyCommentView">수정</label> |
@@ -162,17 +161,26 @@ export default {
 .head {
   display: block;
 }
-#left {
+#left img {
+  margin-left: 5px;
 }
 #right {
   float: right;
   display: inline-block;
+  color: #999999;
 }
 .body {
   margin: 5px;
 }
+.recc > span {
+  margin-right: 10px;
+}
+.foot img {
+  margin-right: 5px;
+}
 .foot .btn {
   float: right;
   display: inline-block;
+  color: #999999;
 }
 </style>
