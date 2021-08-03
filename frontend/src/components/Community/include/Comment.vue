@@ -1,30 +1,30 @@
 <template>
-  <div class="comment" v-if="comment.commentNumber==0 || !comment.parent">
+  <div id="comment" v-if="comment.commentNumber==0 || !comment.parent">
     <div v-if="isShow" class="comment-area">
       <div class="head">
-        <span>{{ comment.userNickname }}</span>
-        <span><img id="messageBtn" src="@/assets/message.png" width="20px"/></span>
-        <span>{{ comment.date }}</span>
+        <span id="left">{{ comment.userNickname }}<img id="messageBtn" src="@/assets/message.png" width="20px"/></span>
+        <span id="right" v-text="changeDate(this.comment.date)"/>
       </div>
       <div
         v-if="comment.isdeleted"
-        class="deleted"
+        class="body"
+        id="deleted"
         v-html="`삭제된 댓글입니다.`"
       ></div>
       <div v-else class="body" v-html="enterToBr(comment.content)"></div>
       <div class="foot">
-        <div>
+        <span class="recc">
           <span><img src="@/assets/leaf_gray.png" width="15px">{{ comment.recommend }}</span>
           <!-- <span>{{ comment.commentCount }}</span> -->
-        </div>
-        <div class="btn" v-if="!comment.isdeleted">
+        </span>
+        <span class="btn" v-if="!comment.isdeleted">
           <label @click="modifyCommentView">수정</label> |
           <label @click="deleteComment">삭제</label>
-        </div>
-        <div class="btn" v-else>
+        </span>
+        <span class="btn" v-else>
           <label @click="recommendComment">좋아요</label> |
           <label @click="writeCommentChild">답글달기</label>
-        </div>
+        </span>
       </div>
       <hr />
     </div>
@@ -41,35 +41,35 @@
       <hr>
     </div>
   </div>
-  <div v-else class="row">
+  <div v-else id="comment" class="row">
     <div class="col-2">
       <img src="@/assets/comment_arrow.png" width="15px" />
     </div>
     <div class="col-10" v-if="isShow">
       <div class="head">
-        <span>{{ comment.userNickname }}</span>
-        <span><img id="messageBtn" src="@/assets/message.png" width="20px"/></span>
-        <span>{{ comment.date }}</span>
+        <span id="left">{{ comment.userNickname }}<img id="messageBtn" src="@/assets/message.png" width="20px"/></span>
+        <span id="right" v-text="changeDate(this.comment.date)"/>
       </div>
       <div
         v-if="comment.isdeleted"
-        class="deleted"
+        class="body"
+        id="deleted"
         v-html="`삭제된 댓글입니다.`"
       ></div>
       <div v-else class="body" v-html="enterToBr(comment.content)"></div>
       <div class="foot">
-        <div>
+        <span class="recc">
           <span><img src="@/assets/leaf_gray.png" width="15px">{{ comment.recommend }}</span>
-          <span></span>
-        </div>
-        <div class="btn" v-if="!comment.isdeleted">
+          <!-- <span>{{ comment.commentCount }}</span> -->
+        </span>
+        <span class="btn" v-if="!comment.isdeleted">
           <label @click="modifyCommentView">수정</label> |
           <label @click="deleteComment">삭제</label>
-        </div>
-        <div class="btn" v-else>
+        </span>
+        <span class="btn" v-else>
           <label @click="recommendComment">좋아요</label> |
           <label @click="writeCommentChild">답글달기</label>
-        </div>
+        </span>
       </div>
     </div>
     <div v-else class="col-10 regist_form">
@@ -89,16 +89,10 @@
 
 <script>
 import axios from "axios";
-// import http from "@/util/http-common";
-// import CommentChild from "@/components/Community/include/CommentChild";
-// import CommentChildWrite from "@/components/Community/include/CommentChildWrite";
 
 export default {
   name: "comment",
-  components: {
-    // CommentChild,
-    // CommentChildWrite,
-  },
+  components: {},
   props: {
     comment: Object,
   },
@@ -115,6 +109,9 @@ export default {
     // });
   },
   methods: {
+    changeDate(str) {
+      return str.substring(0, 10) + " " + str.substring(11, 19)
+    },
     enterToBr(str) {
       if (str) return str.replace(/(?:\r\n|\r|\n)/g, "<br />");
     },
@@ -157,4 +154,25 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+#comment {
+  margin: 5px;
+  text-align: left;
+}
+.head {
+  display: block;
+}
+#left {
+}
+#right {
+  float: right;
+  display: inline-block;
+}
+.body {
+  margin: 5px;
+}
+.foot .btn {
+  float: right;
+  display: inline-block;
+}
+</style>
