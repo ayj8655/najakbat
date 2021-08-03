@@ -2,7 +2,7 @@
   <div id="comment" v-if="comment.commentNumber==0 || !comment.parent">
     <div v-if="isShow" class="comment-area">
       <div class="head">
-        <span id="left">{{ comment.userNickname }}<img id="messageBtn" src="@/assets/message.png" width="20px"/></span>
+        <span id="left" @click="movePage">{{ comment.userNickname }}<img id="messageBtn" src="@/assets/message.png" width="20px"/></span>
         <span id="right" v-text="changeDate(this.comment.date)"/>
       </div>
       <div
@@ -108,6 +108,9 @@ export default {
     // });
   },
   methods: {
+    movePage() {
+      this.$router.push(`/profile/${this.comment.userNumber}`);
+    },
     changeDate(str) {
       return str.substring(0, 10) + " " + str.substring(11, 19)
     },

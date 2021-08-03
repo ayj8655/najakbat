@@ -42,7 +42,7 @@ export default {
     };
   },
   created() {
-    axios.get("guide/plant/").then((data) => {
+    axios.get("guide/plant/summary").then((data) => {
       this.crops = data.data;
       //   console.log(data);
     });

@@ -5,24 +5,74 @@
     </div>
     <div class="menu">
       <span class="category">
-        <span class="all" @click="showAllPost">전체</span>
-        <span class="free" @click="changeType(1, '자유')">자유</span>
-        <span class="info" @click="changeType(2, '정보')">정보</span>
-        <span class="question" @click="changeType(3, '질문')">질문</span>
-        <span class="share" @click="changeType(4, '나눔')">나눔</span>
+        <span
+          :class="{ colorChange: colorChange[0] }"
+          id="all"
+          @click="showAllPost"
+          >전체</span
+        >
+        <span
+          :class="{ colorChange: colorChange[1] }"
+          id="free"
+          @click="changeType(1, '자유')"
+          >자유</span
+        >
+        <span
+          :class="{ colorChange: colorChange[2] }"
+          id="info"
+          @click="changeType(2, '정보')"
+          >정보</span
+        >
+        <span
+          :class="{ colorChange: colorChange[3] }"
+          id="question"
+          @click="changeType(3, '질문')"
+          >질문</span
+        >
+        <span
+          :class="{ colorChange: colorChange[4] }"
+          id="share"
+          @click="changeType(4, '나눔')"
+          >나눔</span
+        >
       </span>
       <span class="etc">
-        <span class="search">검색</span>
-        <span class="write" v-if="this.$store.userNumber" @click="postWrite">글쓰기</span>
+        <span class="search" @click="changeFlag"
+          ><img :src="searchImg" width="30px"
+        /></span>
+        <span class="write" v-if="this.$store.userNumber" @click="postWrite"
+          >글쓰기</span
+        >
       </span>
-      <hr>
+      <div class="row mt-3" id="search-area" v-show="isSearch">
+        <span class="col-4">
+          <select class="form-control mr-2" name="key" id="skey" v-model="skey">
+            <option value="name">닉네임</option>
+            <option value="title">제목</option>
+            <option value="content">내용</option>
+          </select>
+        </span>
+        <span class="col-8">
+          <input
+            type="text"
+            class="form-control mr-2"
+            placeholder="검색어 입력."
+            name="word"
+            id="sword"
+            v-model="sword"
+          />
+        </span>
+      </div>
+
+      <hr />
     </div>
     <div class="post-area">
       <list-row
         v-for="(post, index) in this.list"
         :key="index"
         :post="post"
-      ></list-row>
+        v-show="((sword=='') || (skey=='name' && post.userNickname.includes(sword)) || (skey=='title' && post.title.includes(sword) || (skey=='content' && post.content.includes(sword))))"
+      />
       <infinite-loading
         @infinite="infiniteHandler"
         spinner="circles"
@@ -45,6 +95,11 @@ export default {
       list: [],
       limit: 0,
       type: 0,
+      listOrigin: [],
+      colorChange: [true, false, false, false, false],
+      isSearch: false,
+      skey: "name",
+      sword: "",
     };
   },
   components: {
@@ -56,18 +111,36 @@ export default {
       this.$router.push("/community/write");
     },
     showAllPost() {
+      this.list = [];
       this.type = 0;
       this.limit = 0;
-      this.list = [];
+      // this.list = this.listOrigin;
+      this.colorChange[1] = false;
+      this.colorChange[2] = false;
+      this.colorChange[3] = false;
+      this.colorChange[4] = false;
+      this.colorChange[0] = true;
     },
     changeType(type, text) {
       this.type = type;
-      axios.get(`post/type/${text}`).then(({ res }) => {
-        this.list = res.data;
-      })
-      .catch((error) => {
+      this.colorChange.forEach((c, index) => {
+        this.colorChange[index] = false;
+        // console.log(c);
+      });
+      this.colorChange[type] = true;
+      this.listOrigin = this.list;
+      this.list = [];
+      axios
+        .get(`post/type/${text}`)
+        .then(({ data }) => {
+          this.list = data;
+        })
+        .catch((error) => {
           console.log(error);
         });
+    },
+    changeFlag() {
+      this.isSearch = !this.isSearch;
     },
     infiniteHandler($state) {
       axios
@@ -93,7 +166,11 @@ export default {
     },
   },
   computed: {
-
+    searchImg() {
+      return this.isSearch
+        ? require("@/assets/search_darkgreen.png")
+        : require("@/assets/search_green.png");
+    },
   },
 };
 </script>
@@ -109,9 +186,15 @@ export default {
 .menu {
   text-align: left;
 }
-.category span {
+.colorChange {
+  font-weight: bold;
+  color: #446631;
+}
+.category {
+  color: #b6c790;
+}
+.category > span {
   margin-right: 5px;
-  color:#B6C790;
 }
 .etc {
   float: right;
