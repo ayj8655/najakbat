@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,8 +42,9 @@ public class UserSettingController {
 	//유저세팅을 보내면 한번에 업데이트함
 	
 	@RequestMapping(value = "/setting/notice", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "유저세팅을 입력하면 상태를 수정하여 성공 실패 여부 반환한다.", response = String.class)
-	private ResponseEntity<String> updateNotice (@RequestBody UserSetting userSetting) throws IOException {
+	public ResponseEntity<String> updateNotice (@RequestBody UserSetting userSetting) throws IOException {
 		logger.info("알림 상태 수정");
 		
 		try {
@@ -57,8 +59,9 @@ public class UserSettingController {
 	
 	//유저 넘버를 보내주면 알림상태를 반환함
 	@RequestMapping(value = "/setting/notice/{userNumber}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "유저번호를 입력하면 해당하는 유저의 설정 정보를 반환한다.", response = UserSetting.class)
-	private ResponseEntity<UserSetting> getNotice (@PathVariable int userNumber) throws IOException {
+	public ResponseEntity<UserSetting> getNotice (@PathVariable int userNumber) throws IOException {
 		logger.info("알림 상태 전송");
 		
 		try {

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,8 +41,9 @@ public class UserNoticeController {
 	NoticeService noticeService;
 	
 	@RequestMapping(value = "/notice/{userNumber}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "유저번호를 입력하면 해당하는 유저의 알림을 모두 반환한다", response = List.class)
-	private ResponseEntity<List<Notice>> searchNotice (@PathVariable int userNumber) throws IOException {
+	public ResponseEntity<List<Notice>> searchNotice (@PathVariable int userNumber) throws IOException {
 		logger.info("알림 기록 전체 조회");
 		
 		try {
@@ -58,8 +60,9 @@ public class UserNoticeController {
 	}
 	
 	@RequestMapping(value = "/notice/{no}", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "알림 번호를 입력하면 해당하는 알림을 읽음처리하여 성공 실패 여부를 반환한다.", response = String.class)
-	private ResponseEntity<String> readNotice (@PathVariable int no) throws IOException {
+	public ResponseEntity<String> readNotice (@PathVariable int no) throws IOException {
 		logger.info("알림 선택 시 읽음표시 변경");
 		
 		try {
@@ -85,7 +88,7 @@ public class UserNoticeController {
 	
 	//삭제는 선택해서 갈거라 아래 두개가 같은거같음 어떻게 해야할지 미정 -> 맵으로 하면 될거같긴함
 	@RequestMapping(value = "/notice", method = RequestMethod.DELETE)
-	private ResponseEntity<String> deleteAllNotice (@RequestBody User user) throws IOException {
+	public ResponseEntity<String> deleteAllNotice (@RequestBody User user) throws IOException {
 		logger.info("읽은 알림 전체 삭제");
 		
 		return null;
@@ -94,7 +97,7 @@ public class UserNoticeController {
 	}
 	
 	@RequestMapping(value = "/notice/{no}", method = RequestMethod.DELETE)
-	private ResponseEntity<String> deleteNotice (@PathVariable String no) throws IOException {
+	public ResponseEntity<String> deleteNotice (@PathVariable String no) throws IOException {
 		logger.info("알림 하나 삭제");
 		
 		return null;
