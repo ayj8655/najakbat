@@ -4,7 +4,7 @@
       <router-link to="/main"><img src="@/assets/mococo.png"/></router-link>
       </div>
       <div id="right">
-      <router-link :to="'/profile/' + myId"><img alt="프로필" /></router-link>
+      <router-link :to="'/profile/' + myProfileNumber"><img alt="프로필" /></router-link>
       <router-link to="/myalerts"><img src="@/assets/noti.png" /></router-link>
       </div>
   </div>
@@ -16,10 +16,10 @@ import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState([
-      'userId'
+      'myNumber'
     ]),
-    myId() {
-      return this.userId
+    myProfileNumber() {
+      return this.myNumber
     }
   }
 };

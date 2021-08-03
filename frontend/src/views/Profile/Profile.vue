@@ -3,6 +3,9 @@
     <header-nav></header-nav>
     <div v-if="getNickname">
       <h3>{{ getNickname }}</h3>
+      <div class="container">
+        <MyCommunityList :userNumber="getUserNumber" />
+      </div>
     </div>
     <div v-else>
       <h1>존재하지 않는 페이지입니다</h1>
@@ -17,10 +20,15 @@
 // import axios from "axios";
 import HeaderNav from "@/components/Menu/HeaderNav.vue";
 import Menubar from "@/components/Menu/Menubar.vue";
+import MyCommunityList from "@/components/Profile/MyCommunityList.vue"
 import { mapState } from 'vuex'
 
 export default {
-  components: { Menubar, HeaderNav },
+  components: { 
+    Menubar, 
+    HeaderNav,
+    MyCommunityList
+  },
   data() {
     return {
       id: null,
@@ -28,20 +36,22 @@ export default {
   },
   computed: {
     ...mapState([
-      'targetUser'
+      'profile'
     ]),
     getNickname() {
-      if(this.targetUser) {
-        return this.targetUser[1]
+      if(this.profile.nickname) {
+        return this.profile.nickname
       }
       else {
         return false
       }
+    },
+    getUserNumber() {
+      return this.profile.userNumber
     }
   },
   created() {
-    console.log(this.$route.params.username)
-    this.$store.dispatch('getProfile', this.$route.params.username)
+    this.$store.dispatch('getProfile', this.$route.params.usernumber)
   },
 };
 </script>

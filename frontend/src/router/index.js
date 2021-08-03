@@ -146,7 +146,7 @@ const routes = [
     component: FindPassword,
   },
   {
-    path: '/profile/:username',
+    path: '/profile/:usernumber',
     name: 'Profile',
     component: Profile,
   },

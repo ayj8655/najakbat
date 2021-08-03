@@ -24,12 +24,17 @@ export default new Vuex.Store({
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
+    myNumber: localStorage.getItem('userNumber') || '',
     myId: null,
     loginCheck: false,
 
     // profile 정보
-    targetUser: [],
-    targetPosts: [],
+    profile: {
+      id: null,
+      userNumber: null,
+      nickname: null,
+      gold: null
+    },
   },
   mutations: {
 
@@ -71,10 +76,14 @@ export default new Vuex.Store({
 
     // Profile
     GET_PROFILE(state, payload) {
-      state.targetUser = [payload['id'], payload['nickname'], payload['gold']]
-      state.targetPosts = payload.posts
-      console.log(state.targetUser)
-      console.log(state.targetPosts)
+      state.profile['id'] = payload.id
+      state.profile['userNumber'] = payload.userNumber
+      state.profile['nickname'] = payload.nickname
+      state.profile['gold'] = payload.gold
+    },
+    GET_POSTS(state, payload) {
+      state.targetPosts = payload
+      
     }
   },
 
@@ -163,7 +172,9 @@ export default new Vuex.Store({
           commit
           axios.get(`user/${credentials[0]}`)
           .then(res => {
+            // console.log(res.data);
             localStorage.setItem('userId', res.data.id)
+            localStorage.setItem('userNumber', res.data.userNumber)
             router.push({ name: 'SignupNext' })
           })
         .catch(err => {
@@ -191,11 +202,15 @@ export default new Vuex.Store({
         })
         .then(res => {
           if(res.data) {
+            console.log(res.data);
             commit('CHECK_LOGIN', res.data)
             localStorage.setItem('userId', res.data.id)
+            localStorage.setItem('userNumber', res.data.userNumber)
+            router.push({ path: 'main' })
           }
           else {
             commit('CHECK_LOGIN', res.data)
+            alert('아이디 또는 비밀번호가 일치하지 않습니다')
           }
         })
         .catch(err => {
@@ -204,11 +219,22 @@ export default new Vuex.Store({
       },
 
       // Profile actions
-      getProfile({ commit }, username) {
-        axios.get(`user/${username}`)
+      getProfile({ commit }, userNumber) {
+        axios.get('user/all')
         .then(res => {
-          console.log(res.data);
-          commit('GET_PROFILE', res.data)
+          for (var i = 0; i < res.data.length; i++) {
+            if (userNumber == res.data[i]['userNumber']) {
+              var targetId = res.data[i]['id']
+              axios.get(`user/${targetId}`)
+              .then(res => {
+                commit('GET_PROFILE', res.data)
+              })
+              .catch(err => {
+                console.error(err);
+              })
+              return
+            }
+          }
         })
         .catch(err => {
           console.error(err);
