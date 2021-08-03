@@ -59,6 +59,11 @@ public class PostController {
 	private ResponseEntity<Optional<Post>> searchPost (@PathVariable String no) throws IOException {
 		logger.info("게시물 내용 조회");
 		int post_number = Integer.parseInt(no);
+		Optional<Post> post = postService.findPostByPostNumber(post_number);
+		post.get().setView(post.get().getView()+1);
+		postService.updatePost(post.get()); //조회수 +1해서 업데이트
+		
+		
 		return new ResponseEntity<Optional<Post>>(postService.findPostByPostNumber(post_number),HttpStatus.OK);
 	}
 	
@@ -177,7 +182,6 @@ public class PostController {
 		post.setDate(time);
 	
 		
-		
 		List<PostPhoto> photoInfos = new ArrayList<PostPhoto>();
 		try {
 			logger.info("게시글 등록");
@@ -202,6 +206,7 @@ public class PostController {
 	        		photo.setSaveFile(destinationFileName);
 	        		photo.setOriginFile(sourceFileName);
 	        		photo.setSaveFolder(fileUrl);
+	        		System.out.println("길이"+photo.getSaveFolder().length());
 	        		
 				}
 
