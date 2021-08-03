@@ -23,7 +23,8 @@ export default new Vuex.Store({
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
-    myId: null
+    myId: null,
+    loginCheck: false
   },
   mutations: {
 
@@ -43,6 +44,15 @@ export default new Vuex.Store({
     // Find Id
     FIND_ID(state, myId) {
       state.myId = myId
+    },
+    CHECK_LOGIN(state, payload) {
+      if (payload) {
+        state.loginCheck = true
+      }
+      else {
+        state.loginCheck = false
+      }
+      console.log(state.loginCheck);
     }
   },
 
@@ -109,7 +119,7 @@ export default new Vuex.Store({
         .then(res => {
           res
           commit
-          axios.get(`user/${credentials[0]}/`)
+          axios.get(`user/${credentials[0]}`)
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             router.push({ name: 'SignupNext' })
@@ -123,10 +133,27 @@ export default new Vuex.Store({
         })
       },
       findMyId({ commit }, myPhone) {
-        axios.post('http://localhost:8080/user/idFind/', {phone: myPhone})
+        axios.post('user/idFind', {phone: myPhone})
         .then(res => {
           commit('FIND_ID', res.data)
           router.push({ name: 'FindIdNext' })
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      },
+      login({ commit }, credentials) {
+        axios.post('user/login', {
+          userId: credentials[0],
+          userPwd: credentials[1]
+        })
+        .then(res => {
+          if(res.data) {
+            commit('CHECK_LOGIN', res.data)
+          }
+          else {
+            commit('CHECK_LOGIN', res.data)
+          }
         })
         .catch(err => {
           console.error(err);
