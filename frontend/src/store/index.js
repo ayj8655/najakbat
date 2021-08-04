@@ -5,6 +5,13 @@ import router from "../router"
 
 Vue.use(Vuex);
 axios.defaults.baseURL = 'http://localhost:8080/'
+
+axios.interceptors.request.use(config => {
+  const accessToken = localStorage.getItem('access_token')
+  config.headers.common['Authorization'] = accessToken ? `Bearer ${accessToken}` : ''
+  return config
+})
+
 export default new Vuex.Store({
   state: {
     // user 정보
@@ -27,6 +34,7 @@ export default new Vuex.Store({
     myNumber: localStorage.getItem('userNumber') || '',
     myId: null,
     loginCheck: false,
+    accessToken: localStorage.getItem('access_token') || '',
 
     // profile 정보
     profile: {
@@ -59,6 +67,11 @@ export default new Vuex.Store({
     // GET_NOTICE_ISREAD(state, data) {
     //   state.noticeIsread = data.isRead
     // },
+
+    // Get Token
+    UPDATE_TOKEN(state, accessToken) {
+      state.accessToken = accessToken
+    },
 
     // Find Id
     FIND_ID(state, myId) {
@@ -238,10 +251,9 @@ export default new Vuex.Store({
       })
       .then(res => {
         console.log(res.data);
-        commit('CHECK_LOGIN', res.data)
-        localStorage.setItem('userId', res.data.id)
-        localStorage.setItem('userNumber', res.data.userNumber)
-        router.push({ path: 'main' })
+        localStorage.setItem('access_token', res.data.token)
+        commit('UPDATE_TOKEN', res.data.token)
+        // router.push({ path: 'main' })
         
       })
       .catch(err => {
