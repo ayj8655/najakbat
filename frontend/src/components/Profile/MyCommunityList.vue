@@ -1,8 +1,5 @@
 <template>
   <div class="container mt-4">
-    <div style="text-align: center">
-      <h4 class="mb-5 community">커뮤니티</h4>
-    </div>
     <div class="menu">
       <span class="category">
         <span class="all" @click="showAllPost">전체</span>
