@@ -338,8 +338,8 @@
                     지역이 <b>{{ this.userInformation.region }}</b> / <b>{{ this.userInformation.city }}</b>(으)로 설정되었습니다.
                 </div>
             </div>
-        <button class="btn btn-success" @click.prevent="saveAddress">서비스 시작</button>
-        <p class="my-3"><router-link to="/">나중에 설정하기</router-link></p>
+        <button class="btn btn-success" @click.prevent="saveAddress" :disabled="!this.address">서비스 시작</button>
+        <p class="my-3"><router-link to="/main">나중에 설정하기</router-link></p>
       </form>
     </div>
 
@@ -358,18 +358,14 @@ export default {
                 city: null,
             },
             address: null,
-            userNumber: null,
-            id: null,
-            password: null,
             nickname: null,
-            phone: null,
-            joinDate: null,
         }
     },
     methods: {
         selectRegion(event) {
             this.userInformation.region = event.target.value
             this.userInformation.city = null
+            this.address = null
         },
         selectCity(event) {
             this.userInformation.city = event.target.value
@@ -378,32 +374,13 @@ export default {
             this.address = this.userInformation.region + this.userInformation.city
         },
         saveAddress() {
-            axios.put('http://localhost:8080/user/',{
-                userNumber: this.userNumber,
-                id: this.id,
-                password: this.password,
-                nickname: this.nickname,
-                phone: this.phone,
-                joinDate: this.joinDate,
-                address: this.address
-            })
-            .then(res => {
-                console.log(res)
-            })
-            .catch(err => {
-                console.error(err);
-            })
+            this.$store.dispatch('updateAddress', this.address)
         }
     },
     created() {
-        axios.get(`http://localhost:8080/user/${localStorage.getItem('userId')}/`)
+        axios.get('http://localhost:8080/user/user1')
         .then(res => {
-            this.userNumber = res.data.userNumber
-            this.id = res.data.id
-            this.password = res.data.password
             this.nickname = res.data.nickname
-            this.phone = res.data.phone
-            this.joinDate = res.data.joinDate
         })
         .catch(err => {
             console.error(err);

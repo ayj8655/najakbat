@@ -96,10 +96,6 @@ export default new Vuex.Store({
       state.profile['nickname'] = payload.nickname
       state.profile['gold'] = payload.gold
     },
-    GET_POSTS(state, payload) {
-      state.targetPosts = payload
-      
-    }
   },
 
 
@@ -227,7 +223,6 @@ export default new Vuex.Store({
           commit('UPDATE_TOKEN', res.data.token)
           axios.get('user/user1')
           .then(res => {
-            console.log(res.data);
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
             router.push({ path: 'SignupNext' })
@@ -235,6 +230,26 @@ export default new Vuex.Store({
           .catch(err => {
             console.error(err);
           })
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    },
+
+    updateAddress({ commit }, myAddress) {
+      commit
+      myAddress
+      axios.get('user/user1')
+      .then(res => {
+        var addressPut = { ...res.data, address: myAddress}
+        axios.put('user/', addressPut)
+        .then(res => {
+          res
+          router.push({ path: 'main' })
         })
         .catch(err => {
           console.error(err);
@@ -281,21 +296,9 @@ export default new Vuex.Store({
 
     // Profile actions
     getProfile({ commit }, userNumber) {
-      axios.get('user/all')
+      axios.get(`user/${userNumber}`)
       .then(res => {
-        for (var i = 0; i < res.data.length; i++) {
-          if (userNumber == res.data[i]['userNumber']) {
-            var targetId = res.data[i]['id']
-            axios.get(`user/${targetId}`)
-            .then(res => {
-              commit('GET_PROFILE', res.data)
-            })
-            .catch(err => {
-              console.error(err);
-            })
-            return
-          }
-        }
+        commit('GET_PROFILE', res.data)
       })
       .catch(err => {
         console.error(err);

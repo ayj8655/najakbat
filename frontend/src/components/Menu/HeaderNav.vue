@@ -11,17 +11,25 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {
   data() {
     return {
       // path: this.$route.path,
       // notiImg: "",
-      myProfileNumber: this.$store.state.myNumber
+      myProfileNumber: null
     }
   },
   created() {
     // this.notiImg = (this.path.include("myalert"))? require("@/assets/noti_green.png"): require("@/assets/noti.png");
+    axios.get('http://localhost:8080/user/user1')
+    .then(res => {
+      this.myProfileNumber = res.data['userNumber']
+    })
+    .catch(err => {
+      console.error(err);
+    })
   },
 };
 </script>
