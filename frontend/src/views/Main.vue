@@ -1,6 +1,7 @@
 <template>
   <div>
     <header-nav></header-nav>
+    <Sidebar/>
     <div id="main-body">
       <div class="mt-5 mb-5">
         <h3>실시간 인기 작물</h3>
@@ -132,8 +133,9 @@
 // import axios from "axios";
 import HeaderNav from "../components/Menu/HeaderNav.vue";
 import Menubar from "../components/Menu/Menubar.vue";
+import Sidebar from "../components/Sidebar/Sidebar.vue";
 export default {
-  components: { Menubar, HeaderNav },
+  components: { Menubar, HeaderNav, Sidebar },
   data() {
     return {
       id: null,
