@@ -135,6 +135,19 @@ public class UserService {
 		return user;
 	}
 	
+	public Optional<User> findByNickname(String nickName) {
+		Optional<User> user = userDAO.findByNickname(nickName);
+
+		user.ifPresent(selectUser -> {
+			System.out.println(selectUser.getNickname());
+		});
+
+		return user;
+	}
+
+	
+	
+	
 	//핸드폰번호로 유저 검색
 	public Optional<User> findByPhone(String phoneNumber) {
 
@@ -205,6 +218,7 @@ public class UserService {
 		return loginUser.get();
 	}
 
+	
 	/*
 	 * public void updateById(String userId, User user) {
 	 * 

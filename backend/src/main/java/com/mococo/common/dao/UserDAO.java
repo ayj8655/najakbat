@@ -30,4 +30,6 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 	@EntityGraph(attributePaths = "authorities") //-> EAGER조회로 authorities 정보 같이 가져옴
 	Optional<User> findOneWithAuthoritiesById(String id);
 
+	public Optional<User> findByNickname(String nickName);
+
 }

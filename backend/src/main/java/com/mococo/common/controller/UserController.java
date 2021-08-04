@@ -138,7 +138,7 @@ public class UserController {
 
 	//아이디를 통해 다른사람의 정보 겟
 	@GetMapping("/user1/{username}")
-	@PreAuthorize("hasAnyRole('ADMIN')") // 어드민권한을 가지고있는 사람만 호출 가능
+	@PreAuthorize("hasAnyRole('USER','ADMIN')") // 어드민권한을 가지고있는 사람만 호출 가능
 	public ResponseEntity<User> getUserInfo(@PathVariable String username) {
 		System.out.println(userService);
 		System.out.println(username);
@@ -173,6 +173,31 @@ public class UserController {
 
 		} catch (Exception e) {
 			System.out.println("id중복 검사 오류");
+			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
+	
+	//닉네임 입력하면 중복여부 확인
+	@GetMapping("/pass/confirmNickname/{nickName}")
+	@ApiOperation(value = "닉네임 입력하면 중복여부 확인후 성공 실패 반환", response = String.class)
+	public ResponseEntity<String> confirmNickName(@PathVariable String nickName) throws IOException {
+		logger.info("닉네임 중복체크");
+		
+		
+		System.out.println(userService);
+		try {
+			Optional<User> user = userService.findByNickname(nickName);
+
+			if (!user.isPresent()) {
+				logger.info("닉네임중복 없음");
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
+			}
+
+			System.out.println("닉네임중복 있음");
+			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println("닉네임중복 검사 오류");
 			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
@@ -267,7 +292,7 @@ public class UserController {
 	// 권한없이 가야할듯
 	//여기까지 --------------------------------------------------------------------------------
 	
-	
+	/*
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ApiOperation(value = "회원가입- 유저정보로 가입하고 자동으로 세팅까지 생성한다 성공실패 반환.", response = String.class)
 	public ResponseEntity<String> signup(@RequestBody User user) throws IOException {
@@ -296,18 +321,19 @@ public class UserController {
 		userSettingService.save(us);
 
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+	}*/
 
-	}
-
-	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('ADMIN')")
-	@ApiOperation(value = "유저 아이디를 받아 검색된 유저 정보 반환.", response = User.class)
-	public ResponseEntity<User> searchUser(@PathVariable String userId) throws IOException {
+	@RequestMapping(value = "/{userNumber}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "유저번호를 받아 검색된 유저 정보 반환.", response = User.class)
+	public ResponseEntity<User> searchUser(@PathVariable int userNumber) throws IOException {
 		logger.info("회원검색");
 
-		System.out.println(userId);
 		try {
-			Optional<User> user = userService.findById(userId);
+			
+			//Optional<User> user = userService.findById(userId);
+			
+			Optional<User> user = userService.findByUserNumber(userNumber);
 			return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 		} catch (Exception e) {
 			System.out.println("회원 검색 실패");
@@ -375,30 +401,30 @@ public class UserController {
 	}
 
 	
-	//이건 임시
-	@RequestMapping(value = "/login", method = { RequestMethod.POST })
-	@ApiOperation(value = "아이디 비밀번호를 입력받아 비교후 해당하는 유저 정보 반환", response = User.class)
-	public ResponseEntity<User> login(@RequestBody Map<String, String> map) {
-		logger.info("login 메소드 실행");
-		System.out.println(map.get("userId"));
-		System.out.println(map.get("userPwd"));
-
-		try {
-			User user = userService.login(map);
-			System.out.println(user);
-			if (user != null) {
-				System.out.println("로그인성공 세션생성");
-
-				return new ResponseEntity<User>(user, HttpStatus.OK);
-			} else {
-				System.out.println("로그인실패 ");
-				return new ResponseEntity<User>(user, HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-
-	}
+//	//이건 임시
+//	@RequestMapping(value = "/login", method = { RequestMethod.POST })
+//	@ApiOperation(value = "아이디 비밀번호를 입력받아 비교후 해당하는 유저 정보 반환", response = User.class)
+//	public ResponseEntity<User> login(@RequestBody Map<String, String> map) {
+//		logger.info("login 메소드 실행");
+//		System.out.println(map.get("userId"));
+//		System.out.println(map.get("userPwd"));
+//
+//		try {
+//			User user = userService.login(map);
+//			System.out.println(user);
+//			if (user != null) {
+//				System.out.println("로그인성공 세션생성");
+//
+//				return new ResponseEntity<User>(user, HttpStatus.OK);
+//			} else {
+//				System.out.println("로그인실패 ");
+//				return new ResponseEntity<User>(user, HttpStatus.NO_CONTENT);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//
+//	}
 
 }
