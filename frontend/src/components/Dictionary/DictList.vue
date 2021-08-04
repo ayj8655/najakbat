@@ -4,14 +4,14 @@
     <div class="" id="search-area">
       <img src="@/assets/search.png" width="20px" />
       <span>
-      <input
-        type="text"
-        class="form-control"
-        id="searchKey"
-        v-model="searchKey"
-        placeholder="이름으로 농작물 검색"
-        width="80%"
-      />
+        <input
+          type="text"
+          class="form-control"
+          id="searchKey"
+          v-model="searchKey"
+          placeholder="이름으로 농작물 검색"
+          width="80%"
+        />
       </span>
     </div>
     <div class="mt-2" id="crops-area">
@@ -20,6 +20,7 @@
         v-for="(crop, index) in crops"
         :key="index"
         @click="movePage(crop.cropNumber)"
+        v-show="(searchKey=='') || (crop.name.includes(searchKey))"
       >
         <div>
           <img id="thumbnail" :src="cropImg[index]" width="45px" />
