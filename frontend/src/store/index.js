@@ -17,7 +17,7 @@ export default new Vuex.Store({
     // user 정보
     userNumber: '',
     // sidebar 변수
-    
+    sidebar: false,
     // Settings 변수
     water_notice: false,
     recommendedinfo_notice: false,

@@ -2,7 +2,6 @@ import Vue from "vue"
 import VueRouter from "vue-router"
 import Home from "../views/Home.vue"
 // 준호 라우터
-import SidebarMain from "../views/Sidebar/SidebarMain.vue"
 import DirectQuery from "../views/Sidebar/DirectQuery.vue"
 import MyAlerts from "../views/Sidebar/MyAlerts.vue"
 import Settings from "../views/Sidebar/Settings.vue"
@@ -110,11 +109,6 @@ const routes = [
     path: '/settings',
     name: 'Settings',
     component: Settings,
-  },
-  {
-    path: '/sidebarmain',
-    name: 'SidebarMain',
-    component: SidebarMain,
   },
   {
     path: '/message',

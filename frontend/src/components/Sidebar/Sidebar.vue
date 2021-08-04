@@ -1,8 +1,5 @@
 <template>
   <div id="sidebar-1">
-    <button @click="sidebar = !sidebar">
-      Toggle render
-    </button>
     <transition name="slide-fade">
       <div class="container greenbg w-75" v-if="sidebar" v-click-outside="onClickOutside">
         <div class="container infos w-100 h-25 px-0">
@@ -73,26 +70,30 @@
 <script>
 import vClickOutside from 'v-click-outside'
 import { mapActions } from 'vuex'
+import { mapState } from 'vuex'
+
 export default {
   name: 'sidebar-1',
   directives: {
     clickOutside: vClickOutside.directive
   },
-  data: function () {
-    return {
-      sidebar: false,
-    }
-  },
   methods: {
     onClickOutside () {
-      this.sidebar = false
+      this.$store.state.sidebar = false
+    },
+    Sidebaron () {
+      this.$store.state.sidebar = ! this.$store.state.sidebar
     },
     ...mapActions ([
       'logout'
     ])
+
   },
-
-
+  computed: {
+    ...mapState ([
+      'sidebar'
+    ])
+  }
 }
 </script>
 
@@ -157,6 +158,6 @@ export default {
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(10px);
-  opacity: 0;
+  opacity: 0.1;
 }
 </style>
