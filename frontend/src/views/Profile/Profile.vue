@@ -6,7 +6,7 @@
         <img src="@/assets/profile_sample.png" class="img-thumbnail profile-size" alt="...">
         <h3 class="mx-3">{{ getNickname }}</h3>
       </div>
-      <div class="container w-75 d-flex justify-content-between">
+      <div class="container w-75 d-flex justify-content-between my-3">
         <span @click="changeComponent(0)" v-bind:class="[componentNum === 0 ? 'select-font' : 'select-font-none']">나의 활동</span>
         <span class="select-font-none">|</span>
         <span @click="changeComponent(1)" v-bind:class="[componentNum === 1 ? 'select-font' : 'select-font-none']">내가 쓴 게시글</span>

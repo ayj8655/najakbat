@@ -54,7 +54,7 @@ export default {
                 else {
                     this.counting = true;
                     this.numberConfirmation = true
-                    // axios.post('http://localhost:8080/user/phone', {
+                    // axios.post('http://localhost:8080/user/pass/phone', {
                     //     phone: this.$props.phoneNum
                     // })
                     // .then(res => {

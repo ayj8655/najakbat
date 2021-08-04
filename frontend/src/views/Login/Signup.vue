@@ -23,7 +23,7 @@
             <span class="text-danger me-auto" v-if="nickname && nickname.length > 12">닉네임이 너무 길어요</span>
             <span class="text-danger me-auto" v-else-if="nicknameOverlap">이미 사용중인 닉네임입니다</span>
             <span class="me-auto" v-else-if="check.nickname">사용 가능한 닉네임입니다</span>
-            <button class="btn btn-success" :disabled="!nickname || nickname.length > 12" @click.prevent="checkNickname">중복확인</button>
+            <button class="btn btn-success" :disabled="!nickname || nickname.length > 12" @click.prevent="checkNickname(nickname)">중복확인</button>
           </div>
           <label class="form-label d-flex align-items-start">휴대폰 번호</label>
           <input type="text" class="form-control" v-validate="'digits:11'" name="digits_field" placeholder="휴대폰 번호를 입력하세요" v-model="phone">
@@ -92,15 +92,13 @@ export default {
         console.error(err);
       })
     },
-    checkNickname() {
-      axios.get('http://localhost:8080/user/all')
+    checkNickname(nick) {
+      axios.get(`http://localhost:8080/user/pass/confirmNickname/${nick}`)
       .then(res => {
-        for (var i = 0; i < res.data.length; i++) {
-          if (res.data[i]['nickname'] === this.nickname) {
-            this.nicknameOverlap = true
-            return
-          }
-        }
+        if (res.data === 'fail') {
+          this.nicknameOverlap = true
+          return
+        } 
         this.nicknameOverlap = false
         this.check.nickname = true
       })
