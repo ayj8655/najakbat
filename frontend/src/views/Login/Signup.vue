@@ -78,7 +78,7 @@ export default {
       this.check.phone = true
     },
     checkId() {
-      axios.get(`http://localhost:8080/user/confirmId/${this.username}`)
+      axios.get(`http://localhost:8080/user/pass/confirmId/${this.username}`)
       .then(res => {
         if (res.data === 'fail') {
           this.idOverlap = true
