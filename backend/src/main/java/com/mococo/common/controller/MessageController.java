@@ -9,15 +9,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.Message;
-import com.mococo.common.model.UserCrop;
 import com.mococo.common.service.MessageService;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -40,6 +39,7 @@ public class MessageController {
 	MessageService messageService;
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "sender", value = "전송하는 유저의 userNumber", paramType = "query"),
 		@ApiImplicitParam(name = "receiver", value = "전송받는 유저의 userNumber", paramType = "query"),
@@ -65,8 +65,9 @@ public class MessageController {
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "메시지 삭제")
-	private ResponseEntity<String> deleteMessage(@RequestParam int messageNumber) throws IOException {
+	public ResponseEntity<String> deleteMessage(@RequestParam int messageNumber) throws IOException {
 		logger.info("메시지 삭제");
 		
 		try {
@@ -79,8 +80,9 @@ public class MessageController {
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "메시지 읽음 처리")
-	private ResponseEntity<String> readMessage(@RequestParam int messageNumber) throws IOException {
+	public ResponseEntity<String> readMessage(@RequestParam int messageNumber) throws IOException {
 		logger.info("메시지 읽음 처리");
 		
 		try {
@@ -98,8 +100,9 @@ public class MessageController {
 	}
 	
 	@RequestMapping(value = "/sender", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "해당 유저가 보낸 모든 메시지 조회")
-	private ResponseEntity<?> searchAllMessageBySender(@RequestParam int userNumber, @RequestParam int page) throws IOException {
+	public ResponseEntity<?> searchAllMessageBySender(@RequestParam int userNumber, @RequestParam int page) throws IOException {
 		logger.info("해당 유저가 보낸 모든 메시지 조회");
 		
 		try {
@@ -112,8 +115,9 @@ public class MessageController {
 	}
 	
 	@RequestMapping(value = "/receiver", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "해당 유저가 받은 모든 메시지 조회")
-	private ResponseEntity<?> searchAllMessageReceiver(@RequestParam int userNumber, @RequestParam int page) throws IOException {
+	public ResponseEntity<?> searchAllMessageReceiver(@RequestParam int userNumber, @RequestParam int page) throws IOException {
 		logger.info("해당 유저가 받은 모든 메시지 조회");
 		
 		try {
@@ -126,8 +130,9 @@ public class MessageController {
 	}
 	
 	@RequestMapping(value = "/owner", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "해당 유저가 주고 받은 모든 메시지 조회")
-	private ResponseEntity<?> searchAllMessageByOwner(@RequestParam int userNumber, @RequestParam int page) throws IOException {
+	public ResponseEntity<?> searchAllMessageByOwner(@RequestParam int userNumber, @RequestParam int page) throws IOException {
 		logger.info("해당 유저가 주고 받은 모든 메시지 조회");
 		
 		try {
