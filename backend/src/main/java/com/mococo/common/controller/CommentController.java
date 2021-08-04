@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,7 @@ public class CommentController {
 	CommentService commentService;
 	
 	@RequestMapping(value = "/{postno}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<?> searchComment (@PathVariable String postno) throws IOException {
 		logger.info("게시물별 댓글 조회");
 		int post_number = Integer.parseInt(postno);
@@ -48,6 +50,7 @@ public class CommentController {
 	
 	// request param 은 댓글이 게시글의 댓글인지 댓글의 대댓글인지 구분. 게시글의 댓글: parent=0, 댓글의 대댓글: parent = 댓글의 comment_number 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> insertComment (@RequestBody Comment comment, @RequestParam("user_number") int user_number
 													, @RequestParam("parent") int parent, @RequestParam("postno") int postno) throws IOException {
 		logger.info("댓글 등록");
@@ -85,6 +88,7 @@ public class CommentController {
 	}
 	
 	@RequestMapping(value = "/{commentno}", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> updateComment (@RequestBody Comment comment) throws IOException {
 		logger.info("댓글 수정");
 		try {
@@ -110,6 +114,7 @@ public class CommentController {
 	
 	
 	@RequestMapping(value = "/{comment_number}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> deleteComment (@PathVariable String comment_number) throws IOException {
 		logger.info("댓글 삭제");
 		
@@ -132,6 +137,7 @@ public class CommentController {
 	
 	
 	@RequestMapping(value = "/recommend/{commentno}", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> recommentComment (@PathVariable String commentno, @RequestParam int user_number) throws IOException {
 		
 		
