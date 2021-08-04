@@ -1,28 +1,26 @@
 <template>
-  <div class="container">
+  <div class="container mt-2">
     <div id="post-area">
       <div id="post-head">
-        <div id="category"></div>
-        <div>{{ this.post.title }}</div>
+        <div id="category"><img :src="this.typeimg" width="35px" /></div>
+        <div class="mt-2 mb-2" id="title">{{ this.post.title }}</div>
         <div>
-          <span>{{ this.post.userNickname }}</span> |
-          <span>
-            <!-- <img src="@/assets/view.png"/> -->
-            {{ this.post.view }} | {{ this.post.regtime }}
+          <span id="left">{{ this.post.userNickname }}</span>
+          <span id="right">
+            <img src="@/assets/view.png" width="15px"/>{{ this.post.view }} | <span v-text="changeDate(post.date)" />
           </span>
         </div>
         <hr />
       </div>
-      <div id="post-body">
+      <div class="mt-5 mb-5" id="post-body">
         <div v-html="enterToBr(this.post.content)"></div>
       </div>
       <div id="post-foot">
-        <span><img src="@/assets/leaf_lightgreen.png" width="15px">{{ this.post.recommend }}</span> |
+        <span><img src="@/assets/leaf_lightgreen.png" width="15px" />{{this.post.recommend}}</span>
         <span>
-          <img src="@/assets/comment_green.png" width="15px">{{ this.post.commentCount }}
+          <img src="@/assets/comment_green.png" width="15px" />{{this.post.commentCount}}
         </span>
-        <div>
-          <!-- <div v-if="this.$store.user.userNumber == this.post.userNumber"> -->
+        <div v-if="this.$store.userNumber == this.post.userNumber">
           <span class="modifyBtn" @click="modifyPost">수정</span> |
           <span class="deleteBtn" @click="deletePost">삭제</span>
         </div>
@@ -63,23 +61,43 @@ export default {
   data() {
     return {
       no: this.$route.params.no,
+      typeimg: null,
       comments: [],
       isModifyShow: false,
       modifyComment: Object,
       recommended: "@/assets/leaf_lightgreen.png",
-      notRecommended: "@/assets/leaf_gray.png"
+      notRecommended: "@/assets/leaf_gray.png",
     };
   },
   created() {
     axios.get(`post/${this.no}`).then(({ data }) => {
       this.post = data;
+      switch (this.post.postType) {
+        case 1:
+          this.typeimg = require("@/assets/category_free.png");
+          break;
+        case 2:
+          this.typeimg = require("@/assets/category_info.png");
+          break;
+        case 3:
+          this.typeimg = require("@/assets/category_question.png");
+          break;
+        case 4:
+          this.typeimg = require("@/assets/category_share.png");
+          break;
+      }
+      return this.typeimg;
     });
     axios.get(`comment/${this.no}`).then(({ data }) => {
       this.comments = data;
-      console.log(data);
+      // console.log(data);
     });
   },
   methods: {
+    changeDate(str) {
+      console.log(str);
+      return str.substring(0, 10) + " " + str.substring(11, 19);
+    },
     enterToBr(str) {
       if (str) return str.replace(/(?:\r\n|\r|\n)/g, "<br />");
     },
@@ -105,4 +123,33 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.container > * {
+  font-family: Noto Sans KR;
+  font-style: normal;
+}
+#post-area {
+  text-align: left;
+}
+#title {
+  font-style: large;
+  font-weight: bold;
+}
+#left {
+  color: #999999;
+}
+#right {
+  float: right;
+  display: inline-block;
+  color: #999999;
+}
+#right img {
+  margin: 5px;
+}
+#post-foot span {
+  margin-right: 10px;
+}
+#post-foot img{
+  margin-right: 5px;
+}
+</style>

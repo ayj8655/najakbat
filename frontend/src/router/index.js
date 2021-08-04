@@ -14,6 +14,7 @@ import SignupNext from "../views/Login/SignupNext.vue"
 import FindId from "../views/Login/FindId.vue"
 import FindIdNext from "../views/Login/FindIdNext.vue"
 import FindPassword from "../views/Login/FindPassword.vue"
+import Profile from "../views/Profile/Profile.vue"
 
 Vue.use(VueRouter)
 
@@ -40,36 +41,56 @@ const routes = [
     component: () =>
     import("../views/Main.vue"),
   },
-{
-  path: "/community",
-  name: "Community",
-  component: () => import("../views/Community.vue"),
-  children : [
-    {
-      path: "/community/list",
-      name: "CommunityList",
-      component: () => import("../components/Community/CommunityList.vue")
+  {
+    path: "/community",
+    name: "Community",
+    component: () => import("../views/Community.vue"),
+    children : [
+      {
+        path: "/community/list",
+        name: "CommunityList",
+        component: () => import("../components/Community/CommunityList.vue")
+      },
+      {
+        path: "/community/write",
+        name: "CommunityWrite",
+        component: () => import("../components/Community/CommunityWrite.vue")
+      },
+      {
+        path: "/community/modify/:no",
+        name: "CommunityModify",
+        component: () => import("../components/Community/CommunityModify.vue")
+      },
+      {
+        path: "/community/detail/:no",
+        name: "CommunityDetail",
+        component: () => import("../components/Community/CommunityDetail.vue")
+      },
+    ],
+    redirect: () => {
+      return "/community/list";
     },
-    {
-      path: "/community/write",
-      name: "CommunityWrite",
-      component: () => import("../components/Community/CommunityWrite.vue")
+  },
+  {
+    path: "/dict",
+    name: "Dictionary",
+    component: () => import("../views/Dictionary.vue"),
+    children : [
+      {
+        path: "/dict/list",
+        name: "DictionaryList",
+        component: () => import("../components/Dictionary/DictList.vue")
+      },
+      {
+        path: "/dict/detail/:no",
+        name: "DictionaryDetail",
+        component: () => import("../components/Dictionary/DictDetail.vue")
+      },
+    ],
+    redirect: () => {
+      return "/dict/list";
     },
-    {
-      path: "/community/modify/:no",
-      name: "CommunityModify",
-      component: () => import("../components/Community/CommunityModify.vue")
-    },
-    {
-      path: "/community/detail/:no",
-      name: "CommunityDetail",
-      component: () => import("../components/Community/CommunityDetail.vue")
-    },
-  ],
-  redirect: () => {
-    return "/community/list";
-  }
-},
+  },
   // 준호 라우터
 
   {
@@ -123,6 +144,11 @@ const routes = [
     path: '/findpassword',
     name: 'FindPassword',
     component: FindPassword,
+  },
+  {
+    path: '/profile/:usernumber',
+    name: 'Profile',
+    component: Profile,
   },
 ];
 

@@ -19,11 +19,22 @@ export default new Vuex.Store({
     nightmode_notice: false,
 
     // Alerts 변수
-    searchNotices: '',
+    searchNotices: [],
+    // noticeIsreads: [],
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
-    myId: null
+    myNumber: localStorage.getItem('userNumber') || '',
+    myId: null,
+    loginCheck: false,
+
+    // profile 정보
+    profile: {
+      id: null,
+      userNumber: null,
+      nickname: null,
+      gold: null
+    },
   },
   mutations: {
 
@@ -38,11 +49,41 @@ export default new Vuex.Store({
 
     GET_SEARCH_NOTICE(state, searchNotice) {
       state.searchNotices = searchNotice
+      // for (let key in searchNotice) {
+      //   const value = searchNotice[key]
+      //   state.noticeIsreads.push(value.isRead)
+      // }
     },
+
+    // Myalerts mutations
+    // GET_NOTICE_ISREAD(state, data) {
+    //   state.noticeIsread = data.isRead
+    // },
 
     // Find Id
     FIND_ID(state, myId) {
       state.myId = myId
+    },
+    CHECK_LOGIN(state, payload) {
+      if (payload) {
+        state.loginCheck = true
+      }
+      else {
+        state.loginCheck = false
+      }
+      console.log(state.loginCheck);
+    },
+
+    // Profile
+    GET_PROFILE(state, payload) {
+      state.profile['id'] = payload.id
+      state.profile['userNumber'] = payload.userNumber
+      state.profile['nickname'] = payload.nickname
+      state.profile['gold'] = payload.gold
+    },
+    GET_POSTS(state, payload) {
+      state.targetPosts = payload
+      
     }
   },
 
@@ -50,8 +91,8 @@ export default new Vuex.Store({
   actions: {
     // Alerts actions
 
-    getSearchNotice(context, userNumber) {
-      axios.get(`user/notice/${userNumber}`)
+    getSearchNotice(context) {
+      axios.get(`user/notice/1`)
       .then(res => {
         context.commit('GET_SEARCH_NOTICE', res.data)
       })
@@ -97,6 +138,60 @@ export default new Vuex.Store({
           console.error(err)
         })
       },
+    // Myalerts actions
+    updateIsread(context, mynoticeStatus) {
+      mynoticeStatus[0] = (mynoticeStatus[0])? 1:0;
+      console.log(mynoticeStatus)
+      // this.state.searchNotices[mynoticeStatus[1] - 1].isRead = mynoticeStatus[0] 
+      axios({
+        method: 'put',
+        url: `user/notice/${mynoticeStatus[1]}`,
+        data: {
+          isRead: mynoticeStatus[0],
+          userNumber: 1,
+        }
+      })
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+      },
+
+    deleteallNotices() {
+      axios({
+        method: 'delete',
+        url: `user/notice`,
+        data: {
+          userNumber: 1,
+        }
+      })
+        .then(res => {
+          this.state.searchNotices = [];
+          console.log(res)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+    
+    deleteNotice (context, noticeNumber) {
+      axios({
+        method: 'delete',
+        url: `user/notice/${noticeNumber}`,
+        data: {
+          userNumber: 1,
+        }
+      })
+        .then(res => {
+          console.log('success')
+          console.log(res)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
     
       // Signup actions
       signup({ commit }, credentials) {
@@ -109,9 +204,11 @@ export default new Vuex.Store({
         .then(res => {
           res
           commit
-          axios.get(`user/${credentials[0]}/`)
+          axios.get(`user/${credentials[0]}`)
           .then(res => {
+            // console.log(res.data);
             localStorage.setItem('userId', res.data.id)
+            localStorage.setItem('userNumber', res.data.userNumber)
             router.push({ name: 'SignupNext' })
           })
         .catch(err => {
@@ -123,10 +220,55 @@ export default new Vuex.Store({
         })
       },
       findMyId({ commit }, myPhone) {
-        axios.post('http://localhost:8080/user/idFind/', {phone: myPhone})
+        axios.post('user/idFind', {phone: myPhone})
         .then(res => {
           commit('FIND_ID', res.data)
           router.push({ name: 'FindIdNext' })
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      },
+      login({ commit }, credentials) {
+        axios.post('user/login', {
+          userId: credentials[0],
+          userPwd: credentials[1]
+        })
+        .then(res => {
+          if(res.data) {
+            console.log(res.data);
+            commit('CHECK_LOGIN', res.data)
+            localStorage.setItem('userId', res.data.id)
+            localStorage.setItem('userNumber', res.data.userNumber)
+            router.push({ path: 'main' })
+          }
+          else {
+            commit('CHECK_LOGIN', res.data)
+            alert('아이디 또는 비밀번호가 일치하지 않습니다')
+          }
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      },
+
+      // Profile actions
+      getProfile({ commit }, userNumber) {
+        axios.get('user/all')
+        .then(res => {
+          for (var i = 0; i < res.data.length; i++) {
+            if (userNumber == res.data[i]['userNumber']) {
+              var targetId = res.data[i]['id']
+              axios.get(`user/${targetId}`)
+              .then(res => {
+                commit('GET_PROFILE', res.data)
+              })
+              .catch(err => {
+                console.error(err);
+              })
+              return
+            }
+          }
         })
         .catch(err => {
           console.error(err);

@@ -1,13 +1,28 @@
 <template>
   <div class="nav">
-      <router-link to="/main"><img src="@/assets/mococo.png" id="left"/></router-link>
+      <div id="left">
+      <router-link to="/main"><img src="@/assets/mococo.png"/></router-link>
+      </div>
+      <div id="right">
+      <router-link :to="'/profile/' + myProfileNumber"><img alt="프로필" /></router-link>
       <router-link to="/myalerts"><img src="@/assets/noti.png" /></router-link>
-      <router-link to="/">프로필</router-link>
+      </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapState } from 'vuex'
+
+export default {
+  computed: {
+    ...mapState([
+      'myNumber'
+    ]),
+    myProfileNumber() {
+      return this.myNumber
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -16,15 +31,18 @@ export default {};
     border-bottom: 2px solid #b6c790;
     display: inline-block;
   }
-  #left {
-      float: left;
+  #left img {
+    float: left;
   }
-  #right {
+  #right img {
       float: right;
+      right: 0;
       display: inline-block;
   }
   img {
     width: 15%;
+    margin: 5px;
+    padding: 5px;
   }
 }
 </style>
