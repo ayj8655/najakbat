@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,6 +57,7 @@ public class PostController {
 	
 	//하나의 게시물의 내용 조회
 	@RequestMapping(value = "/{no}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<Optional<Post>> searchPost (@PathVariable String no) throws IOException {
 		logger.info("게시물 내용 조회");
 		int post_number = Integer.parseInt(no);
@@ -89,6 +91,7 @@ public class PostController {
 	
 	// 게시물 n개씩 조회해서 보내주는 것
 	@RequestMapping(value = "/infinite", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<?> searchInfinitePost (@RequestParam("limit") int limit) throws IOException {
 		try {
 
@@ -107,7 +110,9 @@ public class PostController {
 	
 	
 	// 자유1,정보2, 질문3, 나눔4  
+	
 	@RequestMapping(value = "/type/{type}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<?> searchPostType (@PathVariable String type) throws IOException {
 		logger.info("게시물 분류 조회");
 		int postType = 0;
@@ -136,6 +141,7 @@ public class PostController {
 	// 사용자가 쓴 게시글 모음 인피니티 스크롤로 변경
 	// limit =0 일때 첫번째 post부터 3개 보내줌. limit = 3일 때 4번째부터 post를 3개 보내줌 - 최근 글이 위로 오게 보낸다.
 	@RequestMapping(value = "/user/{userno}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<?> searchPostUser (@RequestParam String limit,@PathVariable String userno) throws IOException {
 		logger.info("사용자 게시물 조회");
 		try {
@@ -156,6 +162,7 @@ public class PostController {
 	
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> insertPost (@RequestParam (value = "type")String type,
 												@RequestParam(value = "content")String content,
 												@RequestParam(value = "title")String title,
@@ -238,6 +245,7 @@ public class PostController {
 
 	}
 	@RequestMapping(value = "/{postno}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> deletePost (@PathVariable String postno) throws IOException {
 		
 		try {
@@ -257,6 +265,7 @@ public class PostController {
 		}
 	}
 	@RequestMapping(value = "/{postno}", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> updatePost (@RequestBody Post post) throws IOException {
 		
 	
@@ -282,6 +291,7 @@ public class PostController {
 	
 	// 사용자가 게시글 추천을 누르면 게시글의 좋아요가 하나 늘어나고, 몇번 유저가 몇번 게시글에 좋아요를 눌렀는지 post_recommend table에 추가한다.
 	@RequestMapping(value = "/recommend/{postno}", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> recommendPost (@PathVariable String postno, @RequestParam("user_number") int user_number) throws IOException {
 		
 		try {
