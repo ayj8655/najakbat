@@ -46,7 +46,7 @@ export default {
         startCountdown() {
             let phone = this.$props.phoneNum
             
-            axios.get(`http://localhost:8080/user/confirmPhone/${phone}`)
+            axios.get(`http://localhost:8080/user/pass/confirmPhone/${phone}`)
             .then(res => {
                 if (res.data === 'fail') {
                     alert('이미 가입된 번호입니다')

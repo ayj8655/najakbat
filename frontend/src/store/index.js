@@ -208,7 +208,7 @@ export default new Vuex.Store({
     
     // Signup actions
     signup({ commit }, credentials) {
-      axios.post('user/', {
+      axios.post('user/signup', {
         id: credentials[0],
         password: credentials[1],
         nickname: credentials[2],
@@ -216,16 +216,25 @@ export default new Vuex.Store({
       })
       .then(res => {
         res
-        commit
-        this.dispatch('login', credentials)
-        axios.get(`user/${credentials[0]}`)
-        .then(res => {
-          // console.log(res.data);
-          localStorage.setItem('userId', res.data.id)
-          localStorage.setItem('userNumber', res.data.userNumber)
-          router.push({ name: 'SignupNext' })
+        axios.post('user/authenticate', {
+          id: credentials[0],
+          password: credentials[1]
         })
-      .catch(err => {
+        .then(res => {
+          localStorage.setItem('access_token', res.data.token)
+          commit('UPDATE_TOKEN', res.data.token)
+          axios.get('user/user1')
+          .then(res => {
+            console.log(res.data);
+            localStorage.setItem('userId', res.data.id)
+            localStorage.setItem('userNumber', res.data.userNumber)
+            router.push({ path: 'SignupNext' })
+          })
+          .catch(err => {
+            console.error(err);
+          })
+        })
+        .catch(err => {
           console.error(err);
         })
       })
@@ -233,6 +242,7 @@ export default new Vuex.Store({
         console.error(err);
       })
     },
+
     findMyId({ commit }, myPhone) {
       axios.post('user/idFind', {phone: myPhone})
       .then(res => {
@@ -243,18 +253,24 @@ export default new Vuex.Store({
         console.error(err);
       })
     },
+
     login({ commit }, credentials) {
-      console.log(credentials);
       axios.post('user/authenticate', {
         id: credentials[0],
         password: credentials[1]
       })
       .then(res => {
-        console.log(res.data);
         localStorage.setItem('access_token', res.data.token)
         commit('UPDATE_TOKEN', res.data.token)
-        // router.push({ path: 'main' })
-        
+        axios.get('user/user1')
+        .then(res => {
+          localStorage.setItem('userId', res.data.id)
+          localStorage.setItem('userNumber', res.data.userNumber)
+          router.push({ path: 'main' })
+        })
+        .catch(err => {
+          console.error(err);
+        })
       })
       .catch(err => {
         console.error(err);
