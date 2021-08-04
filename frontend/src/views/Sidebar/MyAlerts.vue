@@ -3,13 +3,17 @@
   <header-nav></header-nav>
   <router-view></router-view>
   <h3 class="mb-3 mt-5 fw-bold">알림</h3>
-  <button type="button" class="btn btn-danger mb-2" @click="deleteallNotices">Danger</button>
+  <button type="button" class="btn btn-warning mb-2" v-if="isdeleteactivated" @click="Activatedelete">삭제 취소</button>
+  <button type="button" class="btn btn-secondary mb-2" v-else @click="Activatedelete">알림 삭제</button>
   <div v-for="searchNotice in searchNotices" :key="searchNotice.noticeNumber">
     <div class="container px-0">
-      <div v-if="searchNotice.isRead" class="isRead-false border border-end-0 border-start-0 bg-white" draggable @click="Reading (searchNotice)">
+      <div v-if="searchNotice.isRead" class="isRead-false border border-end-0 border-start-0 bg-white" @click="Reading (searchNotice)">
         <div class="container notice mt-2">
           <div class="row">
-            <div class="col-1 px-0" @drop="deleteNotice" @dragover.prevent @dragenter.prevent></div>
+            <div class="col-1 px-0" v-show="isdeleteactivated" @click="Checkingnotice (searchNotice.noticeNumber)">
+              <img v-if="noticechecked" src="@/assets/select_on.png" alt="">
+              <img v-else src="@/assets/select_off.png" alt="">
+            </div>
             <div class="col-2 px-0">
               <img v-if="searchNotice.isRead" src="@/assets/noti.png" width="30px" height="30px" alt="">
               <!-- <img v-else src="@/assets/noti_green.png" width="30px" height="30px" alt=""> -->
@@ -26,10 +30,13 @@
           </div>
         </div>
       </div>
-      <div v-else class="isRead-false border border-end-0 border-start-0" draggable @click="Reading (searchNotice)">
+      <div v-else class="isRead-false border border-end-0 border-start-0" @click="Reading (searchNotice)">
         <div class="container notice mt-2">
           <div class="row">
-            <div class="col-1 px-0" @drop="deleteNotice" @dragover.prevent @dragenter.prevent ></div>
+            <div class="col-1 px-0" v-show="isdeleteactivated" @click="Checkingnotice (searchNotice.noticeNumber)">
+              <img v-if="noticechecked" src="@/assets/select_on.png" alt="">
+              <img v-else src="@/assets/select_off.png" alt="">
+            </div>
             <div class="col-2 px-0">
               <!-- <img v-if="searchNotice.isRead" src="@/assets/noti.png" width="30px" height="30px" alt=""> -->
               <img src="@/assets/noti_green.png" width="30px" height="30px" alt="">
@@ -48,6 +55,7 @@
       </div>
     </div>
   </div>
+  <button type="button" class="btn btn-danger mt-3" v-show="isdeleteactivated" @click="deleteallNotices">전체 알림 삭제</button>
   <div id="foot"></div>
   <menubar id="menubar"></menubar>
 </div>
@@ -67,6 +75,13 @@ export default {
   created() {
     this.$store.dispatch('getSearchNotice')
   },
+  data () {
+    return {
+      isdeleteactivated: false,
+      noticechecked: false,
+    }
+  },
+
   methods: {
     ...mapActions ([
       'updateIsread',
@@ -83,6 +98,13 @@ export default {
     },
     test () {
       console.log('success')
+    },
+    Activatedelete () {
+      this.isdeleteactivated = ! this.isdeleteactivated
+      // console.log(this.isdeleteactivated)
+    },
+    Checkingnotice (mynotice) {
+      this.$store.state.searchNotices[mynotice] = ! this.$store.state.searchNotices[mynotice]
     }
   },
   computed: {

@@ -29,7 +29,8 @@ export default new Vuex.Store({
     searchNotices: [],
 
     // Message 변수
-    
+    receivedMessages: [],
+    sentMessages: [],
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
@@ -65,10 +66,15 @@ export default new Vuex.Store({
       // }
     },
 
-    // Myalerts mutations
-    // GET_NOTICE_ISREAD(state, data) {
-    //   state.noticeIsread = data.isRead
-    // },
+    // Message mutations
+
+    GET_RECEIVED_MESSAGES(state, receivedMessage) {
+      state.receivedMessages = receivedMessage
+    },
+    
+    GET_SENT_MESSAGES(state, sentMessage) {
+      state.sentMessages = sentMessage
+    },
 
     // Get Token
     UPDATE_TOKEN(state, accessToken) {
@@ -123,6 +129,39 @@ export default new Vuex.Store({
         console.error(err)
       })
     },
+    getReceivedMessages(context) {
+      axios({
+        method: 'get',
+        url: `message/receiver`,
+        // data: {
+        //   userNumber: 1,
+        //   page: 1
+        // }
+      })
+      .then(res => {
+        context.commit('GET_RECEIVED_MESSAGES', res.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    },
+    getSentMessages(context) {
+      axios({
+        method: 'get',
+        url: `message/sender`,
+        // data: {
+        //   userNumber: 1,
+        //   page: 1
+        // }
+      })
+      .then(res => {
+        context.commit('GET_SENT_MESSAGES', res.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    },
+
     updateNotice(context, settingsStatus) {  
       settingsStatus[0] = (settingsStatus[0])? 1:0;
       settingsStatus[1] = (settingsStatus[1])? 1:0;
