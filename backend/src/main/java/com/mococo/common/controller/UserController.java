@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import javax.annotation.security.PermitAll;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +74,10 @@ public class UserController {
 	
 	//로그인 및 토큰 발급
 	@PostMapping("/authenticate")
+	@ApiOperation(value = "로그인및인증 ->인증토큰 헤더에 반환하고 로그인유저 정보 바디에 담아서 반환", response = String.class)
+	
 	public ResponseEntity<TokenDto> authorize(@RequestBody Map<String, String> map) {
+//	public ResponseEntity<User> authorize(@RequestBody Map<String, String> map) {
 		System.out.println(userService);
 
 		// id,passoword를 통해 UsernamePasswordAuthenticationToken을 생성
@@ -89,17 +94,39 @@ public class UserController {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		// 헤더에도 넣고
 		httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+		
 		// 바디에도 넣어서 리턴
 		return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+		
+//		return new ResponseEntity<>( userService.getUserWithAuthorities(map.get("id")).get(), httpHeaders, HttpStatus.OK);
 	}
 
 	//회원가입
 	@PostMapping("/signup")
-	public ResponseEntity<User> signup1(@RequestBody User userDto) {
-		System.out.println(userDto);
-		System.out.println(userService);
-		return ResponseEntity.ok(userService.signup(userDto));
+	public ResponseEntity<String> signup1(@RequestBody User userDto) {
+		
+		try {
+			User user = userService.signup(userDto);
+			if (user==null) {
+				logger.info("회원가입실패");
+				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+			}
+
+		} catch (Exception e) {
+			System.out.println("회원 가입 오류");
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+		}
+
+		Optional<User> tempuser = userService.findById(userDto.getId());
+//		System.out.println("이게 내가 파인드바이아이디로 찾은거 " + tempuser);
+		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0);
+//		System.out.println("이건 내가 저장할거" + us);
+		userSettingService.save(us);
+
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		
 	}
+	
 
 	//자기 자신의 정보 및 인증정보 
 	@GetMapping("/user1")
@@ -126,7 +153,7 @@ public class UserController {
 	//여기서부터 --------------------------------------------------------------------------------
 	
 	// @RequestMapping(value = "/confirmId/{userId}", method = RequestMethod.GET)
-	@GetMapping("/confirmId/{userId}")
+	@GetMapping("/pass/confirmId/{userId}")
 	@ApiOperation(value = "아이디 입력하면 중복여부 확인후 성공 실패 반환", response = String.class)
 	public ResponseEntity<String> confirmUserId(@PathVariable String userId) throws IOException {
 		logger.info("아이디 중복체크");
@@ -151,7 +178,7 @@ public class UserController {
 	}
 
 	// 번호 받아서 중복확인
-	@RequestMapping(value = "/confirmPhone/{userPhone}", method = RequestMethod.GET)
+	@RequestMapping(value = "/pass/confirmPhone/{userPhone}", method = RequestMethod.GET)
 	@ApiOperation(value = "핸드폰번호 입력하면 중복여부 확인후 성공 실패 반환", response = String.class)
 	public ResponseEntity<String> confirmUserPhone(@PathVariable String userPhone) throws IOException {
 		logger.info("핸드폰번호 중복체크");
@@ -175,7 +202,7 @@ public class UserController {
 	}
 
 	// 핸드폰번호 받고 받은 폰 번호로 아이디 찾고 찾은 아이디 전송 (핸드폰번호만 받으면됨)
-	@RequestMapping(value = "/idFind", method = RequestMethod.POST)
+	@RequestMapping(value = "/pass/idFind", method = RequestMethod.POST)
 	@ApiOperation(value = "핸드폰번호를 받아서 아이디를 찾고 성공시 id 실패시 fail 반환", response = String.class)
 	public ResponseEntity<String> idFind(@RequestBody User user) throws IOException {
 		logger.info("id찾기");
@@ -203,7 +230,7 @@ public class UserController {
 	}
 
 	// 핸드폰번호 받음 -> 랜덤숫자만듦 -> 메시지 보냄 -> 숫자 프론트에 보냄
-	@RequestMapping(value = "/phone", method = RequestMethod.POST)
+	@RequestMapping(value = "/pass/phone", method = RequestMethod.POST)
 	@ApiOperation(value = "헨드폰인증 -> 번호입력후 인증번호 생성 후 메시지보내고 인증번호를 프론트로 전송", response = String.class)
 	public ResponseEntity<String> phoneaCertification(@RequestBody User user) throws IOException {
 		logger.info("핸드폰인증");

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,8 +42,9 @@ public class RecipeGuideController {
 	private static final String ERROR = "error";
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "모든 요리 레시피 검색")
-	private ResponseEntity<?> searchAllRecipe() throws IOException {
+	public ResponseEntity<?> searchAllRecipe() throws IOException {
 		logger.info("모든 요리 레시피 검색");
 		
 		try {
@@ -55,8 +57,9 @@ public class RecipeGuideController {
 	}
 	
 	@RequestMapping(value = "/{recipeNumber}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "요리 레시피 검색")
-	private ResponseEntity<?> searchRecipe (@PathVariable("recipeNumber") String recipeNumberString) throws IOException {
+	public ResponseEntity<?> searchRecipe (@PathVariable("recipeNumber") String recipeNumberString) throws IOException {
 		logger.info("요리 레시피 검색");
 		
 		try {
@@ -76,8 +79,9 @@ public class RecipeGuideController {
 	}
 	
 	@RequestMapping(value = "/crop/{recipeNumber}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "요리 레시피에 들어가는 모든 작물 검색")
-	private ResponseEntity<?> searchAllCropByRecipeNumber(@PathVariable("recipeNumber") String recipeNumberString) throws IOException {
+	public ResponseEntity<?> searchAllCropByRecipeNumber(@PathVariable("recipeNumber") String recipeNumberString) throws IOException {
 		logger.info("요리 레시피에 들어가는 모든 작물 검색");
 		
 		try {
