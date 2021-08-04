@@ -27,7 +27,9 @@ export default new Vuex.Store({
 
     // Alerts 변수
     searchNotices: [],
-    // noticeIsreads: [],
+
+    // Message 변수
+    
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
