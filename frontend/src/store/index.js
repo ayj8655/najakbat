@@ -193,87 +193,84 @@ export default new Vuex.Store({
         })
     },
     
-      // Signup actions
-      signup({ commit }, credentials) {
-        axios.post('user/', {
-          id: credentials[0],
-          password: credentials[1],
-          nickname: credentials[2],
-          phone: credentials[3]
-        })
+    // Signup actions
+    signup({ commit }, credentials) {
+      axios.post('user/', {
+        id: credentials[0],
+        password: credentials[1],
+        nickname: credentials[2],
+        phone: credentials[3]
+      })
+      .then(res => {
+        res
+        commit
+        this.dispatch('login', credentials)
+        axios.get(`user/${credentials[0]}`)
         .then(res => {
-          res
-          commit
-          axios.get(`user/${credentials[0]}`)
-          .then(res => {
-            // console.log(res.data);
-            localStorage.setItem('userId', res.data.id)
-            localStorage.setItem('userNumber', res.data.userNumber)
-            router.push({ name: 'SignupNext' })
-          })
-        .catch(err => {
-            console.error(err);
-          })
+          // console.log(res.data);
+          localStorage.setItem('userId', res.data.id)
+          localStorage.setItem('userNumber', res.data.userNumber)
+          router.push({ name: 'SignupNext' })
         })
-        .catch(err => {
+      .catch(err => {
           console.error(err);
         })
-      },
-      findMyId({ commit }, myPhone) {
-        axios.post('user/idFind', {phone: myPhone})
-        .then(res => {
-          commit('FIND_ID', res.data)
-          router.push({ name: 'FindIdNext' })
-        })
-        .catch(err => {
-          console.error(err);
-        })
-      },
-      login({ commit }, credentials) {
-        axios.post('user/login', {
-          userId: credentials[0],
-          userPwd: credentials[1]
-        })
-        .then(res => {
-          if(res.data) {
-            console.log(res.data);
-            commit('CHECK_LOGIN', res.data)
-            localStorage.setItem('userId', res.data.id)
-            localStorage.setItem('userNumber', res.data.userNumber)
-            router.push({ path: 'main' })
-          }
-          else {
-            commit('CHECK_LOGIN', res.data)
-            alert('아이디 또는 비밀번호가 일치하지 않습니다')
-          }
-        })
-        .catch(err => {
-          console.error(err);
-        })
-      },
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    },
+    findMyId({ commit }, myPhone) {
+      axios.post('user/idFind', {phone: myPhone})
+      .then(res => {
+        commit('FIND_ID', res.data)
+        router.push({ name: 'FindIdNext' })
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    },
+    login({ commit }, credentials) {
+      console.log(credentials);
+      axios.post('user/authenticate', {
+        id: credentials[0],
+        password: credentials[1]
+      })
+      .then(res => {
+        console.log(res.data);
+        commit('CHECK_LOGIN', res.data)
+        localStorage.setItem('userId', res.data.id)
+        localStorage.setItem('userNumber', res.data.userNumber)
+        router.push({ path: 'main' })
+        
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    },
 
-      // Profile actions
-      getProfile({ commit }, userNumber) {
-        axios.get('user/all')
-        .then(res => {
-          for (var i = 0; i < res.data.length; i++) {
-            if (userNumber == res.data[i]['userNumber']) {
-              var targetId = res.data[i]['id']
-              axios.get(`user/${targetId}`)
-              .then(res => {
-                commit('GET_PROFILE', res.data)
-              })
-              .catch(err => {
-                console.error(err);
-              })
-              return
-            }
+    // Profile actions
+    getProfile({ commit }, userNumber) {
+      axios.get('user/all')
+      .then(res => {
+        for (var i = 0; i < res.data.length; i++) {
+          if (userNumber == res.data[i]['userNumber']) {
+            var targetId = res.data[i]['id']
+            axios.get(`user/${targetId}`)
+            .then(res => {
+              commit('GET_PROFILE', res.data)
+            })
+            .catch(err => {
+              console.error(err);
+            })
+            return
           }
-        })
-        .catch(err => {
-          console.error(err);
-        })
-      }
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    }
   },
 
   modules: {},
