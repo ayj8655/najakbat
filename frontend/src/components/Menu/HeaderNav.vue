@@ -14,6 +14,15 @@
 import { mapState } from 'vuex'
 
 export default {
+  data() {
+    return {
+      // path: this.$route.path,
+      // notiImg: "",
+    }
+  },
+  created() {
+    // this.notiImg = (this.path.include("myalert"))? require("@/assets/noti_green.png"): require("@/assets/noti.png");
+  },
   computed: {
     ...mapState([
       'myNumber'
