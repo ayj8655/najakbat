@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mococo.common.model.Comment;
 import com.mococo.common.service.CommentService;
 
+import io.swagger.annotations.ApiOperation;
+
 
 //http://localhost:8080/swagger-ui.html/
 
@@ -29,17 +32,19 @@ import com.mococo.common.service.CommentService;
 
 public class CommentController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
-	private static final String SUCCESS = "success";
-	private static final String FAIL = "fail";
-	private static final String ERROR = "error";
+	public static final Logger logger = LoggerFactory.getLogger(CommentController.class);
+	public static final String SUCCESS = "success";
+	public static final String FAIL = "fail";
+	public static final String ERROR = "error";
 	
 	
 	@Autowired
 	CommentService commentService;
 	
 	@RequestMapping(value = "/{postno}", method = RequestMethod.GET)
-	private ResponseEntity<?> searchComment (@PathVariable String postno) throws IOException {
+	@ApiOperation(value = "하나의 게시물 안에 있는 댓글들 조회")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<?> searchComment (@PathVariable String postno) throws IOException {
 		logger.info("게시물별 댓글 조회");
 		int post_number = Integer.parseInt(postno);
 		return new ResponseEntity<List<Comment>>(commentService.findAllByPostNumber(post_number), HttpStatus.OK);
@@ -48,7 +53,9 @@ public class CommentController {
 	
 	// request param 은 댓글이 게시글의 댓글인지 댓글의 대댓글인지 구분. 게시글의 댓글: parent=0, 댓글의 대댓글: parent = 댓글의 comment_number 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	private ResponseEntity<String> insertComment (@RequestBody Comment comment, @RequestParam("user_number") int user_number
+	@ApiOperation(value = "댓글을 등록")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<String> insertComment (@RequestBody Comment comment, @RequestParam("user_number") int user_number
 													, @RequestParam("parent") int parent, @RequestParam("postno") int postno) throws IOException {
 		logger.info("댓글 등록");
 		
@@ -85,7 +92,9 @@ public class CommentController {
 	}
 	
 	@RequestMapping(value = "/{commentno}", method = RequestMethod.PUT)
-	private ResponseEntity<String> updateComment (@RequestBody Comment comment) throws IOException {
+	@ApiOperation(value = "댓글 수정")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<String> updateComment (@RequestBody Comment comment) throws IOException {
 		logger.info("댓글 수정");
 		try {
 			
@@ -110,7 +119,9 @@ public class CommentController {
 	
 	
 	@RequestMapping(value = "/{comment_number}", method = RequestMethod.DELETE)
-	private ResponseEntity<String> deleteComment (@PathVariable String comment_number) throws IOException {
+	@ApiOperation(value = "댓글 삭제")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<String> deleteComment (@PathVariable String comment_number) throws IOException {
 		logger.info("댓글 삭제");
 		
 		try {
@@ -132,7 +143,9 @@ public class CommentController {
 	
 	
 	@RequestMapping(value = "/recommend/{commentno}", method = RequestMethod.PUT)
-	private ResponseEntity<String> recommentComment (@PathVariable String commentno, @RequestParam int user_number) throws IOException {
+	@ApiOperation(value = "댓글 추천 올리기")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<String> recommentComment (@PathVariable String commentno, @RequestParam int user_number) throws IOException {
 		
 		
 		try {

@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-4">
     <div style="text-align: center">
-      <h4 class="mb-5 community">커뮤니티</h4>
+      <h3 class="m-5 community">커뮤니티</h3>
     </div>
     <div class="menu">
       <span class="category">
@@ -79,7 +79,7 @@
         v-if="this.type == 0"
       ></infinite-loading>
     </div>
-    <hr class="line1" />
+    <!-- <hr class="line1" /> -->
     <div></div>
   </div>
 </template>
@@ -114,11 +114,9 @@ export default {
       this.list = [];
       this.type = 0;
       this.limit = 0;
-      // this.list = this.listOrigin;
-      this.colorChange[1] = false;
-      this.colorChange[2] = false;
-      this.colorChange[3] = false;
-      this.colorChange[4] = false;
+      this.colorChange.forEach((c, index) => {
+        this.colorChange[index] = false;
+      });
       this.colorChange[0] = true;
     },
     changeType(type, text) {

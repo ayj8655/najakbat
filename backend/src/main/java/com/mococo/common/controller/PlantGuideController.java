@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,8 +39,9 @@ public class PlantGuideController {
 	private static final String ERROR = "error";
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "모든 작물 정보 검색")
-	private ResponseEntity<?> searchAllPlant() throws IOException {
+	public ResponseEntity<?> searchAllPlant() throws IOException {
 		logger.info("모든 작물 정보 검색");
 		
 		try {
@@ -52,8 +54,9 @@ public class PlantGuideController {
 	}
 	
 	@RequestMapping(value = "/summary", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "모든 작물 요약 정보 검색(cropNumber, name, image)")
-	private ResponseEntity<?> searchAllPlantSummary() throws IOException {
+	public ResponseEntity<?> searchAllPlantSummary() throws IOException {
 		logger.info("모든 작물 요약 정보 검색");
 		
 		try {
@@ -66,8 +69,9 @@ public class PlantGuideController {
 	}
 	
 	@RequestMapping(value = "/{cropNumber}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 정보 검색")
-	private ResponseEntity<?> searchPlant(@PathVariable("cropNumber") String cropNumberString) throws IOException {
+	public ResponseEntity<?> searchPlant(@PathVariable("cropNumber") String cropNumberString) throws IOException {
 		logger.info("작물 정보 검색");
 		
 		try {
@@ -87,8 +91,9 @@ public class PlantGuideController {
 	}
 	
 	@RequestMapping(value = "/recipe/{cropNumber}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물로 만들 수 있는 모든 요리 검색")
-	private ResponseEntity<?> searchAllRecipeByCropNumber(@PathVariable("cropNumber") String cropNumberString) throws IOException {
+	public ResponseEntity<?> searchAllRecipeByCropNumber(@PathVariable("cropNumber") String cropNumberString) throws IOException {
 		logger.info("작물로 만들 수 있는 모든 요리 검색");
 		
 		try {

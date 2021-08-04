@@ -157,6 +157,40 @@ export default new Vuex.Store({
         .catch(err => {
           console.error(err)
         })
+      },
+
+    deleteallNotices() {
+      axios({
+        method: 'delete',
+        url: `user/notice`,
+        data: {
+          userNumber: 1,
+        }
+      })
+        .then(res => {
+          this.state.searchNotices = [];
+          console.log(res)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+    
+    deleteNotice (context, noticeNumber) {
+      axios({
+        method: 'delete',
+        url: `user/notice/${noticeNumber}`,
+        data: {
+          userNumber: 1,
+        }
+      })
+        .then(res => {
+          console.log('success')
+          console.log(res)
+        })
+        .catch(err => {
+          console.error(err)
+        })
     },
     
       // Signup actions
