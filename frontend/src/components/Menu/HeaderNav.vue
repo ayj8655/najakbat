@@ -4,33 +4,25 @@
       <router-link to="/main"><img src="@/assets/mococo.png"/></router-link>
       </div>
       <div id="right">
-      <router-link :to="'/profile/' + myProfileNumber"><img alt="프로필" /></router-link>
+      <router-link :to="'/profile/' + this.myProfileNumber"><img alt="프로필" /></router-link>
       <router-link to="/myalerts"><img src="@/assets/noti.png" /></router-link>
       </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 
 export default {
   data() {
     return {
       // path: this.$route.path,
       // notiImg: "",
+      myProfileNumber: this.$store.state.myNumber
     }
   },
   created() {
     // this.notiImg = (this.path.include("myalert"))? require("@/assets/noti_green.png"): require("@/assets/noti.png");
   },
-  computed: {
-    ...mapState([
-      'myNumber'
-    ]),
-    myProfileNumber() {
-      return this.myNumber
-    }
-  }
 };
 </script>
 
