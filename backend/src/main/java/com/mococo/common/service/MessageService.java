@@ -30,18 +30,21 @@ public class MessageService {
 		message1.setRead(true);
 		messageList.add(message1);
 		Optional<Message> messageOpt1 = messageDAO.findByMessageNumber(message1.getMessageNumber());
+		if(messageOpt1.isPresent()) return false;
 		
-		Message message2 = new Message();
-		message2.setUserSender(message.getUserSender());
-		message2.setUserReceiver(message.getUserReceiver());
-		message2.setOwner(message.getUserReceiver());
-		message2.setContent(message.getContent());
-		message2.setTime(message.getTime());
-		message2.setRead(false);
-		messageList.add(message2);
-		Optional<Message> messageOpt2 = messageDAO.findByMessageNumber(message2.getMessageNumber());
+		if(message.getUserSender() != message.getUserReceiver()) {
+			Message message2 = new Message();
+			message2.setUserSender(message.getUserSender());
+			message2.setUserReceiver(message.getUserReceiver());
+			message2.setOwner(message.getUserReceiver());
+			message2.setContent(message.getContent());
+			message2.setTime(message.getTime());
+			message2.setRead(false);
+			messageList.add(message2);
+			Optional<Message> messageOpt2 = messageDAO.findByMessageNumber(message2.getMessageNumber());
+			if(messageOpt2.isPresent()) return false;
+		}
 		
-		if(messageOpt1.isPresent() || messageOpt2.isPresent()) return false;
 		messageDAO.saveAll(messageList);
 		return true;
 	}
