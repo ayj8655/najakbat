@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,8 +51,9 @@ public class UserCropController {
 	
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 등록")
-	private ResponseEntity<String> insertCrop(@RequestBody UserCrop userCrop) throws IOException {
+	public ResponseEntity<String> insertCrop(@RequestBody UserCrop userCrop) throws IOException {
 		logger.info("작물 등록");
 		
 		try {
@@ -70,8 +72,9 @@ public class UserCropController {
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 삭제")
-	private ResponseEntity<String> deleteCrop(@RequestBody int userCropNumber) throws IOException {
+	public ResponseEntity<String> deleteCrop(@RequestBody int userCropNumber) throws IOException {
 		logger.info("작물 삭제");
 		
 		try {
@@ -84,8 +87,9 @@ public class UserCropController {
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 정보 수정")
-	private ResponseEntity<String> updateCrop(@RequestBody UserCrop userCrop) throws IOException {
+	public ResponseEntity<String> updateCrop(@RequestBody UserCrop userCrop) throws IOException {
 		logger.info("작물 정보 수정");
 		
 		try {
@@ -103,8 +107,9 @@ public class UserCropController {
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "모든 작물 정보 조회")
-	private ResponseEntity<?> searchCrop(@RequestParam int userNumber) throws IOException {
+	public ResponseEntity<?> searchCrop(@RequestParam int userNumber) throws IOException {
 		logger.info("모든 작물 정보 조회");
 		
 		try {
@@ -117,8 +122,9 @@ public class UserCropController {
 	}
 	
 	@RequestMapping(value = "/record", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 상태 기록")
-	private ResponseEntity<String> insertCropRecord(@RequestBody UserCropRecord userCropRecord) throws IOException {
+	public ResponseEntity<String> insertCropRecord(@RequestBody UserCropRecord userCropRecord) throws IOException {
 		logger.info("작물 상태 기록");
 		
 		try {
@@ -137,8 +143,9 @@ public class UserCropController {
 	}
 	
 	@RequestMapping(value = "/record", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "해당 작물의 모든 상태 기록 조회")
-	private ResponseEntity<?> searchAllCropRecord(@RequestParam int userCropNumber) throws IOException {
+	public ResponseEntity<?> searchAllCropRecord(@RequestParam int userCropNumber) throws IOException {
 		logger.info("해당 작물의 모든 상태 기록 조회");
 		
 		try {
@@ -151,8 +158,9 @@ public class UserCropController {
 	}
 	
 	@RequestMapping(value = "/water", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "해당 작물에 물을 준 것으로 처리")
-	private ResponseEntity<String> insertWaterRecord(@RequestBody int userCropNumber) throws IOException {
+	public ResponseEntity<String> insertWaterRecord(@RequestBody int userCropNumber) throws IOException {
 		logger.info("해당 작물에 물을 준 것으로 처리");
 		
 		try {
@@ -171,8 +179,9 @@ public class UserCropController {
 	}
 	
 	@RequestMapping(value = "/water", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "해당 작물에게 물 준 기록 조회")
-	private ResponseEntity<?> searchAllWaterRecord(@RequestParam int userCropNumber) throws IOException {
+	public ResponseEntity<?> searchAllWaterRecord(@RequestParam int userCropNumber) throws IOException {
 		logger.info("해당 작물에게 물 준 기록 조회");
 		
 		try {
