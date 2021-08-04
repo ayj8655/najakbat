@@ -10,8 +10,8 @@
         <span :class="[{ tabChange: tabs[3] }, { tabDefault : !tabs[3] }]" @click="changeTab(3)">요리</span>
       </div>
       <div class="m-4" id="contents-area">
-        <div v-if="this.current==0">{{this.crop.description}}</div>
-        <div v-if="this.current==1">{{this.crop.cultivation}}</div>
+        <div v-if="this.current==0" v-html="enterToBr(this.crop.description)" id="content-1"></div>
+        <div v-if="this.current==1" v-html="enterToBr(this.crop.cultivation)" id="content-2"></div>
         <div v-if="this.current==2">
           <div class="mt-5 mb-5">
             <p><strong>햇빛 선호도</strong></p>
@@ -110,6 +110,9 @@ export default {
       this.tabs[num] = true;
       this.current = num;
     },
+    enterToBr(str) {
+      if (str) return str.replace(/(?:\r\n|\r|\n)/g, "<br />");
+    },
     getLowTemp(str) {
       return str.split('~')[0] + "℃";
     },
@@ -157,6 +160,9 @@ export default {
   border-radius: 5px;
   min-height: 200px;
   padding: 20px;
+}
+#content-1, #content-2 {
+  text-align: left;
 }
 #temp {
   width: 50%;
