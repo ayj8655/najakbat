@@ -40,16 +40,20 @@ public class MessageController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "sender", value = "전송하는 유저의 userNumber", paramType = "query"),
-		@ApiImplicitParam(name = "receiver", value = "전송받는 유저의 userNumber", paramType = "query"),
-		@ApiImplicitParam(name = "content", value = "메시지 내용", paramType = "query"),
-	})
+//	@ApiImplicitParams({
+//		@ApiImplicitParam(name = "sender", value = "전송하는 유저의 userNumber", dataType = "int", paramType = "query"),
+//		@ApiImplicitParam(name = "receiver", value = "전송받는 유저의 userNumber", dataType = "int", paramType = "query"),
+//		@ApiImplicitParam(name = "content", value = "메시지 내용", dataType = "string", paramType = "query"),
+//	})
 	@ApiOperation(value = "메시지 전송")
-	public ResponseEntity<String> insertMessage(@ApiIgnore Message message) throws IOException {
+	public ResponseEntity<String> insertMessage(@RequestParam int sender, @RequestParam int receiver, @RequestParam String content) throws IOException {
 		logger.info("메시지 전송");
 		
 		try {
+			Message message = new Message();
+			message.setUserSender(sender);
+			message.setUserReceiver(receiver);
+			message.setContent(content);
 			message.setTime(new Date());
 			boolean result = messageService.insertMessage(message);
 			
