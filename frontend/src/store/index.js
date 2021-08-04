@@ -75,6 +75,13 @@ export default new Vuex.Store({
     GET_SENT_MESSAGES(state, sentMessage) {
       state.sentMessages = sentMessage
     },
+    // Sidebar mutations
+
+    DELETE_TOKEN(state) {
+      state.accessToken = ''
+      state.userId = ''
+      state.myNumber = ''
+    },
 
     // Get Token
     UPDATE_TOKEN(state, accessToken) {
@@ -129,6 +136,8 @@ export default new Vuex.Store({
         console.error(err)
       })
     },
+
+    // Message actions
     getReceivedMessages(context) {
       axios({
         method: 'get',
@@ -242,7 +251,13 @@ export default new Vuex.Store({
           console.error(err)
         })
     },
-    
+    // Logout actions
+
+    logout({ commit }) {
+      commit('DELETE_TOKEN')
+      localStorage.removeItem('access_token')
+      sessionStorage.claer()
+    },
     // Signup actions
     signup({ commit }, credentials) {
       axios.post('user/signup', {

@@ -15,7 +15,7 @@
           <router-link to="/DirectQuery" class="p-2 bd-highlight">1:1 문의</router-link>
           <div class="p-2 bd-highlight">
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn btn-primary" @click="logout">
               로그아웃
             </button>
 
@@ -72,7 +72,7 @@
 
 <script>
 import vClickOutside from 'v-click-outside'
-
+import { mapActions } from 'vuex'
 export default {
   name: 'sidebar-1',
   directives: {
@@ -87,6 +87,9 @@ export default {
     onClickOutside () {
       this.sidebar = false
     },
+    ...mapActions ([
+      'logout'
+    ])
   },
 
 
