@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mococo.common.model.Comment;
 import com.mococo.common.service.CommentService;
 
+import io.swagger.annotations.ApiOperation;
+
 
 //http://localhost:8080/swagger-ui.html/
 
@@ -40,6 +42,7 @@ public class CommentController {
 	CommentService commentService;
 	
 	@RequestMapping(value = "/{postno}", method = RequestMethod.GET)
+	@ApiOperation(value = "하나의 게시물 안에 있는 댓글들 조회")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<?> searchComment (@PathVariable String postno) throws IOException {
 		logger.info("게시물별 댓글 조회");
@@ -50,6 +53,7 @@ public class CommentController {
 	
 	// request param 은 댓글이 게시글의 댓글인지 댓글의 대댓글인지 구분. 게시글의 댓글: parent=0, 댓글의 대댓글: parent = 댓글의 comment_number 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@ApiOperation(value = "댓글을 등록")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> insertComment (@RequestBody Comment comment, @RequestParam("user_number") int user_number
 													, @RequestParam("parent") int parent, @RequestParam("postno") int postno) throws IOException {
@@ -88,6 +92,7 @@ public class CommentController {
 	}
 	
 	@RequestMapping(value = "/{commentno}", method = RequestMethod.PUT)
+	@ApiOperation(value = "댓글 수정")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> updateComment (@RequestBody Comment comment) throws IOException {
 		logger.info("댓글 수정");
@@ -114,6 +119,7 @@ public class CommentController {
 	
 	
 	@RequestMapping(value = "/{comment_number}", method = RequestMethod.DELETE)
+	@ApiOperation(value = "댓글 삭제")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> deleteComment (@PathVariable String comment_number) throws IOException {
 		logger.info("댓글 삭제");
@@ -137,6 +143,7 @@ public class CommentController {
 	
 	
 	@RequestMapping(value = "/recommend/{commentno}", method = RequestMethod.PUT)
+	@ApiOperation(value = "댓글 추천 올리기")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> recommentComment (@PathVariable String commentno, @RequestParam int user_number) throws IOException {
 		
