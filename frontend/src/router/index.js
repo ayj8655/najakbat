@@ -6,6 +6,9 @@ import SidebarMain from "../views/Sidebar/SidebarMain.vue"
 import DirectQuery from "../views/Sidebar/DirectQuery.vue"
 import MyAlerts from "../views/Sidebar/MyAlerts.vue"
 import Settings from "../views/Sidebar/Settings.vue"
+import Message from "../views/Message/Message.vue"
+// import Received from "../views/Message/Received.vue"
+// import Sent from "../views/Message/Sent.vue"
 
 // 기하 라우터
 import Login from "../views/Login/Login.vue"
@@ -113,6 +116,21 @@ const routes = [
     name: 'SidebarMain',
     component: SidebarMain,
   },
+  {
+    path: '/message',
+    name: 'Message',
+    component: Message,
+  },
+  // {
+  //   path: '/received',
+  //   name: 'Received',
+  //   component: Received,
+  // },
+  // {
+  //   path: '/sent',
+  //   name: 'Sent',
+  //   component: Sent,
+  // },
 
   // 기하 라우터
   {
