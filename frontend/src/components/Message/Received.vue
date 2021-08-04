@@ -1,10 +1,19 @@
 <template>
-  <div>받은쪽지</div>
+  <div>{{ receivedMessages }}</div>
 </template>
 
 <script>
-export default {
+import { mapState } from 'vuex'
 
+export default {
+    computed: {
+  ...mapState ([
+    'receivedMessages'
+    ])
+  },
+  created() {
+    this.$store.dispatch('getReceivedMessages')
+  },
 }
 </script>
 
