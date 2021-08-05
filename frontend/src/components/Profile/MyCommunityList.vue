@@ -8,9 +8,8 @@
         <span class="question" @click="changeType(3, '질문')">질문</span>
         <span class="share" @click="changeType(4, '나눔')">나눔</span>
       </span>
-      <span class="etc">
-        <span class="search">검색</span>
-        <span class="write" v-if="this.$store.userNumber" @click="postWrite">글쓰기</span>
+      <span class="etc" v-if="this.$store.state.myNumber == this.$props.userNumber">
+        <font-awesome-icon :icon="['fas', 'pencil-alt']" size="lg" @click="postWrite" class="pen-color" />
       </span>
       <hr>
     </div>
@@ -92,9 +91,6 @@ export default {
         });
     },
   },
-  computed: {
-
-  },
 };
 </script>
 
@@ -119,5 +115,9 @@ export default {
 }
 .etc span {
   margin-left: 5px;
+}
+
+.pen-color {
+  color: #B6C790;
 }
 </style>
