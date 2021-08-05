@@ -19,8 +19,7 @@ public class WeatherInfoPK implements Serializable{
 
 	
 	//복합키 사용하려면 Serializable이거 해야됨
-	
-	private Date date;
+
 	
 	private String city;
 	

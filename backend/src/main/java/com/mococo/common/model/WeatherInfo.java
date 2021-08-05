@@ -12,10 +12,12 @@ import javax.persistence.TemporalType;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name="weather_info")
@@ -25,10 +27,6 @@ public class WeatherInfo implements Serializable{
 	
 	//복합키 사용하려면 Serializable이거 해야됨
 	
-	
-	@Id
-	@Column(name = "date")
-	private Date date;
 	
 	@Id
 	@Column(name = "city")

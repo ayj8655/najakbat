@@ -32,7 +32,7 @@ public class WeatherController {
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<String> getUserInfo() throws Exception {
 		
-		weatherService.findXY();
+		
 		return ResponseEntity.ok("sess");
 	}
 	
