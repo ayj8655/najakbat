@@ -2,7 +2,7 @@
   <div id="main-contents" class="container-fluid">
     <div class="container" id="body" align="center">
       <h3>회원 목록</h3>
-      <table class="table table-hover">
+      <table class="table table-hover mt-5">
         <colgroup>
           <col width="10%" />
           <col width="10%" />
