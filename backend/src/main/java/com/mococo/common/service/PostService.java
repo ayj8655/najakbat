@@ -7,6 +7,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +41,8 @@ public class PostService {
 	}
 	
 	// 무한스크롤으로 포스트를 뽑아주는 service
-	public List<Post> findInfinitePost(int limit){
-		List<Post> posts = postDAO.findInfinitePost(limit);
+	public List<Object> findInfinitePost(int limit){
+		List<Object> posts = postDAO.findInfinitePost(PageRequest.of(limit, 3,Sort.by("date").descending()));
 		return posts;
 	}
 
@@ -51,12 +53,19 @@ public class PostService {
 		return posts;
 	}	
 	
+	
 	// 유저 별로 게시글 쓴거 불러오기
-	public List<Post> findPostUser(int no,int limit){
-		List<Post> posts = postDAO.findAllByUserNumber(no,limit);
+	public List<Object> findPostUser(int no,int limit){
+		List<Object> posts = postDAO.findAllByUserNumber(no,PageRequest.of(limit, 3,Sort.by("date").descending()));
 		return posts;
 	}	
 	
+	// 유저별로 추천 누른거 불러오기
+	public List<Object> findPostRecommend(int no, int limit) {
+		
+		List<Object> posts = postDAO.findAllByUserRecommend(no,PageRequest.of(limit, 3,Sort.by("date").descending()));
+		return posts;
+	}
 	public Post insertPost(Post post) {
 		Optional<Post> ret = postDAO.findPostByPostNumber(post.getPostNumber());
 		if(ret.isPresent()) {
@@ -133,6 +142,8 @@ public class PostService {
 
 		
 	}
+
+
 
 
 }
