@@ -11,6 +11,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,21 +28,27 @@ public class WeatherService {
 	@Autowired
 	WeatherInfoDAO weatherInfoDAO;
 
+	public Optional<WeatherInfo> findByCityAndGugun(String city, String gugun) {
+
+		Optional<WeatherInfo> weatherInfo = weatherInfoDAO.findByCityAndGugun(city, gugun);
+
+		return weatherInfo;
+
+	}
+
 	public void findXY(String baseTime) throws Exception {
 
 		String result;
-		String areaTop = "서울특별시"; // 지역
-		String areaMdl = "강북구";
-		String areaLeaf = "종로1가동";
+//		String areaTop = "서울특별시"; // 지역
+//		String areaMdl = "강북구";
+//		String areaLeaf = "종로1가동";
 		String code = ""; // 지역 코드
 		String x = "";
 		String y = "";
-		
 
-		
 		String city = "";
 		String gugun = "";
-		
+
 		URL url;
 		BufferedReader br;
 		URLConnection conn;
@@ -60,9 +67,9 @@ public class WeatherService {
 
 		parser = new JSONParser();
 		jArr = (JSONArray) parser.parse(result);
-		
+
 		for (int i = 0; i < jArr.size(); i++) {
-			
+
 			jobj = (JSONObject) jArr.get(i);
 			code = (String) jobj.get("code");
 			city = (String) jobj.get("value");
@@ -96,31 +103,12 @@ public class WeatherService {
 //				parser = new JSONParser();
 				JSONArray jArr3 = (JSONArray) parser.parse(result);
 				JSONObject jobj3;
-				if (areaMdl.equals("종로구")) {
-					for (int k = 0; k < jArr3.size(); k++) {
-						jobj3 = (JSONObject) jArr3.get(k);
 
-						String leaf1 = areaLeaf.substring(0, areaLeaf.length() - 3);
-						String leaf2 = areaLeaf.substring(areaLeaf.length() - 3, areaLeaf.length() - 2);
-						String leaf3 = areaLeaf.substring(areaLeaf.length() - 2, areaLeaf.length());
-
-						Pattern pattern = Pattern.compile(leaf1 + "[1-9.]{0,8}" + leaf2 + "[1-9.]{0,8}" + leaf3);
-						Matcher matcher = pattern.matcher((String) jobj.get("value"));
-						if (matcher.find()) {
-							x = (String) jobj3.get("x");
-							y = (String) jobj3.get("y");
-//							System.out.println(areaLeaf + "의 x값 : " + x + ", y값 :" + y);
-							break;
-						}
-					}
-				} else {
-
-					jobj3 = (JSONObject) jArr3.get(0);
-					x = (String) jobj3.get("x");
-					y = (String) jobj3.get("y");
-					String test3 = (String) jobj3.get("value");
-//					System.out.println(test3 + "의 x값 : " + x + ", y값 :" + y);
-				}
+				jobj3 = (JSONObject) jArr3.get(0);
+				x = (String) jobj3.get("x");
+				y = (String) jobj3.get("y");
+				String test3 = (String) jobj3.get("value");
+//				System.out.println(test3 + "의 x값 : " + x + ", y값 :" + y);
 
 				// 각각의 값들 다 받았음 이제 요청하고저장하면됨
 				insertWeather(x, y, city, gugun, baseTime);
@@ -130,8 +118,7 @@ public class WeatherService {
 
 	}
 
-
-	public void insertWeather(String nx, String ny, String city, String gugun,String baseTime) throws Exception {
+	public void insertWeather(String nx, String ny, String city, String gugun, String baseTime) throws Exception {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -141,18 +128,19 @@ public class WeatherService {
 		// String apiUrl =
 		// "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtFcst";
 		// //초단기예보조회
-		String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"; // 동네예보조회
+		// 동네예보조회
+		String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
 		String serviceKey = "JO3E4gAgxqUOYOhg27Kp8g3ppUEZh9cMc8P7DEXwLzopTW2ffCn6LFsaNxDCGztD20Jp77KkA3SNDnDhtcRY6w%3D%3D";
 //		String nx = "61"; // 위도
 //		String ny = "128"; // 경도
 		String baseDate = sdf.format(date); // 조회하고싶은 날짜
 //		String baseTime = "1400"; // API 제공 시간
-		
+
 		String dataType = "json"; // 타입 xml, json
 		String numOfRows = "11"; // 한 페이지 결과 수
 
-		//11개 하면 9시 기준 정보만 싹 가져옴
+		// 11개 하면 9시 기준 정보만 싹 가져옴
 		// 동네예보 -- 전날 05시 부터 225개의 데이터를 조회하면 모레까지의 날씨를 알 수 있음
 
 		StringBuilder urlBuilder = new StringBuilder(apiUrl);
@@ -208,27 +196,20 @@ public class WeatherService {
 		String day = "";
 		String time = "";
 
-		// TMP -> 1시간 기온 -> ℃
-		// REH -> 습도 -> %
-		// - 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
-		// - 강수형태(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4)
-
-		String temperaturue = "";
-		String humidity = "";
-		String rearWeather = "";
+		String temperaturue = ""; // 온도
+		String humidity = ""; // 습도
+		String rearWeather = ""; // 날씨
 
 		for (int i = 0; i < parse_item.size(); i++) {
 			weather = (JSONObject) parse_item.get(i);
 			Object fcstValue = weather.get("fcstValue");
 			Object fcstDate = weather.get("fcstDate");
 			Object fcstTime = weather.get("fcstTime");
-
-//			double fcstValue = Double.parseDouble(weather.get("fcstValue").toString());
 			category = (String) weather.get("category");
-			// 출력
-			if (!day.equals(fcstDate.toString())) {
+
+			if (!day.equals(fcstDate.toString()))
 				day = fcstDate.toString();
-			}
+
 			if (!time.equals(fcstTime.toString())) {
 				time = fcstTime.toString();
 				System.out.println(day + "  " + time);
@@ -245,19 +226,19 @@ public class WeatherService {
 				} else if (fcstValue.equals("2")) {
 					rearWeather = "비/눈";
 					continue;
-				}else if(fcstValue.equals("3")) {
+				} else if (fcstValue.equals("3")) {
 					rearWeather = "눈";
 					continue;
-				}else if(fcstValue.equals("4")) {
+				} else if (fcstValue.equals("4")) {
 					rearWeather = "소나기";
 					continue;
 				}
-			}else if (category.equals("SKY"))
+			} else if (category.equals("SKY"))
 				if (fcstValue.equals("1")) {
 					rearWeather = "맑음";
 				} else if (fcstValue.equals("3")) {
 					rearWeather = "구름많음";
-				}else if(fcstValue.equals("4")) {
+				} else if (fcstValue.equals("4")) {
 					rearWeather = "흐림";
 				}
 
@@ -267,17 +248,14 @@ public class WeatherService {
 //			System.out.println(", fcstTime : "+ fcstTime);
 		}
 
-		
-		System.out.println("시 : " + city + " 구 : "+ gugun + " 온도 : " +temperaturue + " 습도 : "+ humidity + " 날씨 : "+rearWeather);
-		
-		
+		System.out.println("시 : " + city + " 구 : " + gugun + " 온도 : " + temperaturue + " 습도 : " + humidity + " 날씨 : "
+				+ rearWeather);
+
 		WeatherInfo weatherInfo = WeatherInfo.builder().city(city).gugun(gugun)
 				.temperature(Double.parseDouble(temperaturue)).humidity(Double.parseDouble(humidity))
 				.weather(rearWeather).build();
 		weatherInfoDAO.save(weatherInfo);
 
-		
-		
 //		System.out.println(data);
 //		for(int i=0;i<parse_item.size();i++) {
 //			System.out.println(parse_item.get(i));
