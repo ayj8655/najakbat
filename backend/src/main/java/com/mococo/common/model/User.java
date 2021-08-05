@@ -7,6 +7,9 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import lombok.*;
 
 
@@ -15,6 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED) 
 @Entity(name="user")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class) // N:M관계에서 서로 참조할때 무한루프 안빠지게 하는 어노테이션
 public class User {
 	
 	@Id
@@ -34,7 +38,7 @@ public class User {
 	private Boolean activated;
 
 	// 유저와 post recommend는 N:M관계
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 			name ="post_recommend",
 			joinColumns = @JoinColumn(name ="user_number"),
@@ -43,7 +47,7 @@ public class User {
 	private List<Post> posts = new ArrayList<>();
 	
 	// 유저와 comment recommend는 N:M관계
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 			name ="comment_recommend",
 			joinColumns = @JoinColumn(name ="user_number"),
@@ -52,7 +56,7 @@ public class User {
 	private List<Comment> comments = new ArrayList<>();
 	
 	// 다대다 조인테이블 -> 유저 권한을 위해 생성
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 	      name = "user_authority",
 	      joinColumns = {@JoinColumn(name = "user_number", referencedColumnName = "user_number")},

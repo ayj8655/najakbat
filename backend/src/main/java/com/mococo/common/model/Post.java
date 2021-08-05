@@ -6,12 +6,16 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity(name="post")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class) // N:M관계에서 서로 참조할때 무한루프 안빠지게 하는 어노테이션
 public class Post {
 
 	@Id
@@ -32,7 +36,7 @@ public class Post {
 	private boolean isDelete; // 게시글이 지워졌는지 여부 - 지워졌어도 db에는 존재
 	
 	
-	 @ManyToMany(mappedBy = "posts")
+	 @ManyToMany(mappedBy = "posts",fetch = FetchType.LAZY)
 	 private List<User> users = new ArrayList<>();
 	 
 	 

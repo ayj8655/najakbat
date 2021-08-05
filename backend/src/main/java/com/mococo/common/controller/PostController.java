@@ -100,7 +100,7 @@ public class PostController {
 		try {
 
 			logger.info("게시물 무한스크롤 조회");
-			return new ResponseEntity<List<Post>>(postService.findInfinitePost(limit), HttpStatus.OK);
+			return new ResponseEntity<List<Object>>(postService.findInfinitePost(limit), HttpStatus.OK);
 		}
 		catch (Exception e){
 			e.printStackTrace();
@@ -153,7 +153,7 @@ public class PostController {
 		try {
 			int user_number = Integer.parseInt(userno);
 			int limit_number = Integer.parseInt(limit);
-			return new ResponseEntity<List<Post>>(postService.findPostUser(user_number, limit_number), HttpStatus.OK);
+			return new ResponseEntity<List<Object>>(postService.findPostUser(user_number, limit_number), HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -163,6 +163,28 @@ public class PostController {
 		}
 
 	}	
+	
+	// 사용자가 좋아요 누른 게시글리스트를 무한스크롤로 넘겨준다.
+	@RequestMapping(value = "/userrecommend/{userno}", method = RequestMethod.GET)
+	@ApiOperation(value = "좋아요 누른 게시글 인피티니 스크롤")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<?> recommendPost (@RequestParam String limit, @PathVariable String userno) throws IOException {
+		
+		logger.info("사용자 좋아요 게시물 조회");
+		try {
+			int user_number = Integer.parseInt(userno);
+			int limit_number = Integer.parseInt(limit);
+			return new ResponseEntity<List<Object>>(postService.findPostRecommend(user_number, limit_number), HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			logger.info("사용자 좋아요 게시물 조회 에러");
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+
+
+	}
 	
 	
 	
@@ -325,8 +347,7 @@ public class PostController {
 
 	}
 	
-	
-	
+
 	
 
 }
