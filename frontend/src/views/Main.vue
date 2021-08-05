@@ -81,40 +81,12 @@
         </div>
       </div>
       <div class="mb-5">
-        <h3>8월에 키우기 좋은 작물</h3>
+        <h3>{{this.month}}월에 키우기 좋은 작물</h3>
         <p>제철 농작물을 추천 받고 키워 보세요!</p>
         <div id="row">
-          <div class="items">
-            <img src="@/assets/thumbnail.png" />
-            <p>1st depth</p>
-          </div>
-          <div class="items">
-            <img src="@/assets/thumbnail.png" />
-            <p>2nd depth</p>
-          </div>
-          <div class="items">
-            <img src="@/assets/thumbnail.png" />
-            <p>3rd depth</p>
-          </div>
-          <div class="items">
-            <img src="@/assets/thumbnail.png" />
-            <p>4th depth</p>
-          </div>
-          <div class="items">
-            <img src="@/assets/thumbnail.png" />
-            <p>5th depth</p>
-          </div>
-          <div class="items">
-            <img src="@/assets/thumbnail.png" />
-            <p>6th depth</p>
-          </div>
-          <div class="items">
-            <img src="@/assets/thumbnail.png" />
-            <p>7th depth</p>
-          </div>
-          <div class="items">
-            <img src="@/assets/thumbnail.png" />
-            <p>8th depth</p>
+          <div class="items" v-for="(crop, index) in cropInThisMonth" :key="index" @click="movePage(crop.cropNumber)">
+            <img :src="getCropImg(crop)" />
+            <p>{{crop.name}}</p>
           </div>
         </div>
       </div>
@@ -130,7 +102,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 import HeaderNav from "../components/Menu/HeaderNav.vue";
 import Menubar from "../components/Menu/Menubar.vue";
 import Sidebar from "../components/Sidebar/Sidebar.vue";
@@ -139,9 +111,35 @@ export default {
   data() {
     return {
       id: null,
+      month: 0,
+      crops: [],
     };
   },
-  created() {},
+  created() {
+    this.month = (new Date().getMonth() + 1);
+    axios.get("guide/plant/").then((data) => {
+      this.crops = data.data;
+      // console.log(this.cropInThisMonth);
+    });
+  },
+  methods: {
+    movePage(cropNumber) {
+      this.$router.push(`/dict/detail/${cropNumber}`);
+    },
+    getCropImg(crop) {
+      return (crop.image)? require("@/assets/crop/"+crop.image):require("@/assets/thumbnail.png");
+    }
+  },
+  computed: {
+    cropInThisMonth() {
+      var list = [];
+      this.crops.forEach((c, index) => {
+        if((c.growthDuration).substring(this.month-1, this.month)=="1")
+          list[list.length] = this.crops[index];
+      });
+      return list;
+    },
+  }
 };
 </script>
 
@@ -177,42 +175,10 @@ h3 {
   width: 100px;
 }
 
-#row .items:first-child {
-  margin-left: 0;
-}
-
-#row .items p {
-  margin-bottom: 8px;
-  text-indent: 7px;
-}
-
-#row .items ul {
-  border-radius: 3px;
-  border: 1px solid #b5b5b5;
-  height: 135px;
-  overflow-y: scroll;
-  padding: 3px 3px 8px;
-  background: #fff;
-}
-
-#row .items ul li a {
-  display: block;
-  overflow: hidden;
-  margin-top: 8px;
-  padding: 3px;
-  color: black;
-  font-size: 12px;
-  text-decoration: none;
-}
-
-#row .items ul li:first-child a {
-  margin-top: 3px;
-}
-
-#row .items ul li.on a {
-  border: 1px solid #c9cccf;
-  border-radius: 3px;
-  font-weight: bold;
-  background-color: #efefef;
+#row .items img {
+  width: 75px;
+  height: 75px;
+  border-radius: 5px;
+  border: solid 1px #efefef;
 }
 </style>
