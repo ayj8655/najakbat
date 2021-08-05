@@ -7,7 +7,7 @@
         <div class="row">
           <div class="d-flex align-items-end">
             <h2 class="ms-3 me-1 my-0">{{ getNickname }}</h2>
-            <font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" @click.prevent="changeUserInformation"/>
+            <router-link to="/user/modify"><font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" /></router-link>
           </div>
           <div class="d-flex align-items-start ms-3 mt-1">
             <font-awesome-icon :icon="['fas', 'envelope']" size="lg" class="message-color"/>
@@ -65,9 +65,6 @@ export default {
     changeComponent(num) {
       this.componentNum = num
     },
-    changeUserInformation() {
-      console.log('췤');
-    }
   },
   computed: {
     ...mapState([
