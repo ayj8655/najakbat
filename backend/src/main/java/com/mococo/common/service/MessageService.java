@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.mococo.common.dao.MessageDAO;
 import com.mococo.common.model.Message;
-import com.mococo.common.model.UserCrop;
 
 @Service
 public class MessageService {
+	
+	private static final int MAX_PAGE_SIZE = 10;
 	
 	@Autowired
 	MessageDAO messageDAO;
@@ -65,15 +66,19 @@ public class MessageService {
 		messageDAO.deleteByMessageNumber(messageNumber);
 	}
 	
+	public int deleteAllMessage(List<Integer> messageNumberList) {
+		return messageDAO.deleteAllByMessageNumberIn(messageNumberList);
+	}	
+	
 	public List<Object> findAllBySender(int page, int userSender, int owner) {
-		return messageDAO.findAllByUserSender(PageRequest.of(Math.max(0, page), 20), userSender, owner);
+		return messageDAO.findAllByUserSender(PageRequest.of(Math.max(0, page), MAX_PAGE_SIZE), userSender, owner);
 	}
 	
 	public List<Object> findAllByReceiver(int page, int userReceiver, int owner) {
-		return messageDAO.findAllByUserReceiver(PageRequest.of(Math.max(0, page), 20), userReceiver, owner);
+		return messageDAO.findAllByUserReceiver(PageRequest.of(Math.max(0, page), MAX_PAGE_SIZE), userReceiver, owner);
 	}
 	
 	public List<Object> findAllByOwner(int page, int owner) {
-		return messageDAO.findAllByOwner(PageRequest.of(Math.max(0, page), 20), owner);
+		return messageDAO.findAllByOwner(PageRequest.of(Math.max(0, page), MAX_PAGE_SIZE), owner);
 	}
 }

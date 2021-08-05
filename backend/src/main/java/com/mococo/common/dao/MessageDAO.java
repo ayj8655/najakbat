@@ -45,4 +45,7 @@ public interface MessageDAO extends PagingAndSortingRepository<Message, Integer>
 	
 	@Transactional
 	public void deleteByMessageNumber(int messageNumber);
+	
+	@Transactional
+	public int deleteAllByMessageNumberIn(List<Integer> messageNumberList);
 }
