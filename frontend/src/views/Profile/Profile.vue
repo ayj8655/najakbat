@@ -4,8 +4,18 @@
     <div v-if="getNickname" class="container">
       <div class="d-flex justify-content-start w-75 container">
         <img src="@/assets/profile_sample.png" class="img-thumbnail profile-size" alt="...">
-        <h3 class="mx-3">{{ getNickname }}</h3>
+        <div class="row">
+          <div class="d-flex align-items-end">
+            <h2 class="ms-3 me-1 my-0">{{ getNickname }}</h2>
+            <font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" @click.prevent="changeUserInformation"/>
+          </div>
+          <div class="d-flex align-items-start ms-3 mt-1">
+            <font-awesome-icon :icon="['fas', 'envelope']" size="lg" class="message-color"/>
+            <span class="message-style ms-2">쪽지함</span>
+          </div>
+        </div>
       </div>
+      <hr class="profile-line container my-3">
       <div class="container w-75 d-flex justify-content-between my-3">
         <span @click="changeComponent(0)" v-bind:class="[componentNum === 0 ? 'select-font' : 'select-font-none']">나의 활동</span>
         <span class="select-font-none">|</span>
@@ -54,6 +64,9 @@ export default {
   methods: {
     changeComponent(num) {
       this.componentNum = num
+    },
+    changeUserInformation() {
+      console.log('췤');
     }
   },
   computed: {
@@ -162,5 +175,24 @@ export default {
 
 .profile-size {
   width: 25%;
+}
+
+.profile-line {
+  width: 75%;
+  border: 1px solid #999999;
+}
+
+.setting-color {
+  color: #999999;
+}
+
+.message-color {
+  color: #446631;
+}
+
+.message-style {
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: normal;
 }
 </style>

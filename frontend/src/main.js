@@ -13,6 +13,11 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VeeValidate from 'vee-validate';
 import vueAwesomeCountdown from 'vue-awesome-countdown'
 
+// FontAwesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faCog, faEnvelope, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 Vue.use(vueAwesomeCountdown, 'vac')
 
 Vue.use(VeeValidate);
@@ -22,6 +27,11 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 Vue.use(ToggleButton)
+
+// FontAwesome
+library.add(faCog, faEnvelope, faPencilAlt)
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false;
 
