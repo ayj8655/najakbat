@@ -47,11 +47,6 @@
             <p>{{r.name}}</p>
             <youtube
               :video-id="videoIds[index]"
-              :player-vars="playerVars"
-              @ready="ready"
-              @playing="playing"
-              @ended="ended"
-              @error="error"
               ref="youtube"
               width="100%" height="100%" />
           </div>
@@ -72,8 +67,8 @@ Vue.use(VueYoutube);
 export default {
   data() {
     return {
-      crop: null,
-      cropImg: null,
+      crop: {},
+      cropImg: "",
       current: 0,
       tabs: [true, false, false, false],
       suns: [null, null, null, null, null],

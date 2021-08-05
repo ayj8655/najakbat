@@ -42,6 +42,21 @@ const routes = [
     import("../views/Main.vue"),
   },
   {
+    path: "/admin",
+    name: "Admin",
+    component: () => import("../views/Admin.vue"),
+    children : [
+      {
+        path: "/admin/users",
+        name: "AdminUserList",
+        component: () => import("../components/Admin/UserList.vue")
+      },
+    ],
+    redirect: () => {
+      return "/admin/users";
+    },
+  },
+  {
     path: "/community",
     name: "Community",
     component: () => import("../views/Community.vue"),
