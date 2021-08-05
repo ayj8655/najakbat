@@ -142,12 +142,13 @@ export default new Vuex.Store({
       axios({
         method: 'get',
         url: `message/receiver`,
-        // data: {
-        //   userNumber: 1,
-        //   page: 1
-        // }
+        params: {
+          userNumber: 1,
+          page: 0
+        }
       })
       .then(res => {
+        console.log(res.data)
         context.commit('GET_RECEIVED_MESSAGES', res.data)
       })
       .catch(err => {
@@ -158,10 +159,10 @@ export default new Vuex.Store({
       axios({
         method: 'get',
         url: `message/sender`,
-        // data: {
-        //   userNumber: 1,
-        //   page: 1
-        // }
+        params: {
+          userNumber: 1,
+          page: 0
+        }
       })
       .then(res => {
         context.commit('GET_SENT_MESSAGES', res.data)
