@@ -1,0 +1,58 @@
+<template>
+  <div id="admin">
+    <div id="side-menu">
+      <div class="sub_menu">
+        <h2>ADMIN</h2>
+        <hr />
+        <ul>
+          <li><router-link to="/admin/users">회원 관리</router-link></li>
+          <li><router-link to="/admin/posts">커뮤니티 관리</router-link></li>
+          <li><router-link to="/admin/qna">문의사항 관리</router-link></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container">
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {};
+</script>
+
+<style scoped>
+@media (min-width: 601px) {
+  #admin {
+    font-family: Noto Sans KR;
+    font-style: normal;
+  }
+  #side-menu {
+    width: 20%;
+    float: left;
+    min-height: 800px;
+    background: #b6c790;
+    color: #446631;
+  }
+  .container {
+    width: 80%;
+    float: right;
+    display: inline-block;
+  }
+  h3 {
+    color: #ffffff;
+  }
+}
+@media (max-width: 600px) {
+  #admin {
+    font-family: Noto Sans KR;
+    font-style: normal;
+  }
+  #side-menu {
+    text-align: center;
+    background: #b6c790;
+  }
+  .container {
+  }
+}
+</style>
