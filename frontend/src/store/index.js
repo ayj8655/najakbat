@@ -259,6 +259,30 @@ export default new Vuex.Store({
       localStorage.removeItem('access_token')
       sessionStorage.claer()
     },
+
+    //Modify actions
+    backToProfile() {
+      router.go(-1)
+    },
+
+    updateModity(context, credentials) {
+      axios.get('user/user1')
+      .then(res => {
+        var addressPut = { ...res.data, nickname: credentials[0], phone: credentials[1], address: credentials[2]}
+        axios.put('user/', addressPut)
+        .then(res => {
+          res
+          alert('저장이 완료되었습니다')
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    },
+
     // Signup actions
     signup({ commit }, credentials) {
       axios.post('user/signup', {

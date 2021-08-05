@@ -17,6 +17,7 @@ import FindId from "../views/Login/FindId.vue"
 import FindIdNext from "../views/Login/FindIdNext.vue"
 import FindPassword from "../views/Login/FindPassword.vue"
 import Profile from "../views/Profile/Profile.vue"
+import UserModify from "../views/Profile/UserModify.vue"
 
 Vue.use(VueRouter)
 
@@ -176,6 +177,11 @@ const routes = [
     path: '/profile/:usernumber',
     name: 'Profile',
     component: Profile,
+  },
+  {
+    path: '/user/modify',
+    name: 'UserModify',
+    component: UserModify,
   },
 ];
 
