@@ -83,6 +83,21 @@ public class MessageController {
 		}
 	}
 	
+	@RequestMapping(value = "/list", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "메시지 리스트 삭제")
+	public ResponseEntity<String> deleteAllMessage(@RequestParam List<Integer> messageNumberList) throws IOException {
+		logger.info("메시지 삭제");
+		
+		try {
+			messageService.deleteAllMessage(messageNumberList);
+			return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+			
+		} catch(Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	@RequestMapping(value = "/", method = RequestMethod.PUT)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "메시지 읽음 처리")
