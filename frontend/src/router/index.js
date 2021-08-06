@@ -177,6 +177,33 @@ const routes = [
     name: 'Profile',
     component: Profile,
   },
+  // 용직 
+  {
+    path: '/mylist',
+    name: 'MyCrop',
+    component: () =>
+    import("../views/MyCrop/MyCrop.vue"),
+    children : [
+      {
+        path: "/mycrop/list",
+        name: "MyCropList",
+        component: () => import("../components/MyCrop/MyCropList.vue")
+      },
+      {
+        path: "/mylist/detail/:no",
+        name: "MyCropDetail",
+        component: () => import("../components/MyCrop/MyCropDetail.vue")
+      },
+      {
+        path: "/mylist/insert",
+        name: "MyCropInsert",
+        component: () => import("../components/MyCrop/MyCropInsert.vue")
+      },
+    ],
+    redirect: () => {
+      return "/mycrop/list";
+    },
+  },
 ];
 
 const router = new VueRouter({
