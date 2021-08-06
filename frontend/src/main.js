@@ -15,7 +15,7 @@ import vueAwesomeCountdown from 'vue-awesome-countdown'
 
 // FontAwesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCog, faEnvelope, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faEnvelope, faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 Vue.use(vueAwesomeCountdown, 'vac')
@@ -29,7 +29,7 @@ Vue.use(IconsPlugin)
 Vue.use(ToggleButton)
 
 // FontAwesome
-library.add(faCog, faEnvelope, faPencilAlt)
+library.add(faCog, faEnvelope, faPencilAlt, faPlus)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
