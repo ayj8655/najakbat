@@ -32,12 +32,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.jwt.JwtFilter;
 import com.mococo.common.jwt.TokenProvider;
+import com.mococo.common.model.LoginDto;
 import com.mococo.common.model.TokenDto;
 import com.mococo.common.model.User;
 import com.mococo.common.model.UserSetting;
 import com.mococo.common.service.UserService;
 import com.mococo.common.service.UserSettingService;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 //http://localhost:8080/swagger-ui.html/
@@ -65,24 +68,15 @@ public class UserController {
 		this.authenticationManagerBuilder = authenticationManagerBuilder;
 	}
 
-	@GetMapping("/hello")
-	public String hello() {
-		// userService.sendMessage("01033818655", "1234");
-		return "Main";
-	}
-
-	
-	//로그인 및 토큰 발급
+	// 로그인 및 토큰 발급
 	@PostMapping("/authenticate")
-	@ApiOperation(value = "로그인및인증 ->인증토큰 헤더에 반환하고 로그인유저 정보 바디에 담아서 반환", response = String.class)
-	
-	public ResponseEntity<TokenDto> authorize(@RequestBody Map<String, String> map) {
-//	public ResponseEntity<User> authorize(@RequestBody Map<String, String> map) {
+	@ApiOperation(value = "로그인 및 인증", notes = "로그인 및 인증 토큰을 헤더 및 바디를 통해 반환", response = TokenDto.class)
+	public ResponseEntity<TokenDto> authorize(@RequestBody LoginDto loginDto) {
 		System.out.println(userService);
 
 		// id,passoword를 통해 UsernamePasswordAuthenticationToken을 생성
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(map.get("id"),
-				map.get("password"));
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+				loginDto.getId(), loginDto.getPassword());
 
 		// 토큰으로 authenticate 실행되면 CustomUserDetailsService에 있는 loadUserByUsername 실행
 		// 그 결과값으로 authentication객체 생성되고 이를 SecurityContext에 저장
@@ -94,145 +88,163 @@ public class UserController {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		// 헤더에도 넣고
 		httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-		
+
 		// 바디에도 넣어서 리턴
 		return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
-		
-//		return new ResponseEntity<>( userService.getUserWithAuthorities(map.get("id")).get(), httpHeaders, HttpStatus.OK);
+
 	}
 
-	//회원가입
+	// 회원가입
 	@PostMapping("/signup")
-	public ResponseEntity<String> signup1(@RequestBody User userDto) {
-		
+	@ApiOperation(value = "회원가입", notes = "유저 정보를 통해 회원가입을 진행한다. 필수 : Id, Pw, Nickname, Phone", response = String.class)
+	public ResponseEntity<String> signup(@RequestBody User userDto) {
+
 		try {
 			User user = userService.signup(userDto);
-			if (user==null) {
+			if (user == null) {
 				logger.info("회원가입실패");
 				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
 			}
 
 		} catch (Exception e) {
 			System.out.println("회원 가입 오류");
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		Optional<User> tempuser = userService.findById(userDto.getId());
-//		System.out.println("이게 내가 파인드바이아이디로 찾은거 " + tempuser);
-		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0);
-//		System.out.println("이건 내가 저장할거" + us);
+		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0); // 유저 설정 디폴트값
 		userSettingService.save(us);
 
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		
-	}
-	
 
-	//자기 자신의 정보 및 인증정보 
-	@GetMapping("/user1")
+	}
+
+	// 자기 자신의 정보 및 인증정보
+	@GetMapping("/my")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')") // 두가지 권한 모두 호출가능
+	@ApiOperation(value = "자기 자신의 회원정보 검색", notes = "토큰을 통해 자기 자신의 정보를 가져온다", response = User.class)
 	public ResponseEntity<User> getMyUserInfo() {
-		System.out.println(userService);
-		return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
+
+		try {
+			Optional<User> user = userService.getMyUserWithAuthorities();
+
+			if (!user.isPresent()) {
+				logger.info("회원정보 없음");
+				return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+			}
+
+			System.out.println("회원정보 있음");
+			return new ResponseEntity<User>(user.get(), HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println("회원정보 검색 오류");
+			return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
-	//아이디를 통해 다른사람의 정보 겟
-	@GetMapping("/user1/{username}")
-	@PreAuthorize("hasAnyRole('USER','ADMIN')") // 어드민권한을 가지고있는 사람만 호출 가능
-	public ResponseEntity<User> getUserInfo(@PathVariable String username) {
-		System.out.println(userService);
-		System.out.println(username);
-		return ResponseEntity.ok(userService.getUserWithAuthorities(username).get());
+	// 아이디를 통해 다른사람의 정보 겟
+	@GetMapping("/auth/{Id}")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')") // 두가지 권한 모두 호출가능
+	@ApiOperation(value = "Id로 회원정보 검색", notes = "유저 Id를 통해 해당 유저의 회원정보를 가져온다", response = User.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "Id", value = "찾고싶은 유저의 Id") })
+	public ResponseEntity<User> getUserInfo(@PathVariable String Id) {
+
+		try {
+			Optional<User> user = userService.getUserWithAuthorities(Id);
+
+			if (!user.isPresent()) {
+				logger.info("회원정보 없음");
+				return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
+			}
+
+			System.out.println("회원정보 있음");
+			return new ResponseEntity<User>(user.get(), HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println("회원정보 검색 오류");
+			return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
-	// 비밀번호 찾기
-
-	
-	
-	
-	//여기서부터 --------------------------------------------------------------------------------
-	
-	// @RequestMapping(value = "/confirmId/{userId}", method = RequestMethod.GET)
-	@GetMapping("/pass/confirmId/{userId}")
-	@ApiOperation(value = "아이디 입력하면 중복여부 확인후 성공 실패 반환", response = String.class)
+	@RequestMapping(value = "/confirmId/{userId}", method = RequestMethod.GET)
+	@ApiOperation(value = "아이디 중복 확인", notes = "아이디를 입력하면 중복여부를 확인한 후 중복이 없다면 성공, 있다면 실패 반환하는 메소드", response = String.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userId", value = "중복확인 하고싶은 Id", required = true) })
 	public ResponseEntity<String> confirmUserId(@PathVariable String userId) throws IOException {
 		logger.info("아이디 중복체크");
-		
-		
+
 		System.out.println(userService);
 		try {
 			Optional<User> user = userService.findById(userId);
 
 			if (!user.isPresent()) {
 				logger.info("id중복 없음");
-				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 
 			System.out.println("id중복 있음");
-			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 
 		} catch (Exception e) {
 			System.out.println("id중복 검사 오류");
-			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	//닉네임 입력하면 중복여부 확인
+
+	// 닉네임 입력하면 중복여부 확인
 	@GetMapping("/pass/confirmNickname/{nickName}")
-	@ApiOperation(value = "닉네임 입력하면 중복여부 확인후 성공 실패 반환", response = String.class)
+	@ApiOperation(value = "닉네임 중복 확인", notes = "닉네임 입력하면 중복여부를 확인한 후 중복이 없다면 성공, 있다면 실패 반환하는 메소드", response = String.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "nickName", value = "중복확인 하고싶은 nickName", required = true) })
 	public ResponseEntity<String> confirmNickName(@PathVariable String nickName) throws IOException {
 		logger.info("닉네임 중복체크");
-		
-		
+
 		System.out.println(userService);
 		try {
 			Optional<User> user = userService.findByNickname(nickName);
 
 			if (!user.isPresent()) {
 				logger.info("닉네임중복 없음");
-				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 
 			System.out.println("닉네임중복 있음");
-			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 
 		} catch (Exception e) {
 			System.out.println("닉네임중복 검사 오류");
-			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	// 번호 받아서 중복확인
 	@RequestMapping(value = "/pass/confirmPhone/{userPhone}", method = RequestMethod.GET)
-	@ApiOperation(value = "핸드폰번호 입력하면 중복여부 확인후 성공 실패 반환", response = String.class)
-	public ResponseEntity<String> confirmUserPhone(@PathVariable String userPhone) throws IOException {
+	@ApiOperation(value = "핸드폰번호 중복 확인", notes = "핸드폰번호 입력하면 중복여부를 확인한 후 중복이 없다면 성공, 있다면 실패 반환하는 메소드", response = String.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "phone", value = "중복확인 하고싶은 phone", required = true) })
+	public ResponseEntity<String> confirmUserPhone(@PathVariable String phone) throws IOException {
 		logger.info("핸드폰번호 중복체크");
 
 		try {
-			Optional<User> user = userService.findByPhone(userPhone);
-
+			Optional<User> user = userService.findByPhone(phone);
 			if (!user.isPresent()) {
 				logger.info("핸드폰번호중복 없음");
-				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
-
 			System.out.println("핸드폰번호중복 있음");
-			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
-
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			System.out.println("핸드폰번호중복 검사 오류");
-			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
 	}
 
 	// 핸드폰번호 받고 받은 폰 번호로 아이디 찾고 찾은 아이디 전송 (핸드폰번호만 받으면됨)
 	@RequestMapping(value = "/pass/idFind", method = RequestMethod.POST)
-	@ApiOperation(value = "핸드폰번호를 받아서 아이디를 찾고 성공시 id 실패시 fail 반환", response = String.class)
+	@ApiOperation(value = "아이디 찾기", notes = "핸드폰번호를 받아서 아이디를 찾고 성공시 id, 실패시 fail 반환 | 필수 : 핸드폰 번호 : phone", response = String.class)
 	public ResponseEntity<String> idFind(@RequestBody User user) throws IOException {
 		logger.info("id찾기");
 
-		String userPhone = user.getPhone();// db바뀌면 이메일이 아니라 Phone으로수정해야함
+		String userPhone = user.getPhone();//
 
 		System.out.println(userPhone);
 
@@ -249,18 +261,18 @@ public class UserController {
 
 		} catch (Exception e) {
 			System.out.println("id찾기 오류");
-			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 
 	// 핸드폰번호 받음 -> 랜덤숫자만듦 -> 메시지 보냄 -> 숫자 프론트에 보냄
 	@RequestMapping(value = "/pass/phone", method = RequestMethod.POST)
-	@ApiOperation(value = "헨드폰인증 -> 번호입력후 인증번호 생성 후 메시지보내고 인증번호를 프론트로 전송", response = String.class)
+	@ApiOperation(value = "헨드폰인증", notes = "번호입력받으면 인증번호 생성 후 핸드폰에 메시지를 보내고 인증번호를 프론트로 전송한다", response = String.class)
 	public ResponseEntity<String> phoneaCertification(@RequestBody User user) throws IOException {
 		logger.info("핸드폰인증");
 
-		String userPhone = user.getPhone();// db바뀌면 이메일이 아니라 Phone으로수정해야함
+		String userPhone = user.getPhone();
 
 		Random rd = new Random();// 랜덤 객체 생성
 		int ran = (rd.nextInt(888888) + 111111);// 111111~999999 사이 랜덤값
@@ -283,56 +295,19 @@ public class UserController {
 
 		} catch (Exception e) {
 			System.out.println("인증번호 전송 오류");
-			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 
-	
-	// 권한없이 가야할듯
-	//여기까지 --------------------------------------------------------------------------------
-	
-	/*
-	@RequestMapping(value = "/", method = RequestMethod.POST)
-	@ApiOperation(value = "회원가입- 유저정보로 가입하고 자동으로 세팅까지 생성한다 성공실패 반환.", response = String.class)
-	public ResponseEntity<String> signup(@RequestBody User user) throws IOException {
-		// 우선 회원가입 하고 가입한 아이디로 유저를 찾은다음 찾은 유저에서 유저넘버를 찾고 그걸 기준으로 세팅을 만들고 그걸 새로 저장
-		logger.info("회원가입");
-
-		Date time = new Date();
-		user.setJoinDate(time);
-
-		try {
-			boolean ret = userService.insertUser(user);
-			if (!ret) {
-				logger.info("회원가입실패");
-				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
-			}
-
-		} catch (Exception e) {
-			System.out.println("회원 가입 오류");
-			return new ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE);
-		}
-
-		Optional<User> tempuser = userService.findById(user.getId());
-//		System.out.println("이게 내가 파인드바이아이디로 찾은거 " + tempuser);
-		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0);
-//		System.out.println("이건 내가 저장할거" + us);
-		userSettingService.save(us);
-
-		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-	}*/
-
 	@RequestMapping(value = "/{userNumber}", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "유저번호를 받아 검색된 유저 정보 반환.", response = User.class)
+	@ApiOperation(value = "유저번호로 유저정보 검색", notes = "유저번호를 받아 검색된 유저 정보 반환.", response = User.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userNumber", value = "검색하고싶은 userNumber", required = true) })
 	public ResponseEntity<User> searchUser(@PathVariable int userNumber) throws IOException {
 		logger.info("회원검색");
 
 		try {
-			
-			//Optional<User> user = userService.findById(userId);
-			
 			Optional<User> user = userService.findByUserNumber(userNumber);
 			return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 		} catch (Exception e) {
@@ -348,12 +323,12 @@ public class UserController {
 	public List<User> searchAllUser() throws IOException {
 		logger.info("전체회원검색");
 		return userService.findAll();
-
 	}
 
 	@RequestMapping(value = "/{userNumber}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "유저번호를 입력하면 회원탈퇴 진행.", response = String.class)
+	@ApiOperation(value = "유저번호로 회원 탈퇴", notes = "유저번호를 받아 해당 유저 탈퇴", response = String.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userNumber", value = "탈퇴하고싶은 userNumber", required = true) })
 	public ResponseEntity<String> withdraw(@PathVariable String userNumber) throws IOException {
 		logger.info("회원 탈퇴");
 
@@ -379,7 +354,7 @@ public class UserController {
 
 	@RequestMapping(value = "/", method = RequestMethod.PUT)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "유저정보를 입력받고 회원정보를 수정한다. 성공실패 반환.", response = String.class)
+	@ApiOperation(value = "회원정보 수정", notes = "유저정보를 입력받아 해당 유저의 정보를 수정한다", response = String.class)
 	public ResponseEntity<String> updateUser(@RequestBody User user) throws IOException {
 		logger.info("회원수정");
 		try {
@@ -400,7 +375,6 @@ public class UserController {
 
 	}
 
-	
 //	//이건 임시
 //	@RequestMapping(value = "/login", method = { RequestMethod.POST })
 //	@ApiOperation(value = "아이디 비밀번호를 입력받아 비교후 해당하는 유저 정보 반환", response = User.class)
@@ -426,5 +400,34 @@ public class UserController {
 //		}
 //
 //	}
+
+	// 권한없이 가야할듯
+	// 여기까지
+	// --------------------------------------------------------------------------------
+
+	/*
+	 * @RequestMapping(value = "/", method = RequestMethod.POST)
+	 * 
+	 * @ApiOperation(value = "회원가입- 유저정보로 가입하고 자동으로 세팅까지 생성한다 성공실패 반환.", response =
+	 * String.class) public ResponseEntity<String> signup(@RequestBody User user)
+	 * throws IOException { // 우선 회원가입 하고 가입한 아이디로 유저를 찾은다음 찾은 유저에서 유저넘버를 찾고 그걸 기준으로
+	 * 세팅을 만들고 그걸 새로 저장 logger.info("회원가입");
+	 * 
+	 * Date time = new Date(); user.setJoinDate(time);
+	 * 
+	 * try { boolean ret = userService.insertUser(user); if (!ret) {
+	 * logger.info("회원가입실패"); return new ResponseEntity<String>("fail",
+	 * HttpStatus.NO_CONTENT); }
+	 * 
+	 * } catch (Exception e) { System.out.println("회원 가입 오류"); return new
+	 * ResponseEntity<String>("error", HttpStatus.NOT_ACCEPTABLE); }
+	 * 
+	 * Optional<User> tempuser = userService.findById(user.getId()); //
+	 * System.out.println("이게 내가 파인드바이아이디로 찾은거 " + tempuser); UserSetting us = new
+	 * UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0); //
+	 * System.out.println("이건 내가 저장할거" + us); userSettingService.save(us);
+	 * 
+	 * return new ResponseEntity<String>(SUCCESS, HttpStatus.OK); }
+	 */
 
 }
