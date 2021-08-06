@@ -35,7 +35,7 @@ public interface CommentDAO extends JpaRepository<Comment, Integer> {
 			+"             ) x"
 			+"  FROM comment c0"
 			+"  LEFT OUTER JOIN comment c1 ON c1.comment_number = c0.parent"
-			+" WHERE c0.post_number =1"
+			+" WHERE c0.post_number =?"
 			+" ORDER BY x;" 
 			, nativeQuery = true	
 			)
