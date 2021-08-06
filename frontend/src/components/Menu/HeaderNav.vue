@@ -28,7 +28,7 @@ export default {
   },
   created() {
     this.notiImg = (this.path.includes("myalerts"))? require("@/assets/noti_green.png"): require("@/assets/noti.png");
-    axios.get('http://localhost:8080/user/user1')
+    axios.get('http://localhost:8080/user/my')
     .then(res => {
       this.myProfileNumber = res.data['userNumber']
     })
