@@ -330,7 +330,7 @@ export default new Vuex.Store({
         axios.put('user/', addressPut)
         .then(res => {
           res
-          router.push({ path: 'main' })
+          router.push({ name: 'Main' })
         })
         .catch(err => {
           console.error(err);
@@ -364,7 +364,7 @@ export default new Vuex.Store({
         .then(res => {
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('userNumber', res.data.userNumber)
-          router.push({ path: 'main' })
+          router.push({ name: 'Main' })
         })
         .catch(err => {
           console.error(err);

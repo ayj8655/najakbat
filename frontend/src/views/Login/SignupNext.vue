@@ -44,7 +44,7 @@
                 </div>
             </div>
         <button class="btn btn-success" @click.prevent="saveAddress" :disabled="!this.address">서비스 시작</button>
-        <p class="my-3"><router-link to="/main">나중에 설정하기</router-link></p>
+        <p class="my-3"><router-link to="/">나중에 설정하기</router-link></p>
       </form>
     </div>
 
