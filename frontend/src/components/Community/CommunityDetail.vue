@@ -90,12 +90,10 @@ export default {
     });
     axios.get(`comment/${this.no}`).then(({ data }) => {
       this.comments = data;
-      // console.log(data);
     });
   },
   methods: {
     changeDate(str) {
-      console.log(str);
       return str.substring(0, 10) + " " + str.substring(11, 19);
     },
     enterToBr(str) {
