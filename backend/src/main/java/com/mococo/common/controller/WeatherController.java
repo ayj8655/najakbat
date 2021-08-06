@@ -27,29 +27,24 @@ public class WeatherController {
 	private static final Logger logger = LoggerFactory.getLogger(WeatherController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
-	
-	
+
 	@Autowired
 	WeatherService weatherService;
-	
-	
-	//성공하면 날씨반환 실패하면 null
-	//예시 - http://localhost:8080/weather/서울특별시,서초구
+
+	// 성공하면 날씨반환 실패하면 null
+	// 예시 - http://localhost:8080/weather/서울특별시,서초구
 	@GetMapping("/{weatherarea}")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "시와구를 , 기준으로 입력하면 날씨를 반환, 없을시 null", response = WeatherInfo.class)
+	@ApiOperation(value = "시와 구를 , 기준으로 입력하면 날씨를 반환, 없을시 null", response = WeatherInfo.class)
 	public ResponseEntity<Optional<WeatherInfo>> getWeatherArea(@PathVariable String weatherarea) throws Exception {
-		
+
 		StringTokenizer st = new StringTokenizer(weatherarea, ",");
 		String city = st.nextToken();
 		String gugun = st.nextToken();
-		
-		//weatherService.findByCityAndGugun(city, gugun);		
-		
-		
+
+		// weatherService.findByCityAndGugun(city, gugun);
+
 		return ResponseEntity.ok(weatherService.findByCityAndGugun(city, gugun));
 	}
-	
-	
-	
+
 }

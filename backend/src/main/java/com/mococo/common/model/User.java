@@ -10,6 +10,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 
@@ -26,10 +27,13 @@ public class User {
 	@Column(name = "user_number")
 	private Integer userNumber;
 	
-	
+	@ApiModelProperty(example = "user")
 	private String id;
+	@ApiModelProperty(example = "user")
 	private String password;
+	@ApiModelProperty(example = "user")
 	private String nickname;
+	@ApiModelProperty(example = "01012345678")
 	private String phone;
 	@Temporal(TemporalType.TIMESTAMP)	//이거 써야 자동으로 시간 넣어줌
 	private Date joinDate;
