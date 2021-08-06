@@ -44,4 +44,8 @@ public class UserCropService {
 	public List<UserCrop> findAllByUserNumber(int userNumber) {
 		return userCropDAO.findAllByUserNumber(userNumber);
 	}
+	
+	public Optional<Object> findGrowingPeriodAndWaterPeriod(int no){
+		return userCropDAO.findGrowingPeriodAndWaterPeriod(no);
+	}
 }

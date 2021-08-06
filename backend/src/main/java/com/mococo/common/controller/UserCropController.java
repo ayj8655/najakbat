@@ -1,9 +1,15 @@
 package com.mococo.common.controller;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +59,45 @@ public class UserCropController {
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 등록")
-	public ResponseEntity<String> insertCrop(@RequestBody UserCrop userCrop) throws IOException {
+	public ResponseEntity<String> insertCrop(@RequestParam String cropno, @RequestParam String userno) throws IOException {
 		logger.info("작물 등록");
 		
 		try {
-			userCrop.setPlantedDate(new Date());
+			if(cropno=="1000") {
+				// db에 없는 기타 작물일 때 처리 방식 추후에 만들기
+			}
+			int crop_number = Integer.parseInt(cropno);
+			int user_number = Integer.parseInt(userno);
+			Date now_time = new Date();
+			Calendar cal = Calendar.getInstance();
+			
+			UserCrop userCrop = new UserCrop();
+			userCrop.setCropNumber(crop_number);
+			userCrop.setPlantedDate(now_time);
+			userCrop.setUserNumber(user_number);
+			userCrop.setFinish(false);
+			// target date, need_date: 물줘야하는날짜, finish=false, water_cycle, 다음 물 줘야하는날
+			Optional<Object> dayInfo = userCropService.findGrowingPeriodAndWaterPeriod(crop_number);
+			JSONObject jsonDayInfo = new JSONObject((Map) dayInfo.get());
+			int growingPeriod = (int)jsonDayInfo.get("growingPeriod");
+			int waterPeriod = (int)jsonDayInfo.get("waterPeriod");
+			
+			cal.setTime(now_time);
+			
+			// target date는 심은날 부터 + growingPeriod
+			cal.add(Calendar.DATE, growingPeriod);
+			userCrop.setTargetDate(cal.getTime());
+			
+			// 다시 심은날로 초기화
+			cal.add(Calendar.DATE, growingPeriod *(-1));
+			
+			// 처음 물 줘야하는 날은 심은날 부터 + waterPeriod
+			cal.add(Calendar.DATE, waterPeriod);
+			userCrop.setNeedDate(cal.getTime());
+			
+			// 물주기 세팅: 심은날 + 물주기
+			userCrop.setWaterCycle(waterPeriod);
+			
 			boolean result = userCropService.insertCrop(userCrop);
 			
 			if (result) {
