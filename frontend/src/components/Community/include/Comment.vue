@@ -17,7 +17,7 @@
           <span><img src="@/assets/leaf_gray.png" width="15px">{{ comment.recommend }}</span>
           <span><img src="@/assets/comment.png" width="15px">{{ comment.commentCount }}</span>
         </span>
-        <span class="btn" v-if="!comment.isdeleted">
+        <span class="btn" v-if="comment.userNumber==this.$store.state.profile.userNumber && !comment.isdeleted">
           <label @click="modifyCommentView">수정</label> |
           <label @click="deleteComment">삭제</label>
         </span>
@@ -61,7 +61,7 @@
         <span class="recc">
           <span><img src="@/assets/leaf_gray.png" width="15px">{{ comment.recommend }}</span>
         </span>
-        <span class="btn" v-if="!comment.isdeleted">
+        <span class="btn" v-if="comment.userNumber==this.$store.state.profile.userNumber && !comment.isdeleted">
           <label @click="modifyCommentView">수정</label> |
           <label @click="deleteComment">삭제</label>
         </span>
@@ -106,6 +106,7 @@ export default {
     // http.get(`comment/${this.comment.comment_number}`).then(({data}) => {
     // this.childs = data;
     // });
+    console.log(this.$store.state);
   },
   methods: {
     movePage() {
