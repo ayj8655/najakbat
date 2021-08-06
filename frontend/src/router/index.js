@@ -1,6 +1,5 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
-import Home from "../views/Home.vue"
 // 준호 라우터
 import DirectQuery from "../views/Sidebar/DirectQuery.vue"
 import MyAlerts from "../views/Sidebar/MyAlerts.vue"
@@ -22,24 +21,10 @@ import UserModify from "../views/Profile/UserModify.vue"
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home,
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-    import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  },
   // 수정 라우터
   
   {
-    path: "/main",
+    path: "/",
     name: "Main",
     component: () =>
     import("../views/Main.vue"),
@@ -186,7 +171,7 @@ const routes = [
     // 용직
     
   {
-    path: '/mylist',
+    path: '/mycrop',
     name: 'MyCrop',
     component: () =>
     import("../views/MyCrop/MyCrop.vue"),
@@ -197,12 +182,12 @@ const routes = [
         component: () => import("../components/MyCrop/MyCropList.vue")
       },
       {
-        path: "/mylist/detail/:no",
+        path: "/mycrop/detail/:no",
         name: "MyCropDetail",
         component: () => import("../components/MyCrop/MyCropDetail.vue")
       },
       {
-        path: "/mylist/insert",
+        path: "/mycrop/insert",
         name: "MyCropInsert",
         component: () => import("../components/MyCrop/MyCropInsert.vue")
       },

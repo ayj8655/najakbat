@@ -1,11 +1,11 @@
 <template>
   <div class="nav">
       <div id="left">
-      <router-link to="/main"><img src="@/assets/mococo.png"/></router-link>
+      <router-link to="/"><img src="@/assets/mococo.png"/></router-link>
       </div>
       <div id="right">
-      <router-link :to="'/profile/' + this.myProfileNumber"><img alt="프로필" /></router-link>
-      <router-link to="/myalerts"><img src="@/assets/noti.png" /></router-link>
+      <router-link :to="'/profile/' + this.myProfileNumber"><img src="@/assets/profile_sample.png" alt="프로필" /></router-link>
+      <router-link to="/myalerts"><img :src="notiImg" /></router-link>
       </div>
   </div>
 </template>
@@ -16,13 +16,13 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      // path: this.$route.path,
-      // notiImg: "",
+      path: this.$route.path,
+      notiImg: require("@/assets/noti.png"),
       myProfileNumber: null
     }
   },
   created() {
-    // this.notiImg = (this.path.include("myalert"))? require("@/assets/noti_green.png"): require("@/assets/noti.png");
+    this.notiImg = (this.path.includes("myalerts"))? require("@/assets/noti_green.png"): require("@/assets/noti.png");
     axios.get('http://localhost:8080/user/user1')
     .then(res => {
       this.myProfileNumber = res.data['userNumber']
