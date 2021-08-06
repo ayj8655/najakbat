@@ -3,24 +3,34 @@
       <div style="text-align: center">
         <h3 class="m-5 crop">내 농작물</h3>
       </div>
-      <span class="etc">
+      <div class="d-flex justify-content-end">
+        <font-awesome-icon :icon="['fas', 'plus']" size="lg" class="pen-color" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
+      </div>
+      <!-- <span class="etc">
         <v-btn elevation="2" right class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
           +
         </v-btn>
-      </span>
+      </span> -->
 
     <div class="mt-2" id="crops-area">
       <hr />
-      <div
-        v-for="(crop, index) in crops"
-        :key="index"
-        @click="movePage(crop.cropNumber)"
-      >
-        <div>
-          <img id="thumbnail" :src="cropImg[index]" width="45px" />
-          <strong>{{ crop.name }}</strong>
+      <div v-if="usercrops.length == 0">
+        <h3 class="text-center">
+          작물을 등록해주세요 :)
+        </h3>
+      </div>
+      <div v-else>
+        <div
+          v-for="(crop, index) in usercrops"
+          :key="index"
+          @click="movePage(crop.cropNumber)"
+        >
+          <div>
+            <img id="thumbnail" :src="cropImg[index]" width="45px" />
+            <strong>{{ crop.name }}</strong>
+          </div>
+          <hr />
         </div>
-        <hr />
       </div>
     </div>
 
@@ -55,22 +65,37 @@ export default {
   data() {
     return {
       crops: [],
-      usercrops:[],
+      usercrops: [],
       cropImg: [],
       usercropImg: [],
       userSelectCrop:'',
+      pickCrop: {
+        userNumber: null,
+      }
     };
   },
   created() {
-    axios.get("user/crop").then((data) => {
-      this.usercrops = data.data;
-      this.usercrops.forEach((c, index) => {
-        this.usercropImg[index] = (this.usercrops[index].image)? require("@/assets/crop/"+this.usercrops[index].image):require("@/assets/thumbnail.png");
-      });
-    });
+    axios.get('user/my')
+    .then(res => {
+      this.pickCrop.userNumber = res.data.userNumber
+      const params = {
+        userNumber: res.data.userNumber
+      }
+      axios.get("user/crop/", { params })
+      .then((res) => {
+        this.usercrops = res.data
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    })
+    .catch(err => {
+      console.error(err);
+    })
  
     axios.get("guide/plant/summary").then((data) => {
       this.crops = data.data;
+      console.log(this.crops);
       this.crops.forEach((c, index) => {
         this.cropImg[index] = (this.crops[index].image)? require("@/assets/crop/"+this.crops[index].image):require("@/assets/thumbnail.png");
       });
@@ -83,12 +108,26 @@ export default {
     },
     selectCrop(event) {
       this.userSelectCrop = event;
-      console.log(this.userSelectCrop);
-
     },
     saveCrop(){
-
-
+      let form = new FormData()
+      form.append('cropno', this.userSelectCrop)
+      form.append('userno', this.pickCrop.userNumber)
+      axios.post('user/crop/', form)
+      .then(res => {
+        res
+        const params = {
+          userNumber: this.pickCrop.userNumber
+        }
+        axios.get("user/crop/", { params })
+        .then((res) => {
+          this.usercrops = res.data
+          console.log(res.data);
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      })
     },
   },
 }
@@ -120,6 +159,10 @@ export default {
 .etc {
   float: right;
   display: inline-block;
+}
+
+.pen-color {
+  color: #446631;
 }
 
 </style>
