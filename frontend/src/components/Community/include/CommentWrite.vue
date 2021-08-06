@@ -32,8 +32,7 @@ export default {
       axios
         .post(`comment/`, {
           postNumber: this.no,
-          // userNumber: 1,
-          // userNickname: "ssafy",
+          userNumber: this.$store.userNumber,
           content: this.content,
         })
         .then(() => {
