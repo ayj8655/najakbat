@@ -26,9 +26,7 @@ public interface CommentDAO extends JpaRepository<Comment, Integer> {
 	//  1댓글의 두번째 대댓글
 	// 2댓글
 	// 순서로 sorting
-	// http://www.gurubee.net/article/66870 에서 가져옴
 	
-	// 쿼리가 10번을 돌아서 SQL최적화 가능한지 봐야함
 	@Query(value = 
 			"SELECT c0.*"
 			+"     , CONCAT("
