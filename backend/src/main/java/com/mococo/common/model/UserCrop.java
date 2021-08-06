@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 @Data 
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED) 
+@NoArgsConstructor(access = AccessLevel.PUBLIC) 
 @Entity(name="userCrop")
 public class UserCrop {
 	@Id
@@ -34,4 +34,5 @@ public class UserCrop {
 	private Date needDate;
 	private boolean finish;
 	private int waterCycle;
+	private boolean isWater;
 }
