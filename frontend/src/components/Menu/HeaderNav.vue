@@ -4,8 +4,13 @@
       <router-link to="/"><img src="@/assets/mococo.png"/></router-link>
       </div>
       <div id="right">
-      <router-link :to="'/profile/' + this.myProfileNumber"><img src="@/assets/profile_sample.png" alt="프로필" /></router-link>
-      <router-link to="/myalerts"><img :src="notiImg" /></router-link>
+        <div v-if="!myProfileNumber">
+          <router-link to="/login"><img src="@/assets/login.png" alt="로그인" /></router-link>
+        </div>
+        <div v-else>
+          <router-link :to="'/profile/' + this.myProfileNumber"><img src="@/assets/profile_sample.png" alt="프로필" /></router-link>
+        </div>
+        <router-link to="/myalerts"><img :src="notiImg" /></router-link>
       </div>
   </div>
 </template>
