@@ -93,7 +93,7 @@ export default {
     },
   },
   created() {
-    axios.get('user/user1')
+    axios.get('user/my')
     .then(res => {
       this.myNumber = res.data.userNumber
     })
