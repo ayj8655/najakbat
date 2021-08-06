@@ -12,8 +12,6 @@ import com.mococo.common.model.Post;
 
 @Repository
 public interface CommentDAO extends JpaRepository<Comment, Integer> {
-
-
 	
 	//List<Comment> findAllByPostNumber(int no);
 	Optional<Comment> findCommentByCommentNumber(int postNumber);
@@ -40,7 +38,6 @@ public interface CommentDAO extends JpaRepository<Comment, Integer> {
 			, nativeQuery = true	
 			)
 	List<Comment> findAllByPostNumber(int no);
-
 
 	Optional<Comment> findCommentByParent(int parent);
 }

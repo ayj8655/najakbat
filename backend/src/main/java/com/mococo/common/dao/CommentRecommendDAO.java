@@ -15,5 +15,4 @@ public interface CommentRecommendDAO extends JpaRepository<CommentRecommend,Comm
 	@Transactional
 	void deleteByCommentNumberAndUserNumber(int commentno, int userno);
 
-
 }
