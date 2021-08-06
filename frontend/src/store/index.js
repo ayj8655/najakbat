@@ -268,7 +268,7 @@ export default new Vuex.Store({
     },
 
     updateModity(context, credentials) {
-      axios.get('user/user1')
+      axios.get('user/my')
       .then(res => {
         var addressPut = { ...res.data, nickname: credentials[0], phone: credentials[1], address: credentials[2]}
         axios.put('user/', addressPut)
@@ -302,7 +302,7 @@ export default new Vuex.Store({
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
           commit('UPDATE_TOKEN', res.data.token)
-          axios.get('user/user1')
+          axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
@@ -324,7 +324,7 @@ export default new Vuex.Store({
     updateAddress({ commit }, myAddress) {
       commit
       myAddress
-      axios.get('user/user1')
+      axios.get('user/my')
       .then(res => {
         var addressPut = { ...res.data, address: myAddress}
         axios.put('user/', addressPut)
@@ -360,7 +360,7 @@ export default new Vuex.Store({
       .then(res => {
         localStorage.setItem('access_token', res.data.token)
         commit('UPDATE_LOGIN_USER', res.data)
-        axios.get('user/user1')
+        axios.get('user/my')
         .then(res => {
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('userNumber', res.data.userNumber)
