@@ -83,9 +83,11 @@ export default new Vuex.Store({
       state.myNumber = ''
     },
 
-    // Get Token
-    UPDATE_TOKEN(state, accessToken) {
-      state.accessToken = accessToken
+    // Get User
+    UPDATE_LOGIN_USER(state, payload) {
+      state.accessToken = payload.token
+      state.myNumber = payload.userNumber
+      state.userId = payload.id
     },
 
     // Find Id
@@ -357,7 +359,7 @@ export default new Vuex.Store({
       })
       .then(res => {
         localStorage.setItem('access_token', res.data.token)
-        commit('UPDATE_TOKEN', res.data.token)
+        commit('UPDATE_LOGIN_USER', res.data)
         axios.get('user/user1')
         .then(res => {
           localStorage.setItem('userId', res.data.id)
@@ -384,6 +386,7 @@ export default new Vuex.Store({
       })
     }
   },
+
 
   modules: {},
 });

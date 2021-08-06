@@ -3,7 +3,7 @@
     <header-nav></header-nav>
     <div v-if="getNickname" class="container">
       <div class="d-flex justify-content-start w-75 container">
-        <img src="@/assets/profile_sample.png" class="img-thumbnail profile-size" alt="...">
+        <img src="@/assets/profile_sample.png" class="profile-size" alt="...">
         <div class="row">
           <div class="d-flex align-items-end">
             <h2 class="ms-3 me-1 my-0">{{ getNickname }}</h2>
