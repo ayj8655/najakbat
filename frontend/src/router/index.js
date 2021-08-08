@@ -39,6 +39,16 @@ const routes = [
         name: "AdminUserList",
         component: () => import("../components/Admin/UserList.vue")
       },
+      {
+        path: "/admin/posts",
+        name: "AdminPostList",
+        component: () => import("../components/Admin/PostList.vue")
+      },
+      {
+        path: "/admin/qna",
+        name: "AdminQnAList",
+        component: () => import("../components/Admin/QnAList.vue")
+      },
     ],
     redirect: () => {
       return "/admin/users";
