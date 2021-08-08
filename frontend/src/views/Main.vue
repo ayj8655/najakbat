@@ -1,7 +1,7 @@
 <template>
   <div>
     <header-nav></header-nav>
-    <Sidebar/>
+    <Sidebar id="side-bar" />
     <div id="main-body">
       <div class="mt-5 mb-5">
         <h3>실시간 인기 작물</h3>
@@ -144,6 +144,12 @@ export default {
 </script>
 
 <style>
+#side-bar {
+  z-index: 1;
+}
+.carousel {
+  z-index: -1;
+}
 #main-body{
   font-family: Noto Sans KR;
   font-style: normal;
