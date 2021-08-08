@@ -68,7 +68,7 @@
           </div>
           <div class="modal-body">정말 {{this.delUser.nickname}} 님의 탈퇴를 진행하시겠습니까?</div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" @click="deleteUser(this.delUser.userNumber)">탈퇴</button>
+            <button type="button" class="btn btn-danger" @click="deleteUser(delUser.userNumber)">탈퇴</button>
             <button
               type="button"
               class="btn btn-secondary"
@@ -100,7 +100,6 @@ export default {
   },
   methods: {
     changeDate(str) {
-      console.log(str);
       return str.substring(0, 10) + " " + str.substring(11, 19);
     },
     getModal(user) {
@@ -109,6 +108,7 @@ export default {
     deleteUser(userno) {
         axios.delete("user/"+userno).then((data) => {
             console.log(data);
+            // if (data.data == "success") window.location.reload();
         });
     }
   },
@@ -116,16 +116,18 @@ export default {
 </script>
 
 <style>
-.container-fluid {
-  padding: 50px;
-}
-#body {
-  padding: 50px 25px;
-  min-height: 500px;
-  background: #ffffff;
-  border-radius: 15px;
-}
-.view {
-  text-align: center;
+@media(min-width: 601px) {
+  .container-fluid {
+    padding: 50px;
+  }
+  #body {
+    padding: 50px 25px;
+    min-height: 500px;
+    background: #ffffff;
+    border-radius: 15px;
+  }
+  .view {
+    text-align: center;
+  }
 }
 </style>

@@ -70,21 +70,21 @@ public class PostController {
 		return new ResponseEntity<Optional<Post>>(postService.findPostByPostNumber(post_number), HttpStatus.OK);
 	}
 
-	/*
-	 * // 게시물 전체 조회
-	 * 
-	 * @RequestMapping(value = "/all", method = RequestMethod.GET) public
-	 * ResponseEntity<?> searchAllPost () throws IOException { try {
-	 * 
-	 * logger.info("게시물 전체 조회");
-	 * 
-	 * return new ResponseEntity<List<Post>>(postService.findAllPost(),
-	 * HttpStatus.OK); } catch (Exception e){ e.printStackTrace();
-	 * logger.info("게시물 전체 조회 에러"); return new
-	 * ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); }
-	 * 
-	 * }
-	 */
+	
+	 // 게시물 전체 조회
+	 
+	 @RequestMapping(value = "/all", method = RequestMethod.GET) public
+	 ResponseEntity<?> searchAllPost () throws IOException { try {
+	 
+	 logger.info("게시물 전체 조회");
+	 
+	 return new ResponseEntity<List<Post>>(postService.findAllPost(),
+	 HttpStatus.OK); } catch (Exception e){ e.printStackTrace();
+	 logger.info("게시물 전체 조회 에러"); return new
+	 ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); }
+	 
+	 }
+	 
 
 	// 게시물 n개씩 조회해서 보내주는 것
 	@RequestMapping(value = "/infinite", method = RequestMethod.GET)
