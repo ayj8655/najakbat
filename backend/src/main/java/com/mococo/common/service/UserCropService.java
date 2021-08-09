@@ -53,4 +53,10 @@ public class UserCropService {
 	public Optional<Object> findGrowingPeriodAndWaterPeriod(int no) {
 		return userCropDAO.findGrowingPeriodAndWaterPeriod(no);
 	}
+
+	public List<UserCrop> findByFinishFalse() {
+		
+		return userCropDAO.findByFinishFalse();
+	}
+
 }

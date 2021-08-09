@@ -65,7 +65,7 @@ public class User {
 	      name = "user_authority",
 	      joinColumns = {@JoinColumn(name = "user_number", referencedColumnName = "user_number")},
 	      inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
-	   private Set<Authority> authorities;
+	private Set<Authority> authorities;
 	
 	
 
