@@ -1,5 +1,7 @@
 <template>
-  
+  <div>
+    좋아요한 게시글
+  </div>
 </template>
 
 <script>
