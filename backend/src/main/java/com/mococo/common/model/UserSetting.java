@@ -32,4 +32,6 @@ public class UserSetting {
 	@Column(name="darkMode", columnDefinition = "TINYINT", length=1)
 	private int darkMode;
 	
+	@Column(name="noticeTime", columnDefinition = "INT")
+	private int noticeTime;
 }
