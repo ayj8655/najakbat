@@ -22,7 +22,7 @@
         @click="movePage(crop.cropNumber)"
         v-show="(searchKey=='') || (crop.name.includes(searchKey))"
       >
-        <div class="cropping">
+        <div>
           <img id="thumbnail" :src="findCropImg(crop)" />
           <strong>{{ crop.name }}</strong>
         </div>
