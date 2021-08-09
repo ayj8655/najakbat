@@ -28,14 +28,19 @@ export default {};
   #admin {
     font-family: Noto Sans KR;
     font-style: normal;
+    height: 100%;
   }
   #side-menu {
+    left: 0;
+    position: fixed;
     width: 20%;
-    float: left;
-    min-height: 800px;
-    max-height: 1300px;
+    height: 100%;
+    color: #ffffff;
     background: #b6c790;
-    color: #446631;
+    display: inline-block;
+  }
+  ul li {
+    text-decoration: none;
   }
   .container {
     width: 80%;

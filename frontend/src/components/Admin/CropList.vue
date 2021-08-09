@@ -2,22 +2,23 @@
   <div id="main-contents" class="container-fluid">
     <div class="container" id="body" align="center">
       <h3>농작물 목록</h3>
-      <table class="table table-hover mt-5">
+      <table class="table mt-5">
         <colgroup>
-          <col width="20%" />
-          <col width="50%" />
+          <!-- <col width="20%" /> -->
+          <col width="70%" />
           <col width="30%" />
         </colgroup>
         <thead>
           <tr>
-            <th class="text-center">no.</th>
+            <th colspan="7"></th>
+            <!-- <th class="text-center">no.</th>
             <th class="text-center">농작물 이름</th>
-            <th class="text-center"></th>
+            <th class="text-center"></th> -->
           </tr>
         </thead>
-        <tbody id="userlist" v-for="(crop, index) in crops" :key="index">
-          <tr class="view" data-id="">
-            <td>{{ crop.cropNumber }}</td>
+        <tbody id="userlist">
+          <tr class="view" v-for="(crop, index) in itemsForList" :key="index">
+            <!-- <td>{{ crop.cropNumber }}</td> -->
             <td id="name">
               <img id="thumbnail" :src="getCropImg(crop)" />{{ crop.name }}
             </td>
@@ -31,6 +32,20 @@
               >
                 수정
               </button>
+            </td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr align="center">
+            <td colspan="2" align="center">
+              <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+                aria-controls="sanggwon-list"
+                class="mt-3 mb-5 justify-content-center"
+                id="paging"
+              ></b-pagination>
             </td>
           </tr>
         </tbody>
@@ -143,6 +158,8 @@ export default {
     return {
       crops: [],
       thisCrop: {},
+      perPage: 5,
+      currentPage: 1,
     };
   },
   created() {
@@ -150,6 +167,17 @@ export default {
       this.crops = data.data;
     });
   },
+  computed: {
+      rows() {
+        return this.crops.length;
+      },
+      itemsForList() {
+        return this.crops.slice(
+          (this.currentPage - 1) * this.perPage,
+          this.currentPage * this.perPage
+        );
+      },
+    },
   methods: {
     getCropImg(crop) {
       return (crop.image)? require("@/assets/crop/"+crop.image):require("@/assets/thumbnail.png");
@@ -204,5 +232,12 @@ export default {
   width: 45px;
   height: 45px;
   border-radius: 5px;
+}
+#paging .page-link  {
+  color: #b6c790;
+}
+.page-item.active .page-link {
+  color: #ffffff !important;
+  background-color: #b6c790 !important;
 }
 </style>
