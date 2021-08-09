@@ -11,10 +11,9 @@ import com.mococo.common.model.Crop;
 
 @Repository
 public interface CropDAO extends JpaRepository<Crop, Integer>{
-	
 	public List<Crop> findAll();
 	
-	@Query("SELECT new Map(c.cropNumber as cropNumber, c.name as name, c.image as image) FROM crop c")
+	@Query("SELECT new Map(c.cropNumber AS cropNumber, c.name AS name, c.image AS image) FROM crop AS c ORDER BY name")
 	public List<Object> findAllSummary();
 	
 	public Optional<Crop> findByCropNumber(int cropNumber);
