@@ -24,6 +24,7 @@ export default new Vuex.Store({
     newcomments_notice: false,
     newtwits_notice: false,
     nightmode_notice: false,
+    noticeTime: '',
 
     // Alerts 변수
     searchNotices: [],
@@ -34,6 +35,7 @@ export default new Vuex.Store({
     messageContent: '',
     messageTime: '',
     messageSenderNickname: '',
+    alluserInfo: '',
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
@@ -59,6 +61,7 @@ export default new Vuex.Store({
       state.newcomments_notice = (data.commentNotice)? true:false;
       state.newtwits_notice = (data.messageNotice)? true:false;
       state.nightmode_notice = (data.darkMode)? true:false;
+      state.noticeTime = data.noticeTime
     },
 
     GET_SEARCH_NOTICE(state, searchNotice) {
@@ -117,6 +120,9 @@ export default new Vuex.Store({
       state.profile['userNumber'] = payload.userNumber
       state.profile['nickname'] = payload.nickname
       state.profile['gold'] = payload.gold
+    },
+    GET_USERINFO_ALL(state, data){
+      state.alluserInfo = data
     },
   },
 
@@ -180,6 +186,18 @@ export default new Vuex.Store({
         console.error(err)
       })
     },
+    getUserinfoAll (context){
+      axios.get(`user/all`)
+      .then(res => {
+        context.commit('GET_USERINFO_ALL', res.data)
+        console.log(this.state.alluserInfo)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    },
+
+
 
     updateNotice(context, settingsStatus) {  
       settingsStatus[0] = (settingsStatus[0])? 1:0;
@@ -249,6 +267,13 @@ export default new Vuex.Store({
           console.error(err)
         })
       },
+
+      // 메세지 작성
+    messagePost() {
+
+      },
+
+
 
     deleteallNotices() {
       axios({

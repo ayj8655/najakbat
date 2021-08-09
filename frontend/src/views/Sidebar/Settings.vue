@@ -46,7 +46,12 @@
                :sync="true"
                :labels="true"
                @change="changeNightmode ()"/>
-    
+    </div>
+    <div class="p-2 d-flex bd-highlight">
+    <h2>알림시간</h2>
+    <h3>
+      {{ noticeTime }}
+    </h3>
     </div>
     <button type="button" class="btn btn-success mb-2" v-if="changes" @click="settingsUpdate">저장</button>
     <!-- <button type="button" class="btn btn-success mb-2" v-if="changes" @click="updateNotice ([this.water_notice, this.recommendedinfo_notice, this.newcomments_notice, this.newtwits_notice, this.nightmode_notice])">저장</button> -->
@@ -102,6 +107,7 @@ export default {
   },
   created() {
     this.$store.dispatch('getNoticeSettings');
+    console.log(this.noticeTime)
   },
 
   watch: {
@@ -151,6 +157,7 @@ export default {
       'newcomments_notice',
       'newtwits_notice',
       'nightmode_notice',
+      'noticeTime',
     ]),
   },
 }
