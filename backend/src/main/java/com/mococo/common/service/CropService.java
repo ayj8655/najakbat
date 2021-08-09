@@ -22,6 +22,7 @@ import com.mococo.common.dao.CropPriceDAO;
 import com.mococo.common.dao.MaterialDAO;
 import com.mococo.common.model.Crop;
 import com.mococo.common.model.CropPrice;
+import com.mococo.common.model.UserCrop;
 
 @Service
 public class CropService {
@@ -70,6 +71,17 @@ public class CropService {
 		return materialDAO.findAllRecipeByCropNumber(cropNumber);
 	}
 
+	public boolean updateCropGuide(Crop crop) {
+		Optional<Crop> cropOpt = cropDAO.findByCropNumber(crop.getCropNumber());
+		
+		if(cropOpt.isPresent()) {
+			cropDAO.save(crop);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public CropPrice findCropPriceByCropNumber(int cropNumber) {
 		return cropPriceDAO.findByCropNumber(cropNumber);
 	}
@@ -77,6 +89,7 @@ public class CropService {
 	public List<CropPrice> findMonthPriceByCropNumber(int cropNumber) {
 		return cropPriceDAO.findMonthPriceByCropNumber(cropNumber);
 	}
+	
 
 	public void insertCropPrice(String startDay, String endDay) throws IOException, ParseException {
 		// http://www.kamis.or.kr/service/price/xml.do?action=periodProductList&p_productclscode=02&p_startday=2015-10-01&p_endday=2015-12-01&p_itemcategorycode=200&p_itemcode=212&p_kindcode=00&p_productrankcode=04&p_countrycode=1101&p_convert_kg_yn=Y&p_cert_key=111&p_cert_id=222&p_returntype=xml

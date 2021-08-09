@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +43,7 @@ public class PlantGuideController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "모든 작물 정보 검색")
-	public ResponseEntity<?> searchAllPlant() throws IOException {
+	public ResponseEntity<?> searchAllPlantGuide() throws IOException {
 		logger.info("모든 작물 정보 검색");
 
 		try {
@@ -72,7 +73,7 @@ public class PlantGuideController {
 	@RequestMapping(value = "/{cropNumber}", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 정보 검색")
-	public ResponseEntity<?> searchPlant(@PathVariable("cropNumber") String cropNumberString) throws IOException {
+	public ResponseEntity<?> searchPlantGuide(@PathVariable("cropNumber") String cropNumberString) throws IOException {
 		logger.info("작물 정보 검색");
 
 		try {
@@ -106,6 +107,26 @@ public class PlantGuideController {
 
 		} catch (NumberFormatException e) {
 			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "작물 도감 정보 수정")
+	public ResponseEntity<?> updatePlantGuide(@RequestBody Crop crop) throws IOException {
+		logger.info("작물 도감 정보 수정");
+
+		try {
+			boolean result = cropService.updateCropGuide(crop);
+
+			if (result) {
+				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+			}
+
 		} catch (Exception e) {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
