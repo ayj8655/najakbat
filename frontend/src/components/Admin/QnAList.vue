@@ -1,7 +1,7 @@
 <template>
   <div id="main-contents" class="container-fluid">
     <div class="container" id="body" align="center">
-      <h3>1:1문의 목록</h3>
+      <h3>1:1 문의 목록</h3>
       <table class="table table-hover mt-5">
         <colgroup>
           <col width="10%" />
@@ -36,13 +36,21 @@
             <td v-text="changeDate(qna.date)" />
             <td>
               <button
+                v-if="!qna.answer"
                 type="button"
                 class="ansBtn btn btn-outline-primary btn-sm"
                 data-bs-toggle="modal"
                 data-bs-target="#ansModal"
                 @click="getAnsModal(qna)"
               >
-                답변
+                답변하기
+              </button>
+              <button
+                v-else
+                type="button"
+                class="ansBtn btn btn-outline-secondary btn-sm"
+              >
+                답변완료
               </button>
               <button
                 type="button"
@@ -78,16 +86,30 @@
             ></button>
           </div>
           <div class="modal-body">
-            <p>해당 문의사항의 답변을 작성하세요.</p>
-            <textarea v-model="ansContent"></textarea>
+            <p>분류: {{this.ansQnA.qnaType}}</p>
+            <div>
+              <label for="question">답변:</label>
+              <div id="question" name="question" v-text="enterToBr(this.ansQnA.question)"></div>
+            </div>
+            <div class="form-group" align="left">
+              <label for="answer">답변:</label>
+              <textarea
+                class="form-control"
+                rows="15"
+                id="answer"
+                name="answer"
+                v-model="ansQnA.answer"
+                placeholder="답변을 입력하세요."
+              ></textarea>
+            </div>
           </div>
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-danger"
-              @click="answerQnA(ansQnA.qnaNumber)"
+              class="btn btn-success"
+              @click="answerQnA"
             >
-              삭제
+              답변완료
             </button>
             <button
               type="button"
@@ -144,14 +166,29 @@
 
 <script>
 export default {
-data() {
-  return {
-    qnas: [],
-    ansQnA: {},
-    delQnA: {},
-    ansContent: "",
-  }
-},
+  data() {
+    return {
+      qnas: [],
+      ansQnA: {},
+      delQnA: {},
+      ansContent: "",
+    }
+  },
+  methods: {
+    getAnsModal(qna) {
+        this.ansQnA = qna;
+    },
+    getDelModal(qna) {
+        this.delQnA = qna;
+    },
+    enterToBr(str) {
+      if (str) return str.replace(/(?:\r\n|\r|\n)/g, "<br />");
+    },
+    answerQnA() {},
+    deleteQnA(qnaNumber) {
+      console.log(qnaNumber);
+    },
+  },
 }
 </script>
 
