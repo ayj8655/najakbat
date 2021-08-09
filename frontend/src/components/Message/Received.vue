@@ -88,11 +88,6 @@ export default {
     'messageSenderNickname',
     ])
   },
-  data () {
-    return {
-      showModal: false
-    }
-  },
   created() {
     this.$store.dispatch('getReceivedMessages')
   },
@@ -107,10 +102,10 @@ export default {
     },
     reading(messageinfo) {
       const messageIdx = messageinfo[0]
-      // const messageNum = messageinfo[1]
+      const messageNum = messageinfo[1]
       this.$store.state.receivedMessages[messageIdx].isRead = 1
-      console.log(this.$store.state.receivedMessages[messageIdx].isRead)
-      this.$store.$dispatch('readingMessage', messageinfo)
+      // console.log(this.$store.state.receivedMessages[messageIdx].isRead)
+      this.$store.dispatch('readingMessage', messageNum)
     },
   }
 }

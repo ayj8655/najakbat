@@ -227,22 +227,25 @@ export default new Vuex.Store({
           console.error(err)
         })
       },
-    readingMessage(context, messageinfo) {
+
+
+    readingMessage(context, messageNum) {
       axios({
         method: 'put',
-        url: `message`,
+        url: `message/`,
         params: {
-          messageNumber: messageinfo[1]      
+          messageNumber: Number(messageNum),
         },
-        data: {
-          userNumber: 1,
-          isRead: 1
-        }
+        // data: {
+        //   isRead: 1
+        //   // messageNumber: Number(messageNum)
+        // }
       })
         .then(res => {
           console.log(res.data)
         })
         .catch(err => {
+          console.log(messageNum)
           console.error(err)
         })
       },
