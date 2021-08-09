@@ -112,7 +112,7 @@ public class UserController {
 		}
 
 		Optional<User> tempuser = userService.findById(userDto.getId());
-		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0); // 유저 설정 디폴트값
+		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0, 6); // 유저 설정 디폴트값 초기에 6시로 알림 세팅
 		userSettingService.save(us);
 
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);

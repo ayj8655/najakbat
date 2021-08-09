@@ -2,7 +2,6 @@ package com.mococo.common.model;
 
 import java.util.Date;
 
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,23 +17,12 @@ import lombok.NoArgsConstructor;
 @Data 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC) 
-@Entity(name="userCrop")
-public class UserCrop {
+public class UserCropResponse {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int userCropNumber;
 	private int userNumber;
 	private int cropNumber;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date plantedDate;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date targetDate;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date realDate;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date needDate;
-	private boolean finish;
-	private int waterCycle;
+	private int remainDate;
 	private boolean isWater;
-	
 }
