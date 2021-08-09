@@ -107,8 +107,8 @@ export default {
     },
     deleteUser(userno) {
         axios.delete("user/"+userno).then((data) => {
-            console.log(data);
-            // if (data.data == "success") window.location.reload();
+            // console.log(data);
+            if (data.data == "success") window.location.reload();
         });
     }
   },
