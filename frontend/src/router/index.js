@@ -40,6 +40,11 @@ const routes = [
         component: () => import("../components/Admin/UserList.vue")
       },
       {
+        path: "/admin/crops",
+        name: "AdminCropList",
+        component: () => import("../components/Admin/CropList.vue")
+      },
+      {
         path: "/admin/posts",
         name: "AdminPostList",
         component: () => import("../components/Admin/PostList.vue")
@@ -48,6 +53,11 @@ const routes = [
         path: "/admin/qna",
         name: "AdminQnAList",
         component: () => import("../components/Admin/QnAList.vue")
+      },
+      {
+        path: "/admin/message",
+        name: "AdminSendingMessage",
+        component: () => import("../components/Admin/SendMessage.vue")
       },
     ],
     redirect: () => {

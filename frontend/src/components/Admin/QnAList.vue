@@ -5,9 +5,9 @@
       <table class="table table-hover mt-5">
         <colgroup>
           <col width="10%" />
-          <col width="10%" />
           <col width="20%" />
-          <col width="30%" />
+          <col width="20%" />
+          <col width="20%" />
           <col width="10%" />
           <col width="10%" />
           <col width="10%" />
@@ -25,22 +25,31 @@
         </thead>
         <tbody id="userlist" v-for="(qna, index) in qnas" :key="index">
           <tr class="view" data-id="">
-            <td>{{ qna.postNumber }}</td>
+            <td>{{ qna.qnaNumber }}</td>
             <td><img :src="changeType(qna.qnaType)" width="35px" /></td>
             <td>{{ qna.title }}</td>
             <td
               v-text="splitContent(qna.content)"
-              @click="movePage(qna.postNumber)"
+              @click="movePage(qna.qnaNumber)"
             ></td>
             <td>{{ qna.userNickname }}</td>
             <td v-text="changeDate(qna.date)" />
             <td>
               <button
                 type="button"
+                class="ansBtn btn btn-outline-primary btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#ansModal"
+                @click="getAnsModal(qna)"
+              >
+                답변
+              </button>
+              <button
+                type="button"
                 class="delBtn btn btn-outline-danger btn-sm"
                 data-bs-toggle="modal"
                 data-bs-target="#delModal"
-                @click="getModal(qna)"
+                @click="getDelModal(qna)"
               >
                 삭제
               </button>
@@ -48,6 +57,48 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="ansModal"
+      tabindex="-1"
+      aria-labelledby="ansModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ansModalLabel">문의사항 답변하기</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>해당 문의사항의 답변을 작성하세요.</p>
+            <textarea v-model="ansContent"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click="answerQnA(ansQnA.qnaNumber)"
+            >
+              삭제
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              취소
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- Modal -->
     <div
@@ -60,7 +111,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="delModalLabel">게시글 삭제하기</h5>
+            <h5 class="modal-title" id="delModalLabel">문의사항 삭제하기</h5>
             <button
               type="button"
               class="btn-close"
@@ -68,12 +119,12 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">해당 게시글의 삭제를 진행하시겠습니까?</div>
+          <div class="modal-body">해당 문의사항의 삭제를 진행하시겠습니까?</div>
           <div class="modal-footer">
             <button
               type="button"
               class="btn btn-danger"
-              @click="deletePost(delPost.postNumber)"
+              @click="deleteQnA(delQnA.qnaNumber)"
             >
               삭제
             </button>
@@ -93,10 +144,30 @@
 
 <script>
 export default {
-
+data() {
+  return {
+    qnas: [],
+    ansQnA: {},
+    delQnA: {},
+    ansContent: "",
+  }
+},
 }
 </script>
 
 <style>
-
+@media (min-width: 601px) {
+  .container-fluid {
+    padding: 50px;
+  }
+  #body {
+    padding: 50px 25px;
+    min-height: 500px;
+    background: #ffffff;
+    border-radius: 15px;
+  }
+  .view {
+    text-align: center;
+  }
+}
 </style>

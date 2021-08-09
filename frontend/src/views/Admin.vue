@@ -6,8 +6,10 @@
         <hr />
         <ul>
           <li><router-link to="/admin/users">회원 관리</router-link></li>
+          <li><router-link to="/admin/crops">농작물 관리</router-link></li>
           <li><router-link to="/admin/posts">커뮤니티 관리</router-link></li>
           <li><router-link to="/admin/qna">문의사항 관리</router-link></li>
+          <li><router-link to="/admin/message">전체 알림 메세지</router-link></li>
         </ul>
       </div>
     </div>
