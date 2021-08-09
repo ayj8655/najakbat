@@ -18,7 +18,9 @@
         <tbody id="userlist" v-for="(crop, index) in crops" :key="index">
           <tr class="view" data-id="">
             <td>{{ crop.cropNumber }}</td>
-            <td id="name"><img id="thumbnail" :src="getCropImg(crop)" />{{ crop.name }}</td>
+            <td id="name">
+              <img id="thumbnail" :src="getCropImg(crop)" />{{ crop.name }}
+            </td>
             <td>
               <button
                 type="button"
@@ -54,68 +56,68 @@
             ></button>
           </div>
           <div class="modal-body">
-              <p>{{this.thisCrop.name}}</p>
-              <div class="form-group" align="left">
-                <label for="description">설명:</label>
-                <textarea
-                    class="form-control"
-                    rows="15"
-                    id="description"
-                    name="description"
-                    v-model="thisCrop.description"
-                    placeholder="설명을 입력하세요."
-                ></textarea>
-              </div>
-              <div class="form-group" align="left">
-                <label for="cultivation">재배:</label>
-                <textarea
-                    class="form-control"
-                    rows="15"
-                    id="cultivation"
-                    name="cultivation"
-                    v-model="thisCrop.cultivation"
-                    placeholder="재배방법을 입력하세요."
-                ></textarea>
-              </div>
-              <div class="form-group" align="left">
-                <label for="sun">햇빛 선호도:</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="sun"
-                    name="sun"
-                    v-model="thisCrop.sun"
-                    placeholder="햇빛 선호도를 입력하세요. (1~5)"
-                />
-              </div>
-              <div class="form-group" align="left">
-                <label for="water">물 선호도:</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="water"
-                    name="water"
-                    v-model="thisCrop.water"
-                    placeholder="물 선호도를 입력하세요. (1~5)"
-                />
-              </div>
-              <div class="form-group" align="left">
-                <label for="temperature">생육 온도:</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="temperature"
-                    name="temperature"
-                    v-model="thisCrop.temperature"
-                    placeholder="생육온도를 입력하세요. (ex.15~25)"
-                />
-              </div>
+            <p>{{ this.thisCrop.name }}</p>
+            <div class="form-group" align="left">
+              <label for="description">설명:</label>
+              <textarea
+                class="form-control"
+                rows="15"
+                id="description"
+                name="description"
+                v-model="thisCrop.description"
+                placeholder="설명을 입력하세요."
+              ></textarea>
+            </div>
+            <div class="form-group" align="left">
+              <label for="cultivation">재배:</label>
+              <textarea
+                class="form-control"
+                rows="15"
+                id="cultivation"
+                name="cultivation"
+                v-model="thisCrop.cultivation"
+                placeholder="재배방법을 입력하세요."
+              ></textarea>
+            </div>
+            <div class="form-group" align="left">
+              <label for="sun">햇빛 선호도:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="sun"
+                name="sun"
+                v-model="thisCrop.sun"
+                placeholder="햇빛 선호도를 입력하세요. (1~5)"
+              />
+            </div>
+            <div class="form-group" align="left">
+              <label for="water">물 선호도:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="water"
+                name="water"
+                v-model="thisCrop.water"
+                placeholder="물 선호도를 입력하세요. (1~5)"
+              />
+            </div>
+            <div class="form-group" align="left">
+              <label for="temperature">생육 온도:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="temperature"
+                name="temperature"
+                v-model="thisCrop.temperature"
+                placeholder="생육온도를 입력하세요. (ex.15~25)"
+              />
+            </div>
           </div>
           <div class="modal-footer">
             <button
               type="button"
               class="btn btn-success"
-              @click="updateCrop(this.thisCrop)"
+              @click="updateCrop"
             >
               수정
             </button>
@@ -155,11 +157,26 @@ export default {
     getUpdateModal(crop) {
         this.thisCrop = crop;
     },
-    // updateCrop(crop) {
-    //     axios.put("guide/plant/", {}).then((data) => {
-    //         console.log(data);
-    //     });
-    // },
+    updateCrop() {
+        axios.put("guide/plant/", {
+          cropNumber: this.thisCrop.cropNumber,
+          name: this.thisCrop.name,
+          description: this.thisCrop.description,
+          cultivation: this.thisCrop.cultivation,
+          sun: Number(this.thisCrop.sun),
+          water: Number(this.thisCrop.water),
+          temperature: this.thisCrop.temperature,
+          growingPeriod: this.thisCrop.growingPeriod,
+          growthDuration: this.thisCrop.growthDuration,
+          image: this.thisCrop.image,
+          waterPeriod: this.thisCrop.waterPeriod
+        }).then((data) => {
+            // console.log(data);
+            if(data.data=="success") window.location.reload();
+        }).catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>
@@ -180,11 +197,12 @@ export default {
   }
 }
 #name {
-    text-align: left;
+  text-align: left;
 }
 #thumbnail {
   margin: 5px 20px;
-  width: 45px; height: 45px;
+  width: 45px;
+  height: 45px;
   border-radius: 5px;
 }
 </style>

@@ -33,6 +33,7 @@ export default {};
     width: 20%;
     float: left;
     min-height: 800px;
+    max-height: 1300px;
     background: #b6c790;
     color: #446631;
   }
