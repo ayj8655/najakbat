@@ -15,6 +15,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.mococo.common.dao.CropDAO;
@@ -56,7 +57,9 @@ public class CropService {
 	CropPriceDAO cropPriceDAO;
 
 	public List<Crop> findAll() {
-		return cropDAO.findAll();
+		List<Crop> cropList = cropDAO.findAll();
+		cropList.sort((o1, o2) -> { return o1.getName().compareTo(o2.getName()); });
+		return cropList;
 	}
 
 	public List<Object> findAllSummary() {
@@ -82,12 +85,12 @@ public class CropService {
 		}
 	}
 	
-	public CropPrice findCropPriceByCropNumber(int cropNumber) {
-		return cropPriceDAO.findByCropNumber(cropNumber);
+	public List<Object> findCropPriceByCropNumber(int cropNumber) {
+		return cropPriceDAO.findByCropNumber(PageRequest.of(0, 1), cropNumber);
 	}
 
-	public List<CropPrice> findMonthPriceByCropNumber(int cropNumber) {
-		return cropPriceDAO.findMonthPriceByCropNumber(cropNumber);
+	public List<Object> findThirtyCropPriceByCropNumber(int cropNumber) {
+		return cropPriceDAO.findByCropNumber(PageRequest.of(0, 30), cropNumber);
 	}
 	
 
@@ -120,7 +123,7 @@ public class CropService {
 			urlBuilder.append("&" + URLEncoder.encode("p_cert_id", "UTF-8") + "=" + ID);
 			urlBuilder.append("&" + URLEncoder.encode("p_returntype", "UTF-8") + "=" + returnType);
 
-			System.out.println(urlBuilder.toString());
+//			System.out.println(urlBuilder.toString());
 
 			// GET으로 요청
 			URL url = new URL(urlBuilder.toString());
@@ -129,7 +132,7 @@ public class CropService {
 			conn.setRequestProperty("Content-type", "application/json");
 
 			BufferedReader br;
-			System.out.println(conn.getResponseCode());
+//			System.out.println(conn.getResponseCode());
 			if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
 				br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			} else if (conn.getResponseCode() == 500) {
@@ -171,7 +174,6 @@ public class CropService {
 				}
 			}
 		}
-		System.out.println("1");
 		cropPriceDAO.saveAll(cropPriceList);
 	}
 }

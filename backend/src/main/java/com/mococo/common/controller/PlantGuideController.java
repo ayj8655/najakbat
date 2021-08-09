@@ -139,22 +139,26 @@ public class PlantGuideController {
 		logger.info("해당 작물의 최근 평균 거래가격 조회");
 
 		try {
-			CropPrice cropPrice = cropService.findCropPriceByCropNumber(cropNumber);
-			return new ResponseEntity<>(cropPrice, HttpStatus.OK);
+			List<Object> cropPrice = cropService.findCropPriceByCropNumber(cropNumber);
+			
+			if(cropPrice.isEmpty()) {
+				return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+			}
+			return new ResponseEntity<>(cropPrice.get(0), HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@RequestMapping(value = "/price/month", method = RequestMethod.GET)
+	@RequestMapping(value = "/price/thirty", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "해당 작물의 최근 한달 평균 거래가격 조회")
+	@ApiOperation(value = "해당 작물의 최근 평균 거래가격 최대 30개 조회")
 	public ResponseEntity<?> searchMonthPrice(@RequestParam int cropNumber) throws IOException {
-		logger.info("해당 작물의 최근 한달 평균 거래가격 조회");
+		logger.info("해당 작물의 최근 평균 거래가격 최대 30개 조회");
 
 		try {
-			List<CropPrice> cropPriceList = cropService.findMonthPriceByCropNumber(cropNumber);
+			List<Object> cropPriceList = cropService.findThirtyCropPriceByCropNumber(cropNumber);
 			return new ResponseEntity<>(cropPriceList, HttpStatus.OK);
 
 		} catch (Exception e) {
