@@ -22,4 +22,7 @@ public interface UserCropDAO extends JpaRepository<UserCrop, Integer>{
 			+ "FROM crop c "
 			+ "WHERE crop_number = :no ")
 	public Optional<Object> findGrowingPeriodAndWaterPeriod(int no);
+	
+
+	public List<UserCrop> findByFinishFalse();
 }
