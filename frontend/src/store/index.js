@@ -31,6 +31,9 @@ export default new Vuex.Store({
     // Message 변수
     receivedMessages: [],
     sentMessages: [],
+    messageContent: '',
+    messageTime: '',
+    messageSenderNickname: '',
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
@@ -74,6 +77,10 @@ export default new Vuex.Store({
     
     GET_SENT_MESSAGES(state, sentMessage) {
       state.sentMessages = sentMessage
+    },
+
+    GET_MESSAGE(state, message_data) {
+      state.Message = message_data
     },
     // Sidebar mutations
 
@@ -211,6 +218,25 @@ export default new Vuex.Store({
         data: {
           isRead: mynoticeStatus[0],
           userNumber: 1,
+        }
+      })
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+      },
+    readingMessage(context, messageinfo) {
+      axios({
+        method: 'put',
+        url: `message`,
+        params: {
+          messageNumber: messageinfo[1]      
+        },
+        data: {
+          userNumber: 1,
+          isRead: 1
         }
       })
         .then(res => {
