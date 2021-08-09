@@ -7,15 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.mococo.common.model.Crop;
 import com.mococo.common.model.UserCrop;
 import com.mococo.common.model.UserSetting;
 import com.mococo.common.service.CropService;
+import com.mococo.common.service.NoticeService;
 import com.mococo.common.service.UserCropService;
 import com.mococo.common.service.UserSettingService;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Component
@@ -26,10 +31,13 @@ public class UserCropWaterSchedule {
 
 	@Autowired
 	UserSettingService usersettingService;
+	
+	@Autowired
+	NoticeService noticeService;
 
 	// 물주기 관리에 대한 부분
 	@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 한번 실행
-	// @Scheduled(cron = "0 */1 * * * *") // 1분마다 실행
+	// @Scheduled(cron = "0 */1 * * * *") // 1분마다 실행 test용
 	public void taskOneDay() throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String nowTime = sdf.format(new Date());
@@ -38,7 +46,7 @@ public class UserCropWaterSchedule {
 		List<UserCrop> usercrops = usercropService.findByFinishFalse();
 		Calendar cal = Calendar.getInstance();
 
-		System.out.println("자정실행");
+		System.out.println("자정 자동 실행");
 
 		for (UserCrop usercrop : usercrops) {
 			cal.setTime(usercrop.getNeedDate());
@@ -50,7 +58,7 @@ public class UserCropWaterSchedule {
 			// case: 물을 기한내에 주었고, 물 기한이 다된 경우 -> water true -> false로 만든다. + (need date를 + 물
 			// 주는 주기)
 			if (usercrop.isWater() && nowTime.equals(needTime)) {
-				System.out.println("기한내물줘서 변경함 + watercycle");
+				
 				usercrop.setWater(false);
 				cal.setTime(usercrop.getNeedDate());
 
@@ -62,8 +70,7 @@ public class UserCropWaterSchedule {
 
 			// case: 물을 기한내에 주지 못하고 물기한이 다된경우 -> water은 false 그대로 need date를 + 1
 			else if (!usercrop.isWater() && nowTime.equals(needTime)) {
-				System.out.println("기한내물못줌 하루늘림");
-
+				
 				cal.setTime(usercrop.getNeedDate());
 
 				cal.add(Calendar.DATE, 1);
@@ -81,33 +88,45 @@ public class UserCropWaterSchedule {
 
 	// 물주기 알림에 대한 부분
 	@Scheduled(cron = "0 0 * * * *") // 매시각 실행
-	// @Scheduled(cron = "0 */1 * * * *") // 1분마다 실행
+	//@Scheduled(cron = "0 */1 * * * *") // 1분마다 실행 test용
 	public void taskEveryHour() throws Exception {
 		Calendar cal = Calendar.getInstance();
-		System.out.println("매시각실행 - 사용자마다 알림설정해놓은 시각에 알림 가도록한다.");
+		int nowH = cal.get(Calendar.HOUR_OF_DAY); // 현재 시각 24시간 형식
+
+		System.out.println("매시각 실행 - 사용자마다 알림설정해놓은 시각에 알림 가도록한다.");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		String nowTime = sdf.format(new Date()); // 현재 년월일 정보 string으로
-		int nowH = cal.get(Calendar.HOUR); // 현재 시각
-
 		// user crop에서 수확이 끝나지 않은 작물 리스트 받기
 		List<UserCrop> usercrops = usercropService.findByFinishFalse();
+		Map<Integer, Integer> noticeMap = new HashMap<Integer, Integer>();
+		
+		String title = "물주기 알림";
+		String content = "농작물에 물을 주세요.";
 		for (UserCrop usercrop : usercrops) {
+			System.out.println("need date "+usercrop.getNeedDate());
+			
+			
 			Optional<UserSetting> usersetting = usersettingService.findByUserNumber(usercrop.getUserNumber());
 
-			cal.setTime(usercrop.getNeedDate());
-			String needTime = sdf.format(cal.getTime());
-			System.out.println(usercrop.getUserNumber());
+			
+			String needTime = sdf.format(usercrop.getNeedDate());
 			// 물을 주지 않았고 현재시간이 세팅한 시간인 사람에게 물줘야하는 날에 알림을 보내줌
+			
 			if (!usercrop.isWater() && usersetting.get().getNoticeTime() == nowH && nowTime.equals(needTime)) {
 
 				// 알림을 보낼 시에는
-				// user number마다 오늘 줘야하는 작물 리스트를 만들어서 보내줘야한다.
-				System.out.println(usercrop.getUserCropNumber() + "작물에 대한");
-				System.out.println("알림 보내기!!");
+				// user number하나만 저장하여서 보낸다.
+				int userNumber = usercrop.getUserNumber();
+				noticeMap.put(userNumber, 0);
+				
 			}
 
+		}
+		
+		for(Integer userno : noticeMap.keySet()) {
+			noticeService.insert(userno,title,content);
 		}
 
 	}

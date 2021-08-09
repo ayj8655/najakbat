@@ -1,6 +1,7 @@
 package com.mococo.common.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +58,13 @@ public class NoticeService {
 		noticeDAO.save(updateNotice.get());//.get() 안하면 옵셔널이라서 뭔지 모르기 때문에 해줘야함
 
 		return true;
+	}
+	
+	public void insert(int userNumber,String title, String content) {
+		Date date = new Date();
+		Notice notice = new Notice(0,userNumber,0, date, title,content);
+		
+		noticeDAO.save(notice);
 	}
 
 }

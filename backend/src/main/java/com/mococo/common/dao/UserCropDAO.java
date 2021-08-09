@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mococo.common.model.Crop;
 import com.mococo.common.model.UserCrop;
 
 @Repository
@@ -25,4 +26,9 @@ public interface UserCropDAO extends JpaRepository<UserCrop, Integer>{
 	
 
 	public List<UserCrop> findByFinishFalse();
+	
+	@Query(value = "SELECT c "
+			+"FROM crop as c " 
+			+"WHERE crop_number = :no ")
+	public Optional<Crop> findNameByCropNumber(int no);
 }
