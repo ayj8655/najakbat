@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mococo.common.dao.UserCropDAO;
+import com.mococo.common.model.Crop;
 import com.mococo.common.model.UserCrop;
 
 @Service
@@ -53,6 +54,12 @@ public class UserCropService {
 	public Optional<Object> findGrowingPeriodAndWaterPeriod(int no) {
 		return userCropDAO.findGrowingPeriodAndWaterPeriod(no);
 	}
+	
+	public Optional<Crop> findNameByCropNumber(int no) {
+		
+		return userCropDAO.findNameByCropNumber(no);
+	}
+	
 
 	public List<UserCrop> findByFinishFalse() {
 		

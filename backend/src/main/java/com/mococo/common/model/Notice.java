@@ -9,7 +9,7 @@ import lombok.*;
 
 @Data 
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED) 
+@NoArgsConstructor(access = AccessLevel.PUBLIC) 
 @Entity(name="notice")
 public class Notice {
 	
