@@ -20,7 +20,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // Alert
 
-import Vue from "vue"
+
 import VueSimpleAlert from "vue-simple-alert";
 
 
