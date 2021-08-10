@@ -88,7 +88,7 @@ public class UserCropWaterSchedule {
 
 	// 물주기 알림에 대한 부분
 	@Scheduled(cron = "0 0 * * * *") // 매시각 실행
-	//@Scheduled(cron = "0 */1 * * * *") // 1분마다 실행 test용
+	// @Scheduled(cron = "0 */1 * * * *") // 1분마다 실행 test용
 	public void taskEveryHour() throws Exception {
 		Calendar cal = Calendar.getInstance();
 		int nowH = cal.get(Calendar.HOUR_OF_DAY); // 현재 시각 24시간 형식
@@ -126,7 +126,7 @@ public class UserCropWaterSchedule {
 		}
 		
 		for(Integer userno : noticeMap.keySet()) {
-			noticeService.insert(userno,title,content);
+			noticeService.insertNotice(userno,0,title,content);
 		}
 
 	}

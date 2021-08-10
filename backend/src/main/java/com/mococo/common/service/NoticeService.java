@@ -60,9 +60,9 @@ public class NoticeService {
 		return true;
 	}
 	
-	public void insert(int userNumber,String title, String content) {
+	public void insertNotice(int userNumber,int postNumber,String title, String content) {
 		Date date = new Date();
-		Notice notice = new Notice(0,userNumber,0, date, title,content);
+		Notice notice = new Notice(0,userNumber,0,0, date, title,content);
 		
 		noticeDAO.save(notice);
 	}

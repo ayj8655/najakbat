@@ -3,6 +3,7 @@ package com.mococo.common.controller;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.Comment;
+import com.mococo.common.model.Post;
 import com.mococo.common.service.CommentService;
+import com.mococo.common.service.NoticeService;
+import com.mococo.common.service.PostService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -38,7 +42,13 @@ public class CommentController {
 
 	@Autowired
 	CommentService commentService;
-
+	
+	@Autowired
+	NoticeService noticeService;
+	
+	@Autowired
+	PostService postService;
+	
 	@RequestMapping(value = "/{postno}", method = RequestMethod.GET)
 	@ApiOperation(value = "하나의 게시물 안에 있는 댓글들 조회")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
@@ -49,6 +59,7 @@ public class CommentController {
 
 	}
 
+	// 댓글을 쓰면 게시글 작성자에게 알림이 가야함.
 	// request param 은 댓글이 게시글의 댓글인지 댓글의 대댓글인지 구분. 게시글의 댓글: parent=0, 댓글의 대댓글:
 	// parent = 댓글의 comment_number
 	@RequestMapping(value = "/", method = RequestMethod.POST)
@@ -67,12 +78,27 @@ public class CommentController {
 			comment.setUserNumber(user_number);
 			comment.setPostNumber(postno);
 			comment.setParent(parent);
-
 			boolean ret = commentService.insertComment(comment);
+			
+
+			
 			if (ret == false) {
 				logger.info("댓글 등록 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
+			
+			///////////////////////////////// 알림 부분 등록- insertComment 성공시만 알림에 추가.
+			//post number로 게시글 작성자 찾고 그 사용자에게 notice 보내줌, content에 post title도 넣어준다.
+			
+			Optional<Post> post = postService.findPostByPostNumber(postno);
+			String title ="커뮤니티 알림";
+			String content ="";
+			
+			
+			content = post.get().getTitle() + "에 댓글이 달렸습니다.";
+			noticeService.insertNotice(post.get().getUserNumber(),postno, title, content);
+
+			/////////////////////////////////
 
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
