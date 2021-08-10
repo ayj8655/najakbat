@@ -4,7 +4,7 @@ import VueRouter from "vue-router"
 import DirectQuery from "../views/Sidebar/DirectQuery.vue"
 import MyAlerts from "../views/Sidebar/MyAlerts.vue"
 import Settings from "../views/Sidebar/Settings.vue"
-import Message from "../views/Message/Message.vue"
+import Message from "../views/Message/Message.js"
 // import Received from "../views/Message/Received.vue"
 // import Sent from "../views/Message/Sent.vue"
 
