@@ -45,7 +45,7 @@
                 <div class="modal-body d-flex justify-content-around">          
                   <select v-model ="crop" required class="form-select form-select-lg m-2" aria-label=".form-select-lg example"  @change='selectCrop(crop.cropNumber)'>
                     <option value ='' hidden> 작물 </option>
-                    <option v-for= "crop in crops" v-bind:value="crop" v-bind:key="crop.cropNumber">{{crop.name}}</option>
+                    <option v-for="crop in crops" v-bind:value="crop" v-bind:key="crop.cropNumber">{{crop.name}}</option>
                   </select>
                 </div>
                 <div class="modal-footer">
