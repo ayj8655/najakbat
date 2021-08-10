@@ -35,7 +35,7 @@ export default {
       ? require("@/assets/noti_green.png")
       : require("@/assets/noti.png");
     axios
-      .get("http://192.168.45.109:8080/user/my")
+      .get("http://localhost:8080/user/my")
       .then((res) => {
         this.myProfileNumber = res.data["userNumber"];
       })

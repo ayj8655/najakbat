@@ -4,7 +4,7 @@ import axios from "axios";
 import router from "../router"
 
 Vue.use(Vuex);
-axios.defaults.baseURL = 'http://192.168.45.109:8080/'
+axios.defaults.baseURL = 'http://localhost:8080/'
 
 axios.interceptors.request.use(config => {
   const accessToken = localStorage.getItem('access_token')
