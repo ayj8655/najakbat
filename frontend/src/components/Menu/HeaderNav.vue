@@ -1,40 +1,47 @@
 <template>
   <div class="nav">
-      <div id="left">
-      <router-link to="/"><img src="@/assets/mococo.png"/></router-link>
+    <div id="left">
+      <router-link to="/"><img src="@/assets/mococo.png" /></router-link>
+    </div>
+    <div id="right">
+      <div v-if="!myProfileNumber">
+        <router-link to="/login"
+          ><img src="@/assets/login.png" alt="로그인"
+        /></router-link>
       </div>
-      <div id="right">
-        <div v-if="!myProfileNumber">
-          <router-link to="/login"><img src="@/assets/login.png" alt="로그인" /></router-link>
-        </div>
-        <div v-else>
-          <router-link :to="'/profile/' + this.myProfileNumber"><img src="@/assets/profile_sample.png" alt="프로필" /></router-link>
-        </div>
-        <router-link to="/myalerts"><img :src="notiImg" /></router-link>
+      <div v-else>
+        <router-link :to="'/profile/' + this.myProfileNumber"
+          ><img src="@/assets/profile_sample.png" alt="프로필"
+        /></router-link>
       </div>
+      <router-link to="/myalerts"><img :src="notiImg" /></router-link>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
       path: this.$route.path,
       notiImg: require("@/assets/noti.png"),
-      myProfileNumber: null
-    }
+      myProfileNumber: null,
+    };
   },
   created() {
-    this.notiImg = (this.path.includes("myalerts"))? require("@/assets/noti_green.png"): require("@/assets/noti.png");
-    axios.get('http://localhost:8080/user/my')
-    .then(res => {
-      this.myProfileNumber = res.data['userNumber']
-    })
-    .catch(err => {
-      console.error(err);
-    })
+    this.notiImg = this.path.includes("myalerts")
+      ? require("@/assets/noti_green.png")
+      : require("@/assets/noti.png");
+    axios
+      .get("http://192.168.45.109:8080/user/my")
+      .then((res) => {
+        this.myProfileNumber = res.data["userNumber"];
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   },
 };
 </script>
@@ -49,9 +56,9 @@ export default {
     float: left;
   }
   #right img {
-      float: right;
-      right: 0;
-      display: inline-block;
+    float: right;
+    right: 0;
+    display: inline-block;
   }
   img {
     width: 15%;
