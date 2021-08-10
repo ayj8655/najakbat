@@ -173,7 +173,14 @@ public class UserCropController {
 				long diffSec = (cmpDate.getTimeInMillis() - getToday.getTimeInMillis()) / 1000;
 				long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
 
-				res.setRemainDate((int) diffDays);
+				res.setRemainDate((int) diffDays); // 수확까지 남은 날짜
+
+				cmpDate.setTime(crop.getNeedDate());
+
+				diffSec = (cmpDate.getTimeInMillis() - getToday.getTimeInMillis()) / 1000;
+				diffDays = diffSec / (24 * 60 * 60); // 물 주기 d-day
+
+				res.setWaterDate((int) diffDays); // 수확까지 남은 날짜
 
 				res.setWater(crop.isWater());
 				resList.add(res);
@@ -246,10 +253,10 @@ public class UserCropController {
 
 		try {
 			WaterRecord waterRecord = new WaterRecord(userCropNumber, new Date());
-			
+
 			Optional<UserCrop> usercrop = userCropService.findByUserCropNumber(userCropNumber);
 			usercrop.get().setWater(true);
-			
+
 			boolean result = waterRecordService.insertWaterRecord(waterRecord);
 
 			if (result) {
@@ -277,6 +284,5 @@ public class UserCropController {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	
+
 }

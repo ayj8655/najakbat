@@ -19,6 +19,8 @@ public class Notice {
 	
 	private int userNumber;
 	
+	private int postNumber;
+	
 	@Column(name="is_read", columnDefinition = "TINYINT", length=1)//read가 예약어라서 바꿈
 	private int isRead;
 	
