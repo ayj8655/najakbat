@@ -3,6 +3,8 @@ package com.mococo.common.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,7 +24,8 @@ public interface QnaDAO extends JpaRepository<Qna, Integer>{
 					+ "FROM qna q "
 					+ "WHERE user_number = :no ")	
 	List<Object> findAllByUserNumber(int no, Pageable pageable);
-
+	
+	List<Qna> findAllByOrderByDateDesc();
 
 
 }
