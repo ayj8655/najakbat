@@ -1,6 +1,6 @@
 <template>
 <div>
-<button type="button" class="btn btn-success" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal2">
   새 쪽지 쓰기
 </button>
 <!-- {{ alluserInfo }} -->
@@ -14,7 +14,7 @@
         <div class="modal-title" align="center" id="exampleModalLabel">
           <!-- <div class="dropdown" align="center"> -->
           <div class="p-3 pb-2" align="center">
-            <h2>{{messageSenderNickname}}</h2>
+            <h2>{{ this.$store.state.messageSenderNickname }}</h2>
           </div>
           에게 보내는 쪽지
         </div>
@@ -60,17 +60,19 @@ export default {
   },
   created() {
     this.$store.dispatch('getUserinfoAll')
-    // console.log(this.$store.state.profile.userNumber)
+
+    // console.log(this.$store.state.messageSenderNickname)
     // console.log(this.$store.state.alluserInfo)
   },
   computed: {
     ...mapState([
       'alluserInfo',
-      'messageSenderNickname',
+      // 'messageSenderNickname',
 
       // 'receiver'
     ])
   },
+  
   methods: {
     ...mapActions([
       'messagePost'
@@ -83,7 +85,7 @@ export default {
         }
       }
       // console.log(this.$store.state.receiver)
-      console.log(this.$store.state.messageSenderNickname)
+      // console.log(this.$store.state.messageSenderNickname)
       this.$store.dispatch('messagePost', [this.content, this.$store.state.receiver])
     },
     syncronizeNickname (receiverNickname) {

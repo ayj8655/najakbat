@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="">
-        <button type="button" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
+        <button type="button" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
         <button type="button" class="btn btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
       </div>
     </div>

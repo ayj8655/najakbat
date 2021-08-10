@@ -1,5 +1,9 @@
 <template>
-  <div class="container">
+<div>
+  <keep-alive>
+  <div v-if="isClick"><MessageObject/></div>
+  
+  <div v-else class="container">
     <div class="container notice mt-2">
       <div class="row">
         <div class="font1 col-2 px-0">
@@ -19,12 +23,12 @@
       </div>
     </div>
     <div v-for="(receivedMessage, idx) in receivedMessages" :key="idx">
-    <div class="container px-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="[detail(receivedMessage), reading([idx, receivedMessage.messageNumber])]" >
+    <div class="container px-0" @click="[detail(receivedMessage), reading([idx, receivedMessage.messageNumber])]" >
       <div class="isRead-false border border-end-0 border-start-0 bg-white">
         <div class="container notice mt-2">
           <div class="row">
             <div class="font2 col-2 px-0">
-              닉네임
+              {{ receivedMessage.senderNickname }}
             </div>
             <div class="col-5 px-0">
               <div class="font2">
@@ -60,28 +64,35 @@
           {{ messageContent }}
         </div>
         <div class="modal-footer">
-          <message-reply-form/>
+          <!-- <message-reply-form/> -->
           <button type="button" class="btn btn-primary">Understood</button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-  </div>
+</div>
+</keep-alive>
+</div>
 
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
-import MessageReplyForm from './include/MessageReplyForm.vue'
-// import MessageReplyform from '@/components/Message/include/MessageReplyform.vue';
+// import MessageReplyForm from './include/MessageReplyForm.vue'
+import MessageObject from './include/MessageObject.vue'
+
 
 export default {
   components: {
-    MessageReplyForm
-    // MessageReplyform,
+    // MessageReplyForm
+    MessageObject
+  },
+  data() {
+    return {
+      isClick: false,
+    }
   },
   computed: {
   ...mapState ([
@@ -102,9 +113,10 @@ export default {
       this.$store.state.messageContent = message.content
       this.$store.state.messageTime = message.time
       this.$store.state.messageSenderNickname = message.senderNickname
-      console.log(this.$store.state.messageContent)
+      console.log(this.$store.state.messageSenderNickname)
     },
     reading(messageinfo) {
+      this.isClick = ! this.isClick
       const messageIdx = messageinfo[0]
       const messageNum = messageinfo[1]
       this.$store.state.receivedMessages[messageIdx].isRead = 1

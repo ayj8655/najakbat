@@ -46,7 +46,7 @@
                 {{searchNotice.content}}
               </div>
               <div class="date mx-1">
-              {{ searchNotice.date | moment('YYYY-MM-DD HH:mm:ss') }} 
+              {{ searchNotice.date | moment('YY-MM-DD HH:mm:ss') }} 
               </div>
             </div>
             <div class="col-1 px-0"></div>

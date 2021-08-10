@@ -1,5 +1,9 @@
 <template>
-  <div class="container">
+<div>
+  <keep-alive>
+  <div v-if="isClick"><MessageObject/></div>
+  
+  <div v-else class="container">
     <div class="container notice mt-2">
       <div class="row">
         <div class="font1 col-2 px-0">
@@ -19,12 +23,12 @@
       </div>
     </div>
     <div v-for="(sentMessage, idx) in sentMessages" :key="idx">
-    <div class="container px-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="[detail(sentMessage)]" >
+    <div class="container px-0" @click="[detail(sentMessage), reading([idx, sentMessage.messageNumber])]" >
       <div class="isRead-false border border-end-0 border-start-0 bg-white">
         <div class="container notice mt-2">
           <div class="row">
             <div class="font2 col-2 px-0">
-              닉네임
+              {{ sentMessage.receiverNickname }}
             </div>
             <div class="col-5 px-0">
               <div class="font2">
@@ -60,26 +64,36 @@
           {{ messageContent }}
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <!-- <message-reply-form/> -->
           <button type="button" class="btn btn-primary">Understood</button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-  </div>
+</div>
+</keep-alive>
+</div>
 
 </template>
 
 <script>
 import { mapState } from 'vuex'
-// import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
+// import MessageReplyForm from './include/MessageReplyForm.vue'
+import MessageObject from './include/MessageObject.vue'
 
 
 export default {
-  name: 'asdf',
-
+  components: {
+    // MessageReplyForm
+    MessageObject
+  },
+  data() {
+    return {
+      isClick: false,
+    }
+  },
   computed: {
   ...mapState ([
     'sentMessages',
@@ -92,21 +106,23 @@ export default {
     this.$store.dispatch('getSentMessages')
   },
   methods: {
-    // ...mapActions ([
-    //   'readingMessage'
-    // ]),
+    ...mapActions ([
+      'readingMessage'
+    ]),
     detail(message) {
       this.$store.state.messageContent = message.content
       this.$store.state.messageTime = message.time
       this.$store.state.messageSenderNickname = message.senderNickname
+      console.log(this.$store.state.messageSenderNickname)
     },
-    // reading(messageinfo) {
-    //   const messageIdx = messageinfo[0]
-    //   const messageNum = messageinfo[1]
-    //   this.$store.state.sentMessages[messageIdx].isRead = 1
-    //   // console.log(this.$store.state.sentMessages[messageIdx].isRead)
-    //   this.$store.dispatch('readingMessage', messageNum)
-    // },
+    reading(messageinfo) {
+      this.isClick = ! this.isClick
+      const messageIdx = messageinfo[0]
+      const messageNum = messageinfo[1]
+      this.$store.state.sentMessages[messageIdx].isRead = 1
+      // console.log(this.$store.state.sentMessages[messageIdx].isRead)
+      this.$store.dispatch('readingMessage', messageNum)
+    },
   }
 }
 
