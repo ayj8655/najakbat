@@ -286,6 +286,10 @@ export default new Vuex.Store({
             this.dispatch('getUserinfoAll')
             console.log(res.data)
             // console.log(receiver)
+            // router.push({name: 'Profile', params: {
+            //   userNumber: 1,
+            //   page: 0
+            // }} )
           })
           .catch(err => {
             console.log(this.receiver)

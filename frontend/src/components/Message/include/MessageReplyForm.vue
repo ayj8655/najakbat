@@ -1,38 +1,20 @@
 <template>
 <div>
-<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal2">
   새 쪽지 쓰기
 </button>
 <!-- {{ alluserInfo }} -->
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="container modaldesign">
     <div class="modal-content">
       <div class="">
         <div class="modal-title" align="center" id="exampleModalLabel">
           <!-- <div class="dropdown" align="center"> -->
-          <div class="form-group nicknameinput dropdown- p-3 pb-2" align="center">
-            <input
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-              type="text"
-              class="form-control dropdown-toggle"
-              id="sword"
-              name="sword"
-              v-model="sword"
-              placeholder="받는사람의 닉네임을 입력하세요."
-            />
-            <ul class="dropdown-menu" aria-labelledby="sword">
-              <li v-for="(userinfo, index) in alluserInfo" :key="index">
-              <!-- <li v-for="(userinfo, index) in alluserInfo" :key="index" v-show="((sword='') || (userinfo.nickname.includes(sword)))"> -->
-                <div v-if="((sword=='') || userinfo.nickname.includes(sword))" class="dropdown-item">
-                  <div @click="syncronizeNickname (userinfo.nickname)">{{ userinfo.nickname }}</div>
-                </div>
-                <div v-else-if="index > 10"></div>
-              </li>
-            </ul>
+          <div class="p-3 pb-2" align="center">
+            <h2>{{messageSenderNickname}}</h2>
           </div>
           에게 보내는 쪽지
         </div>
@@ -72,7 +54,7 @@ export default {
     return {
       content: '',
       nickname: '',
-      sword: '',
+      sword2: '',
       // receiver: '',
     }
   },
@@ -84,6 +66,8 @@ export default {
   computed: {
     ...mapState([
       'alluserInfo',
+      'messageSenderNickname',
+
       // 'receiver'
     ])
   },
@@ -92,18 +76,19 @@ export default {
       'messagePost'
     ]),
     postingMessage() {
-      console.log(this.sword)
+      console.log(this.sword2)
       for (const userinfo of this.alluserInfo) {
-        if (userinfo.nickname === this.sword) {
+        if (userinfo.nickname === this.sword2) {
           this.$store.state.receiver = userinfo.userNumber
         }
       }
       // console.log(this.$store.state.receiver)
+      console.log(this.$store.state.messageSenderNickname)
       this.$store.dispatch('messagePost', [this.content, this.$store.state.receiver])
     },
     syncronizeNickname (receiverNickname) {
       // console.log(localStorage.getItem('userNumber'))
-      this.sword = receiverNickname
+      this.sword2 = receiverNickname
     }
   },
 

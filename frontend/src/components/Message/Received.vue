@@ -60,7 +60,7 @@
           {{ messageContent }}
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <message-reply-form/>
           <button type="button" class="btn btn-primary">Understood</button>
         </div>
       </div>
@@ -75,11 +75,14 @@
 <script>
 import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
-
+import MessageReplyForm from './include/MessageReplyForm.vue'
+// import MessageReplyform from '@/components/Message/include/MessageReplyform.vue';
 
 export default {
-  name: 'asdf',
-
+  components: {
+    MessageReplyForm
+    // MessageReplyform,
+  },
   computed: {
   ...mapState ([
     'receivedMessages',
@@ -99,6 +102,7 @@ export default {
       this.$store.state.messageContent = message.content
       this.$store.state.messageTime = message.time
       this.$store.state.messageSenderNickname = message.senderNickname
+      console.log(this.$store.state.messageContent)
     },
     reading(messageinfo) {
       const messageIdx = messageinfo[0]
