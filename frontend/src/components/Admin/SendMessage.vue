@@ -86,13 +86,18 @@ export default {
     axios.get("user/all").then((data) => {
       this.users = data.data;
       this.users.forEach((user, index) => {
-          this.usernos[index] = user.userNumber;
-        });
+        this.usernos[index] = user.userNumber;
+      });
     });
   },
   computed: {
     isActive() {
-      if (this.selected.length && this.title.length > 0 && this.content.length > 0) return true;
+      if (
+        this.selected.length &&
+        this.title.length > 0 &&
+        this.content.length > 0
+      )
+        return true;
       else return false;
     },
   },

@@ -40,7 +40,8 @@ public class User {
 	private String address;
 	private Integer gold;
 	private Boolean activated;
-
+	private String token;
+	
 	// 유저와 post recommend는 N:M관계
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(

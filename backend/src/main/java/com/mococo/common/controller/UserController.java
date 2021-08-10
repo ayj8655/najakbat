@@ -358,7 +358,7 @@ public class UserController {
 	public ResponseEntity<String> updateUser(@RequestBody User user) throws IOException {
 		logger.info("회원수정");
 		try {
-			boolean ret = userService.updateById(user);
+			boolean ret = userService.updateByUserNumber(user);
 
 			if (!ret) {
 				logger.info("게시글 수정 실패");
@@ -369,7 +369,7 @@ public class UserController {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			System.out.println("회원 수정 에러");
-			// e.printStackTrace();
+			e.printStackTrace();
 			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
