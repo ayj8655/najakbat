@@ -1,5 +1,5 @@
 <template>
-  <div class="nav">
+  <div class="nav" v-show="this.flag">
     <div id="left">
       <router-link to="/"><img src="@/assets/mococo.png" /></router-link>
     </div>
@@ -43,6 +43,12 @@ export default {
         console.error(err);
       });
   },
+  computed: {
+    flag() {
+      if(this.$route.path.includes("mycrop/detail")) return false
+      else return true
+    }
+  }
 };
 </script>
 
@@ -62,6 +68,18 @@ export default {
   }
   img {
     width: 15%;
+    margin: 5px;
+    padding: 5px;
+  }
+}
+@media (min-width: 601px) {
+  .nav {
+    height: 80px;
+    border-bottom: 2px solid #b6c790;
+    display: inline-block;
+  }
+  img {
+    width: 55px;
     margin: 5px;
     padding: 5px;
   }
