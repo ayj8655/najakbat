@@ -1,12 +1,18 @@
 <template>
-    <div class="container mt-5">
-      <div style="text-align: center">
-        <h3 class="m-5 crop">내 농작물</h3>
-      </div>
-      <div class="d-flex justify-content-end">
-        <font-awesome-icon :icon="['fas', 'plus']" size="lg" class="pen-color" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
-      </div>
-      <!-- <span class="etc">
+  <div class="container mt-5">
+    <div style="text-align: center">
+      <h3 class="m-5 crop">내 농작물</h3>
+    </div>
+    <div class="d-flex justify-content-end">
+      <font-awesome-icon
+        :icon="['fas', 'plus']"
+        size="lg"
+        class="pen-color"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      />
+    </div>
+    <!-- <span class="etc">
         <v-btn elevation="2" right class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
           +
         </v-btn>
@@ -15,9 +21,7 @@
     <div class="mt-2" id="crops-area">
       <hr />
       <div v-if="usercrops.length == 0">
-        <h3 class="text-center">
-          작물을 등록해주세요 :)
-        </h3>
+        <h3 class="text-center">작물을 등록해주세요 :)</h3>
       </div>
       <div v-else>
         <div
@@ -35,26 +39,56 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">작물 선택</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex justify-content-around">          
-                  <select v-model ="crop" required class="form-select form-select-lg m-2" aria-label=".form-select-lg example"  @change='selectCrop(crop.cropNumber)'>
-                    <option value ='' hidden> 작물 </option>
-                    <option v-for="crop in crops" v-bind:value="crop" v-bind:key="crop.cropNumber">{{crop.name}}</option>
-                  </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="saveCrop()" :disabled="!this.userSelectCrop===''" >저장</button>
-                </div>
-            </div>
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">작물 선택</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body d-flex justify-content-around">
+            <select
+              v-model="cropNoSelected"
+              required
+              class="form-select form-select-lg m-2"
+              aria-label=".form-select-lg example"
+              @change="selectCrop(crop.cropNumber)"
+            >
+              <option value="">작물 선택</option>
+              <option
+                v-for="(crop, index) in crops"
+                :key="index"
+                :value="crop.cropNumber"
+              >
+                {{ crop.name }}
+              </option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-success"
+              data-bs-dismiss="modal"
+              @click="saveCrop"
+            >
+              <!-- :disabled="!this.userSelectCrop === ''" -->
+              등록
+            </button>
+          </div>
         </div>
+      </div>
     </div>
-
   </div>
 </template>
 
@@ -65,72 +99,69 @@ export default {
   data() {
     return {
       crops: [],
+      cropNoSelected: "",
       usercrops: [],
       cropImg: [],
       usercropImg: [],
-      userSelectCrop:'',
+      userSelectCrop: "",
       pickCrop: {
         userNumber: null,
-      }
+      },
     };
   },
   created() {
-    axios.get('user/my')
-    .then(res => {
-      this.pickCrop.userNumber = res.data.userNumber
-      const params = {
-        userNumber: res.data.userNumber
-      }
-      axios.get("user/crop/", { params })
+    axios
+      .get("user/my")
       .then((res) => {
-        this.usercrops = res.data
+        this.pickCrop.userNumber = res.data.userNumber;
+        axios
+          .get(`user/crop/list?userNumber=${this.pickCrop.userNumber}`)
+          .then((res) => {
+            this.usercrops = res.data;
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
-      })
-    })
-    .catch(err => {
-      console.error(err);
-    })
- 
+      });
+
     axios.get("guide/plant/summary").then((data) => {
       this.crops = data.data;
-      console.log(this.crops);
+      // console.log(this.crops);
       this.crops.forEach((c, index) => {
-        this.cropImg[index] = (this.crops[index].image)? require("@/assets/crop/"+this.crops[index].image):require("@/assets/thumbnail.png");
+        this.cropImg[index] = this.crops[index].image
+          ? require("@/assets/crop/" + this.crops[index].image)
+          : require("@/assets/thumbnail.png");
       });
     });
-  
   },
   methods: {
     movePage(cropNumber) {
-      this.$router.push(`/mylist/detail/${cropNumber}`);
+      this.$router.push("/mycrop/detail/" + cropNumber);
     },
-    selectCrop(event) {
-      this.userSelectCrop = event;
-    },
-    saveCrop(){
-      let form = new FormData()
-      form.append('cropno', this.userSelectCrop)
-      form.append('userno', this.pickCrop.userNumber)
-      axios.post('user/crop/all', form)
-      .then(res => {
-        res
-        const params = {
-          userNumber: this.pickCrop.userNumber
-        }
-        axios.get("user/crop/", { params })
+    // selectCrop(event) {
+    //   this.userSelectCrop = event;
+    // },
+    saveCrop() {
+      // let form = new FormData()
+      // form.append('cropno', this.userSelectCrop)
+      // form.append('userno', this.pickCrop.userNumber)
+      axios
+        .post(
+          `user/crop/?cropno=${this.cropNoSelected}&userno=${this.pickCrop.userNumber}`
+        )
         .then((res) => {
-          this.usercrops = res.data
-          console.log(res.data);
+          // console.log(res);
+          if (res.data == "success") window.location.reload();
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
-        })
-      })
+        });
     },
   },
-}
+};
 </script>
 
 <style>
@@ -153,7 +184,7 @@ export default {
 #thumbnail {
   margin: 5px 20px;
 }
-.crop{
+.crop {
   display: inline;
 }
 .etc {
@@ -164,5 +195,4 @@ export default {
 .pen-color {
   color: #446631;
 }
-
 </style>
