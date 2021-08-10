@@ -41,6 +41,7 @@ export default new Vuex.Store({
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
+    nickname: localStorage.getItem('nickname') || '',
     myNumber: localStorage.getItem('userNumber') || '',
     myId: null,
     loginCheck: false,
@@ -91,15 +92,17 @@ export default new Vuex.Store({
     // Sidebar mutations
 
     DELETE_TOKEN(state) {
-      state.accessToken = ''
-      state.userId = ''
-      state.myNumber = ''
+      state.accessToken = '';
+      state.userId = '';
+      state.myNumber = '';
+      state.nickname = '';
     },
 
     // Get User
     UPDATE_LOGIN_USER(state, payload) {
       state.accessToken = payload.token
       state.myNumber = payload.userNumber
+      state.myNickname = payload.nickname
       state.userId = payload.id
     },
 
@@ -337,9 +340,9 @@ export default new Vuex.Store({
     // Logout actions
 
     logout({ commit }) {
-      commit('DELETE_TOKEN')
-      localStorage.removeItem('access_token')
-      sessionStorage.clear()
+      commit('DELETE_TOKEN');
+      localStorage.removeItem('access_token');
+      localStorage.clear();
     },
 
     //Modify actions
@@ -444,6 +447,7 @@ export default new Vuex.Store({
         .then(res => {
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('userNumber', res.data.userNumber)
+          localStorage.setItem('nickname', res.data.nickname)
           router.push({ name: 'Main' })
         })
         .catch(err => {

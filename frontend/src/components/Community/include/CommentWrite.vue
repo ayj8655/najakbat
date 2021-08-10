@@ -30,34 +30,23 @@ export default {
   methods: {
     registComment() {
       axios
-        .post(`comment/`, {
-          postNumber: this.no,
-          userNumber: this.$store.userNumber,
-          content: this.content,
-        })
+        .post(`comment/?postno=${this.no}&user_number=${this.$store.state.myNumber}&parent=${this.parent}`,
+          {
+            postno: this.no,
+            userNumber: Number(this.$store.state.myNumber),
+            userNickname: this.$store.state.nickname,
+            parent: 0,
+            content: this.content,
+          },
+        )
         .then(() => {
-          alert("댓글이 등록되었습니다.");
+          // alert("댓글이 등록되었습니다.");
           window.location.reload();
         });
-      // if (this.$store.state.userinfo.id) {
-      // } else {
-      //   alert("로그인 후 이용해주세요.");
-      //   this.$router.push("/user/login");
-      // }
-    },
-    updateComment() {
-      axios
-        .put(`comment/${this.modifycomment.comment_number}`, {
-          comment_number: this.modifycomment.comment_number,
-          content: this.modifyComment.content,
-        })
-        .then(() => {
-          alert("댓글이 수정되었습니다.");
-          window.location.reload();
-        });
-    },
-    updateCommentCancel() {
-      this.$emit("modify-comment-cancel", false);
+      if (!localStorage.getItem("userNumber")) {
+        // alert("로그인 후 이용해주세요.");
+        this.$router.push("/user/login");
+      }
     },
   },
 };
