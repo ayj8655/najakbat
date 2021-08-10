@@ -59,4 +59,9 @@ public class QnaService {
 		List<Object> qnas = qnaDAO.findAllByUserNumber(no,PageRequest.of(limit, 3,Sort.by("date").descending()));
 		return qnas;
 	}
+
+	public List<Qna> findAllByOrderByDateDesc() {
+		List<Qna> qnas = qnaDAO.findAllByOrderByDateDesc();
+		return qnas;
+	}
 }

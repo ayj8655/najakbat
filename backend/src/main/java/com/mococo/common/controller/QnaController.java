@@ -143,6 +143,33 @@ public class QnaController {
 		}
 
 	}
+	
+	
+	
+	// 전체 qna 리스트 확인하기
+	
+	// 통으로 보내주기. 
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	@ApiOperation(value = "전체 질문 리스트 전체")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<?> searchQnaUser()
+			throws IOException {
+		logger.info("전체 qna 조회");
+		try {
+
+			return new ResponseEntity<List<Qna>>(qnaService.findAllByOrderByDateDesc(), HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			logger.info("사용자 qna 조회 에러");
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+
+		}
+
+	}
+	
+	
+	
 
 	
 }
