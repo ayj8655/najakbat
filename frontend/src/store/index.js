@@ -3,6 +3,8 @@ import Vuex from "vuex";
 import axios from "axios";
 import router from "../router"
 
+
+
 Vue.use(Vuex);
 axios.defaults.baseURL = 'http://localhost:8080/'
 
@@ -38,6 +40,7 @@ export default new Vuex.Store({
     messageTime: '',
     messageReceiverNickname: '',
     alluserInfo: '',
+    messageNumber: '',
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
@@ -292,12 +295,31 @@ export default new Vuex.Store({
             // }} )
           })
           .catch(err => {
-            console.log(this.receiver)
-            console.log(receiver)
+            // console.log(this.receiver)
+            // console.log(receiver)
             console.error(err)
           })
         context
       },
+    messageDelete(context, [messageNum]) {
+      axios({
+        method: 'delete',
+        url: `message/`,
+        params: {
+          messageNumber: messageNum
+        }
+        })
+        .then(res => {
+          // console.log(this.messageNumber)
+          console.log(res.data)
+        })
+        .catch(err => {
+          // console.log(messageNum)
+          console.log(err)
+          // console.log(this.messageNumber)
+        })
+      // context
+    },
 
 
 

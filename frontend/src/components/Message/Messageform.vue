@@ -1,6 +1,6 @@
 <template>
-<div>
-<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<div class="pt-4">
+<button type="button" class="btn buttoncolor" data-bs-toggle="modal" data-bs-target="#exampleModal">
   새 쪽지 쓰기
 </button>
 <!-- {{ alluserInfo }} -->
@@ -51,7 +51,8 @@
         </div>
       </div>
       <div class="">
-        <button type="button" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
+        <button v-if="content" type="button" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
+        <button v-else disabled type="button" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
         <button type="button" class="btn btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
       </div>
     </div>

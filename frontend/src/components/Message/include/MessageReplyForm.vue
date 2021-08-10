@@ -1,7 +1,7 @@
 <template>
 <div>
-<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-  새 쪽지 쓰기
+<button type="button" class="btn buttoncolor" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+  답장
 </button>
 <!-- {{ alluserInfo }} -->
 
@@ -13,8 +13,8 @@
       <div class="">
         <div class="modal-title" align="center" id="exampleModalLabel">
           <!-- <div class="dropdown" align="center"> -->
-          <div class="p-3 pb-2" align="center">
-            <h2>{{ this.$store.state.messageSenderNickname }}</h2>
+          <div class="p-2 pb-2" align="center">
+            <h2 class="mb-0">{{ this.$store.state.messageSenderNickname }}</h2>
           </div>
           에게 보내는 쪽지
         </div>
@@ -33,7 +33,8 @@
         </div>
       </div>
       <div class="">
-        <button type="button" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
+        <button type="button" v-if="content" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
+        <button type="button" v-else disabled class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
         <button type="button" class="btn btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
       </div>
     </div>
@@ -53,8 +54,8 @@ export default {
   data () {
     return {
       content: '',
-      nickname: '',
-      sword2: '',
+      nickname: this.$store.state.messageSenderNickname,
+      // sword2: '',
       // receiver: '',
     }
   },
@@ -75,12 +76,13 @@ export default {
   
   methods: {
     ...mapActions([
-      'messagePost'
+      'messagePost',
+      'messageDelete'
     ]),
     postingMessage() {
-      console.log(this.sword2)
+      console.log(this.nickname)
       for (const userinfo of this.alluserInfo) {
-        if (userinfo.nickname === this.sword2) {
+        if (userinfo.nickname === this.nickname) {
           this.$store.state.receiver = userinfo.userNumber
         }
       }
@@ -88,10 +90,6 @@ export default {
       // console.log(this.$store.state.messageSenderNickname)
       this.$store.dispatch('messagePost', [this.content, this.$store.state.receiver])
     },
-    syncronizeNickname (receiverNickname) {
-      // console.log(localStorage.getItem('userNumber'))
-      this.sword2 = receiverNickname
-    }
   },
 
 }

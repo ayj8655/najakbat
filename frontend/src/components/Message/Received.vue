@@ -71,6 +71,7 @@
     </div>
   </div>
 </div>
+<messageform/>
 </div>
 </keep-alive>
 </div>
@@ -82,11 +83,12 @@ import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
 // import MessageReplyForm from './include/MessageReplyForm.vue'
 import MessageObject from './include/MessageObject.vue'
-
+import Messageform from '@/components/Message/Messageform.vue'
 
 export default {
   components: {
-    // MessageReplyForm
+    // MessageReplyForm,
+    Messageform,
     MessageObject
   },
   data() {
@@ -113,6 +115,7 @@ export default {
       this.$store.state.messageContent = message.content
       this.$store.state.messageTime = message.time
       this.$store.state.messageSenderNickname = message.senderNickname
+      this.$store.state.messageNumber = message.messageNumber
       console.log(this.$store.state.messageSenderNickname)
     },
     reading(messageinfo) {
