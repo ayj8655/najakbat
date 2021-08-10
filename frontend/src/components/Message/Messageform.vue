@@ -28,7 +28,7 @@
               <li v-for="(userinfo, index) in alluserInfo" :key="index">
               <!-- <li v-for="(userinfo, index) in alluserInfo" :key="index" v-show="((sword='') || (userinfo.nickname.includes(sword)))"> -->
                 <div v-if="((sword=='') || userinfo.nickname.includes(sword))" class="dropdown-item">
-                  {{ userinfo.nickname }}
+                  <div @click="syncronizeNickname (userinfo.nickname)">{{ userinfo.nickname }}</div>
                 </div>
                 <div v-else-if="index > 10"></div>
               </li>
@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="">
-        <button type="button" class="btn buttoncolor mb-3 mx-2" @click="messagePost">보내기</button>
+        <button type="button" class="btn buttoncolor mb-3 mx-2" @click="postingMessage (sword)">보내기</button>
         <button type="button" class="btn btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
       </div>
     </div>
@@ -72,26 +72,39 @@ export default {
     return {
       content: '',
       nickname: '',
-      sword: ''
+      sword: '',
+      // receiver: '',
     }
   },
   created() {
     this.$store.dispatch('getUserinfoAll')
+    // console.log(this.$store.state.profile.userNumber)
     // console.log(this.$store.state.alluserInfo)
   },
   computed: {
     ...mapState([
-      'alluserInfo'
+      'alluserInfo',
+      // 'receiver'
     ])
   },
   methods: {
     ...mapActions([
       'messagePost'
     ]),
-    postingMessage() {
-      this.$store.state.messageSenderNickname = this.content
-      this.$store.state.messageContent = this.nickname
-      this.$store.dispatch('messagePost', [this.content, this.nickname])
+    postingMessage(nickname) {
+      
+      for (let key in this.alluserInfo) {
+        if (this.alluserInfo[key] == nickname) {
+          this.$store.state.receiver = this.alluserInfo[key].userNumber
+        }
+        console.log(this.alluserInfo[key])
+      }
+      console.log(this.$store.state.receiver)
+      // this.$store.dispatch('messagePost', [this.content, this.receiver])
+    },
+    syncronizeNickname (receiverNickname) {
+      // console.log(localStorage.getItem('userNumber'))
+      this.sword = receiverNickname
     }
   },
 
