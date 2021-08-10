@@ -2,7 +2,25 @@
   <div id="main-contents" class="container-fluid">
     <div class="container" id="body" align="center">
       <h3>1:1 문의 목록</h3>
-      <table class="table table-hover mt-5">
+      <div class="row mt-5" id="search-area">
+        <span class="col-4">
+          <select class="form-control mr-2" name="key" id="skey" v-model="skey">
+            <option value="name">닉네임</option>
+            <option value="content">내용</option>
+          </select>
+        </span>
+        <span class="col-8">
+          <input
+            type="text"
+            class="form-control mr-2"
+            placeholder="검색어 입력."
+            name="word"
+            id="sword"
+            v-model="sword"
+          />
+        </span>
+      </div>
+      <table class="table table-hover mt-3">
         <colgroup>
           <col width="5%" />
           <col width="20%" />
@@ -21,7 +39,12 @@
             <th class="text-center"></th>
           </tr>
         </thead>
-        <tbody id="userlist" v-for="(qna, index) in qnas" :key="index">
+        <tbody 
+          id="qnalist" 
+          v-for="(qna, index) in itemsForList" 
+          :key="index"
+          v-show="((sword=='') || (skey=='name' && qna.userNickname.includes(sword)) || (skey=='content' && qna.question.includes(sword)))"
+        >
           <tr class="view" data-id="">
             <td>{{ qna.qnaNumber }}</td>
             <td>{{ qna.qnaType }}</td>
@@ -61,6 +84,14 @@
           </tr>
         </tbody>
       </table>
+      <b-pagination
+        v-model="currentPage"
+        :total-rows="rows"
+        :per-page="perPage"
+        aria-controls="qnalist"
+        class="mt-3 mb-5 justify-content-center"
+        id="paging"
+      ></b-pagination>
     </div>
     <!-- Modal -->
     <div
@@ -170,12 +201,27 @@ export default {
       ansQnA: {},
       delQnA: {},
       ansContent: "",
+      perPage: 10,
+      currentPage: 1,
+      skey: "name",
+      sword: "",
     }
   },
   created() {
     axios.get("qna/all").then((data)=>{
       this.qnas = data.data;
     });
+  },
+  computed: {
+    rows() {
+      return this.qnas.length;
+    },
+    itemsForList() {
+      return this.qnas.slice(
+        (this.currentPage - 1) * this.perPage,
+        this.currentPage * this.perPage
+      );
+    },
   },
   methods: {
     changeDate(str) {
@@ -232,5 +278,15 @@ export default {
   .view {
     text-align: center;
   }
+  #search-area {
+    max-width: 450px;
+  }
+}
+#paging .page-link {
+  color: #b6c790;
+}
+.page-item.active .page-link {
+  color: #ffffff !important;
+  background-color: #b6c790 !important;
 }
 </style>
