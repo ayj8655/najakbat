@@ -25,6 +25,8 @@ export default new Vuex.Store({
     newtwits_notice: false,
     nightmode_notice: false,
     noticeTime: '',
+    receiver: '',
+
 
     // Alerts 변수
     searchNotices: [],
@@ -34,7 +36,7 @@ export default new Vuex.Store({
     sentMessages: [],
     messageContent: '',
     messageTime: '',
-    messageSenderNickname: '',
+    messageReceiverNickname: '',
     alluserInfo: '',
 
     // signup 정보
@@ -84,6 +86,7 @@ export default new Vuex.Store({
 
     GET_MESSAGE(state, message_data) {
       state.Message = message_data
+  
     },
     // Sidebar mutations
 
@@ -190,7 +193,7 @@ export default new Vuex.Store({
       axios.get(`user/all`)
       .then(res => {
         context.commit('GET_USERINFO_ALL', res.data)
-        console.log(this.state.alluserInfo)
+        // console.log(this.state.alluserInfo)
       })
       .catch(err => {
         console.error(err)
@@ -269,8 +272,27 @@ export default new Vuex.Store({
       },
 
       // 메세지 작성
-    messagePost() {
-
+    messagePost(context, [content, receiver]) {
+        axios({
+          method: 'post',
+          url: `message/`,
+          params: {
+            content: content,
+            sender: localStorage.getItem('userNumber'),
+            receiver: receiver
+          }
+          })
+          .then(res => {
+            this.dispatch('getUserinfoAll')
+            console.log(res.data)
+            // console.log(receiver)
+          })
+          .catch(err => {
+            console.log(this.receiver)
+            console.log(receiver)
+            console.error(err)
+          })
+        context
       },
 
 
