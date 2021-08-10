@@ -2,7 +2,20 @@
   <div id="main-contents" class="container-fluid">
     <div class="container" id="body" align="center">
       <h3>농작물 목록</h3>
-      <table class="table mt-5">
+      <div class="mt-5" id="search-area">
+      <img src="@/assets/search.png" width="20px" />
+      <span>
+        <input
+          type="text"
+          class="form-control"
+          id="searchKey"
+          v-model="searchKey"
+          placeholder="이름으로 농작물 검색"
+          width="80%"
+        />
+      </span>
+    </div>
+      <table class="table mt-2">
         <colgroup>
           <!-- <col width="20%" /> -->
           <col width="70%" />
@@ -17,7 +30,11 @@
           </tr>
         </thead>
         <tbody id="userlist">
-          <tr class="view" v-for="(crop, index) in itemsForList" :key="index">
+          <tr class="view" 
+            v-for="(crop, index) in itemsForList"
+            :key="index"
+            v-show="(searchKey=='') || (crop.name.includes(searchKey))"
+          >
             <!-- <td>{{ crop.cropNumber }}</td> -->
             <td id="name">
               <img id="thumbnail" :src="getCropImg(crop)" />{{ crop.name }}
@@ -35,21 +52,15 @@
             </td>
           </tr>
         </tbody>
-        <tbody>
-          <tr align="center">
-            <td colspan="2" align="center">
-              <b-pagination
-                v-model="currentPage"
-                :total-rows="rows"
-                :per-page="perPage"
-                aria-controls="sanggwon-list"
-                class="mt-3 mb-5 justify-content-center"
-                id="paging"
-              ></b-pagination>
-            </td>
-          </tr>
-        </tbody>
       </table>
+      <b-pagination
+        v-model="currentPage"
+        :total-rows="rows"
+        :per-page="perPage"
+        aria-controls="userlist"
+        class="mt-3 mb-5 justify-content-center"
+        id="paging"
+      ></b-pagination>
     </div>
     <!-- Modal -->
     <div
@@ -129,11 +140,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-success"
-              @click="updateCrop"
-            >
+            <button type="button" class="btn btn-success" @click="updateCrop">
               수정
             </button>
             <button
@@ -156,9 +163,10 @@ import axios from "axios";
 export default {
   data() {
     return {
+      searchKey: "",
       crops: [],
       thisCrop: {},
-      perPage: 5,
+      perPage: 10,
       currentPage: 1,
     };
   },
@@ -168,25 +176,28 @@ export default {
     });
   },
   computed: {
-      rows() {
-        return this.crops.length;
-      },
-      itemsForList() {
-        return this.crops.slice(
-          (this.currentPage - 1) * this.perPage,
-          this.currentPage * this.perPage
-        );
-      },
+    rows() {
+      return this.crops.length;
     },
+    itemsForList() {
+      return this.crops.slice(
+        (this.currentPage - 1) * this.perPage,
+        this.currentPage * this.perPage
+      );
+    },
+  },
   methods: {
     getCropImg(crop) {
-      return (crop.image)? require("@/assets/crop/"+crop.image):require("@/assets/thumbnail.png");
+      return crop.image
+        ? require("@/assets/crop/" + crop.image)
+        : require("@/assets/thumbnail.png");
     },
     getUpdateModal(crop) {
-        this.thisCrop = crop;
+      this.thisCrop = crop;
     },
     updateCrop() {
-        axios.put("guide/plant/", {
+      axios
+        .put("guide/plant/", {
           cropNumber: this.thisCrop.cropNumber,
           name: this.thisCrop.name,
           description: this.thisCrop.description,
@@ -197,11 +208,13 @@ export default {
           growingPeriod: this.thisCrop.growingPeriod,
           growthDuration: this.thisCrop.growthDuration,
           image: this.thisCrop.image,
-          waterPeriod: this.thisCrop.waterPeriod
-        }).then((data) => {
-            // console.log(data);
-            if(data.data=="success") window.location.reload();
-        }).catch((error) => {
+          waterPeriod: this.thisCrop.waterPeriod,
+        })
+        .then((data) => {
+          // console.log(data);
+          if (data.data == "success") window.location.reload();
+        })
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -224,6 +237,12 @@ export default {
     text-align: center;
   }
 }
+#search-area > * {
+  display: inline-block;
+}
+#search-area > img {
+  margin-right: 5px;
+}
 #name {
   text-align: left;
 }
@@ -233,7 +252,7 @@ export default {
   height: 45px;
   border-radius: 5px;
 }
-#paging .page-link  {
+#paging .page-link {
   color: #b6c790;
 }
 .page-item.active .page-link {

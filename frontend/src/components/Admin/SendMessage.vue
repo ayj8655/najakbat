@@ -3,9 +3,9 @@
     <div class="container" id="body" align="center">
       <h3>알림 메세지 발송</h3>
       <div width="80%">
-        <div></div>
         <div class="m-2" align="left">
-          <div id="selecting-all-area">
+          <!-- 메세지 발송할 회원 목록 선택 -->
+          <!-- <div id="selecting-all-area">
             <input
               type="checkbox"
               id="selectingAll"
@@ -30,9 +30,9 @@
               >
             </span>
           </div>
-          <!-- <div>{{this.selected}}</div> -->
+          <div>{{this.selected}}</div>
           <div v-if="isShow" @click="changeIsShow">회원목록 접기</div>
-          <div v-else @click="changeIsShow">회원목록 펼치기</div>
+          <div v-else @click="changeIsShow">회원목록 펼치기</div> -->
         </div>
         <div class="form-group m-2" align="left">
           <label for="title">제목:</label>
@@ -68,52 +68,47 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 
 export default {
   data() {
     return {
-      users: [],
-      usernos: [],
-      selected: [],
-      allSelected: false,
+      // users: [],
+      // usernos: [],
+      // selected: [],
+      // allSelected: false,
       title: "",
       content: "",
-      isShow: false,
+      // isShow: false,
     };
   },
   created() {
-    axios.get("user/all").then((data) => {
-      this.users = data.data;
-      this.users.forEach((user, index) => {
-        this.usernos[index] = user.userNumber;
-      });
-    });
+    // axios.get("user/all").then((data) => {
+    //   this.users = data.data;
+    //   this.users.forEach((user, index) => {
+    //       this.usernos[index] = user.userNumber;
+    //     });
+    // });
   },
   computed: {
     isActive() {
-      if (
-        this.selected.length &&
-        this.title.length > 0 &&
-        this.content.length > 0
-      )
-        return true;
+      if (this.title.length > 0 && this.content.length > 0) return true;
       else return false;
     },
   },
   methods: {
-    selectAll() {
-      if (this.allSelected) {
-        this.selected = this.usernos;
-      } else this.selected = [];
-    },
-    selectUser() {
-      if (this.selected.length == this.users.length) this.allSelected = true;
-      else this.allSelected = false;
-    },
-    changeIsShow() {
-      this.isShow = !this.isShow;
-    },
+    // selectAll() {
+    //   if (this.allSelected) {
+    //     this.selected = this.usernos;
+    //   } else this.selected = [];
+    // },
+    // selectUser() {
+    //   if (this.selected.length == this.users.length) this.allSelected = true;
+    //   else this.allSelected = false;
+    // },
+    // changeIsShow() {
+    //   this.isShow = !this.isShow;
+    // },
   },
 };
 </script>
