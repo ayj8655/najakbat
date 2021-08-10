@@ -2,7 +2,25 @@
   <div id="main-contents" class="container-fluid">
     <div class="container" id="body" align="center">
       <h3>회원 목록</h3>
-      <table class="table table-hover mt-5">
+      <div class="row mt-5 mb-3" id="search-area">
+        <span class="col-4">
+          <select class="form-control mr-2" name="key" id="skey" v-model="skey">
+            <option value="id">아이디</option>
+            <option value="name">닉네임</option>
+          </select>
+        </span>
+        <span class="col-8">
+          <input
+            type="text"
+            class="form-control mr-2"
+            placeholder="검색어 입력."
+            name="word"
+            id="sword"
+            v-model="sword"
+          />
+        </span>
+      </div>
+      <table class="table table-hover mt-3">
         <colgroup>
           <col width="10%" />
           <col width="10%" />
@@ -23,7 +41,12 @@
             <th class="text-center"></th>
           </tr>
         </thead>
-        <tbody id="userlist" v-for="(user, index) in users" :key="index">
+        <tbody 
+          id="userlist" 
+          v-for="(user, index) in itemsForList" 
+          :key="index"
+          v-show="((sword=='') || (skey=='id' && user.id.includes(sword)) || (skey=='name' && user.nickname.includes(sword)))"
+        >
           <tr class="view" data-id="">
             <td>{{ user.userNumber }}</td>
             <td>{{ user.id }}</td>
@@ -46,6 +69,14 @@
           </tr>
         </tbody>
       </table>
+      <b-pagination
+        v-model="currentPage"
+        :total-rows="rows"
+        :per-page="perPage"
+        aria-controls="userlist"
+        class="mt-3 mb-5 justify-content-center"
+        id="paging"
+      ></b-pagination>
     </div>
     <!-- Modal -->
     <div
@@ -91,12 +122,27 @@ export default {
     return {
       users: [],
       delUser: {},
+      perPage: 10,
+      currentPage: 1,
+      skey: "name",
+      sword: "",
     };
   },
   created() {
     axios.get("user/all").then(({ data }) => {
       this.users = data;
     });
+  },
+  computed: {
+    rows() {
+      return this.users.length;
+    },
+    itemsForList() {
+      return this.users.slice(
+        (this.currentPage - 1) * this.perPage,
+        this.currentPage * this.perPage
+      );
+    },
   },
   methods: {
     changeDate(str) {
@@ -129,5 +175,15 @@ export default {
   .view {
     text-align: center;
   }
+  #search-area {
+    max-width: 450px;
+  }
+}
+#paging .page-link {
+  color: #b6c790;
+}
+.page-item.active .page-link {
+  color: #ffffff !important;
+  background-color: #b6c790 !important;
 }
 </style>

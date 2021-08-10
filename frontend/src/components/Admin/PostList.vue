@@ -2,7 +2,26 @@
   <div id="main-contents" class="container-fluid">
     <div class="container" id="body" align="center">
       <h3>게시글 목록</h3>
-      <table class="table mt-5">
+      <div class="row mt-5 mb-3" id="search-area">
+        <span class="col-4">
+          <select class="form-control mr-2" name="key" id="skey" v-model="skey">
+            <option value="name">닉네임</option>
+            <option value="title">제목</option>
+            <option value="content">내용</option>
+          </select>
+        </span>
+        <span class="col-8">
+          <input
+            type="text"
+            class="form-control mr-2"
+            placeholder="검색어 입력."
+            name="word"
+            id="sword"
+            v-model="sword"
+          />
+        </span>
+      </div>
+      <table class="table mt-2">
         <colgroup>
           <col width="10%" />
           <col width="10%" />
@@ -24,7 +43,11 @@
           </tr>
         </thead>
         <tbody id="userlist">
-          <tr class="view" v-for="(post, index) in itemsForList" :key="index">
+          <tr class="view" 
+            v-for="(post, index) in itemsForList" 
+            :key="index"
+            v-show="((sword=='') || (skey=='name' && post.userNickname.includes(sword)) || (skey=='title' && post.title.includes(sword) || (skey=='content' && post.content.includes(sword))))"
+          >
             <td>{{ post.postNumber }}</td>
             <td><img :src="changeType(post.postType)" width="35px" /></td>
             <td>{{ post.title }}</td>
@@ -112,8 +135,10 @@ export default {
     return {
       posts: [],
       delPost: {},
-      perPage: 5,
+      perPage: 10,
       currentPage: 1,
+      skey: "name",
+      sword: "",
     };
   },
   created() {
@@ -187,6 +212,9 @@ export default {
   }
   .view {
     text-align: center;
+  }
+  #search-area {
+    max-width: 450px;
   }
 }
 #paging .page-link  {
