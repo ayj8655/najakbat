@@ -168,7 +168,7 @@ public class UserController {
 
 	}
 
-	@RequestMapping(value = "/confirmId/{userId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/pass/confirmId/{userId}", method = RequestMethod.GET)
 	@ApiOperation(value = "아이디 중복 확인", notes = "아이디를 입력하면 중복여부를 확인한 후 중복이 없다면 성공, 있다면 실패 반환하는 메소드", response = String.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "userId", value = "중복확인 하고싶은 Id", required = true) })
 	public ResponseEntity<String> confirmUserId(@PathVariable String userId) throws IOException {
@@ -218,7 +218,7 @@ public class UserController {
 	}
 
 	// 번호 받아서 중복확인
-	@RequestMapping(value = "/pass/confirmPhone/{userPhone}", method = RequestMethod.GET)
+	@RequestMapping(value = "/pass/confirmPhone/{phone}", method = RequestMethod.GET)
 	@ApiOperation(value = "핸드폰번호 중복 확인", notes = "핸드폰번호 입력하면 중복여부를 확인한 후 중복이 없다면 성공, 있다면 실패 반환하는 메소드", response = String.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "phone", value = "중복확인 하고싶은 phone", required = true) })
 	public ResponseEntity<String> confirmUserPhone(@PathVariable String phone) throws IOException {

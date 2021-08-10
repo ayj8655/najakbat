@@ -46,7 +46,7 @@ export default {
         startCountdown() {
             let phone = this.$props.phoneNum
 
-            axios.get(`http://localhost:8080/user/confirmPhone/${phone}`)
+            axios.get(`user/confirmPhone/${phone}`)
             .then(res => {
                 if (res.data === 'fail') {
                   this.counting = true;

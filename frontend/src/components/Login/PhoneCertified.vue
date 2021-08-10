@@ -71,7 +71,7 @@ export default {
       let phone = this.$props.phoneNum;
 
       axios
-        .get(`http://192.168.45.109:8080/user/pass/confirmPhone/${phone}`)
+        .get(`user/pass/confirmPhone/${phone}`)
         .then((res) => {
           if (res.data === "fail") {
             alert("이미 가입된 번호입니다");

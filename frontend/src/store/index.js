@@ -339,7 +339,7 @@ export default new Vuex.Store({
     logout({ commit }) {
       commit('DELETE_TOKEN')
       localStorage.removeItem('access_token')
-      sessionStorage.claer()
+      sessionStorage.clear()
     },
 
     //Modify actions
