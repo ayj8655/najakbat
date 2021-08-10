@@ -18,6 +18,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCog, faEnvelope, faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+// Alert
+
+import Vue from "vue"
+import VueSimpleAlert from "vue-simple-alert";
+
+
 Vue.use(vueAwesomeCountdown, 'vac')
 
 Vue.use(VeeValidate);
@@ -27,6 +33,10 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 Vue.use(ToggleButton)
+
+// Alert
+
+Vue.use(VueSimpleAlert);
 
 // FontAwesome
 library.add(faCog, faEnvelope, faPencilAlt, faPlus)

@@ -7839,6 +7839,11 @@
     "unquote" "~1.1.1"
     "util.promisify" "~1.0.0"
 
+"sweetalert2@^8.18.6":
+  "integrity" "sha512-nFL++N3bitkEkd487Tv4i5ZxusmnoAAXHjtk7lp603Opxb8wlvVnz3hqa7qiIw6QFL04JC810E6qVQNf8s0vYQ=="
+  "resolved" "https://registry.npmjs.org/sweetalert2/-/sweetalert2-8.19.0.tgz"
+  "version" "8.19.0"
+
 "table@^5.2.3":
   "integrity" "sha512-wmEc8m4fjnob4gt5riFRtTu/6+4rSe12TpAELNSqHMfF3IqnA+CH37USM6/YR3qRZv7e56kAEAtd6nKZaxe0Ug=="
   "resolved" "https://registry.npmjs.org/table/-/table-5.4.6.tgz"
@@ -8379,6 +8384,13 @@
   "resolved" "https://registry.npmjs.org/vue-router/-/vue-router-3.5.2.tgz"
   "version" "3.5.2"
 
+"vue-simple-alert@^1.1.1":
+  "integrity" "sha512-iyQorOyO9Ar+bgvvyshQtkgvXTocR3hu0D1PD6R9mEJ1M3JWvjFg5UoL5rIqmqhkfMg6lzwMW9Bu6iwHUdcqig=="
+  "resolved" "https://registry.npmjs.org/vue-simple-alert/-/vue-simple-alert-1.1.1.tgz"
+  "version" "1.1.1"
+  dependencies:
+    "sweetalert2" "^8.18.6"
+
 "vue-simple-search-dropdown@^1.0.1":
   "integrity" "sha512-r3LuGFB3WqMDRILx+Z/Y2S9UTLqMh3Y0nv1Oly+tt8oEzvg77r0tfYLHVqQlhsmVPy0GmSuxMMbetMkDRLOEqg=="
   "resolved" "https://registry.npmjs.org/vue-simple-search-dropdown/-/vue-simple-search-dropdown-1.0.1.tgz"
@@ -8413,7 +8425,7 @@
     "get-youtube-id" "^1.0.0"
     "youtube-player" "^5.4.0"
 
-"vue@^2 || ^3.0.0-0", "vue@^2.0.0", "vue@^2.3.0", "vue@^2.5.18", "vue@^2.6.10", "vue@^2.6.14", "vue@>=1.x.x", "vue@~2":
+"vue@^2 || ^3.0.0-0", "vue@^2.0.0", "vue@^2.3.0", "vue@^2.5.18", "vue@^2.6.10", "vue@^2.6.14", "vue@>=1.x.x", "vue@~2", "vue@2.x":
   "integrity" "sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-2.6.14.tgz"
   "version" "2.6.14"

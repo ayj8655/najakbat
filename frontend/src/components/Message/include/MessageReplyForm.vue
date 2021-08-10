@@ -1,6 +1,6 @@
 <template>
 <div>
-<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+<button type="button" class="btn btn-success" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#exampleModal2">
   새 쪽지 쓰기
 </button>
 <!-- {{ alluserInfo }} -->
