@@ -248,7 +248,7 @@ export default {
 
     checkNickname(nick) {
       axios
-        .get(`http://localhost:8080/user/pass/confirmNickname/${nick}`)
+        .get(`user/pass/confirmNickname/${nick}`)
         .then((res) => {
           if (res.data === "fail") {
             this.overlap.nickname = true;
@@ -283,7 +283,7 @@ export default {
   computed: {},
   created() {
     axios
-      .get("http://localhost:8080/user/my")
+      .get("user/my")
       .then((res) => {
         this.userNum = res.data.userNumber;
         this.nickname = res.data.nickname;

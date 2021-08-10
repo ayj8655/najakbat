@@ -89,7 +89,7 @@ export default {
         }
     },
     created() {
-        axios.get('http://localhost:8080/user/my')
+        axios.get('user/my')
         .then(res => {
             this.nickname = res.data.nickname
         })

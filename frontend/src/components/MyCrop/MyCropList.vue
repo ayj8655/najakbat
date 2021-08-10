@@ -113,7 +113,7 @@ export default {
       let form = new FormData()
       form.append('cropno', this.userSelectCrop)
       form.append('userno', this.pickCrop.userNumber)
-      axios.post('user/crop/', form)
+      axios.post('user/crop/all', form)
       .then(res => {
         res
         const params = {

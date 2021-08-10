@@ -78,7 +78,7 @@ export default {
       this.check.phone = true
     },
     checkId() {
-      axios.get(`http://localhost:8080/user/pass/confirmId/${this.username}`)
+      axios.get(`user/pass/confirmId/${this.username}`)
       .then(res => {
         if (res.data === 'fail') {
           this.idOverlap = true
@@ -93,7 +93,7 @@ export default {
       })
     },
     checkNickname(nick) {
-      axios.get(`http://localhost:8080/user/pass/confirmNickname/${nick}`)
+      axios.get(`user/pass/confirmNickname/${nick}`)
       .then(res => {
         if (res.data === 'fail') {
           this.nicknameOverlap = true
