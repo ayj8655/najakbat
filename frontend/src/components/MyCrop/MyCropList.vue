@@ -25,13 +25,13 @@
       </div>
       <div v-else>
         <div
-          v-for="(crop, index) in usercrops"
+          v-for="(ucrop, index) in usercrops"
           :key="index"
-          @click="movePage(crop.cropNumber)"
+          @click="movePage(ucrop.cropNumber)"
         >
           <div>
-            <img id="thumbnail" :src="cropImg[index]" width="45px" />
-            <strong>{{ crop.name }}</strong>
+            <img id="thumbnail" :src="findCropImg(ucrop)" />
+            <strong>{{ ucrop.name }}</strong>
           </div>
           <hr />
         </div>
@@ -63,7 +63,6 @@
               required
               class="form-select form-select-lg m-2"
               aria-label=".form-select-lg example"
-              @change="selectCrop(crop.cropNumber)"
             >
               <option value="">작물 선택</option>
               <option
@@ -141,6 +140,15 @@ export default {
     movePage(cropNumber) {
       this.$router.push("/mycrop/detail/" + cropNumber);
     },
+    findCropImg(ucrop) {
+      let index = 0;
+      this.crops.forEach((crop, i) => {
+        if(crop.cropNumber==ucrop.cropNumber) {
+          index = i;
+        }
+      });
+      return (this.crops[index].image)? require("@/assets/crop/" + this.crops[index].image):require("@/assets/thumbnail.png");
+    },
     // selectCrop(event) {
     //   this.userSelectCrop = event;
     // },
@@ -164,7 +172,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .container > * {
   font-family: Noto Sans KR;
   font-style: normal;
@@ -183,6 +191,9 @@ export default {
 }
 #thumbnail {
   margin: 5px 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 5px;
 }
 .crop {
   display: inline;
