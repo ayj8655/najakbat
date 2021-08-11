@@ -58,6 +58,24 @@ public class CommentController {
 		return new ResponseEntity<List<Comment>>(commentService.findAllByPostNumber(post_number), HttpStatus.OK);
 
 	}
+	
+	
+	@RequestMapping(value = {"/{postno}/{userno}"}, method = RequestMethod.GET)
+	@ApiOperation(value = "해당 게시물 안에 해당 유저가 좋아요 누른 댓글 리스트 조회")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<?> searchComment(@PathVariable("postno") String postno, @PathVariable("userno") String userno) throws IOException {
+		logger.info("좋아요한 댓글 조회");
+		int post_number = Integer.parseInt(postno);
+		int user_number = Integer.parseInt(userno);
+		return new ResponseEntity<List<Object>>(commentService.findAllByUserNumber(post_number,user_number), HttpStatus.OK);
+
+	}
+	 
+	
+	
+	
+	
+	
 
 	// 댓글을 쓰면 게시글 작성자에게 알림이 가야함.
 	// request param 은 댓글이 게시글의 댓글인지 댓글의 대댓글인지 구분. 게시글의 댓글: parent=0, 댓글의 대댓글:

@@ -87,7 +87,8 @@ public class UserCropWaterSchedule {
 	}
 
 	// 물주기 알림에 대한 부분
-	@Scheduled(cron = "0 0 * * * *") // 매시각 실행
+	@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 한번 실행
+	// @Scheduled(cron = "0 0 * * * *") // 매시각 실행
 	// @Scheduled(cron = "0 */1 * * * *") // 1분마다 실행 test용
 	public void taskEveryHour() throws Exception {
 		Calendar cal = Calendar.getInstance();
@@ -124,7 +125,7 @@ public class UserCropWaterSchedule {
 			}
 
 		}
-		
+		///////////////// 알림 보내는 부분
 		for(Integer userno : noticeMap.keySet()) {
 			noticeService.insertNotice(userno,0,title,content);
 		}

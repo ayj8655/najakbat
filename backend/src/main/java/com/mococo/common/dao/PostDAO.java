@@ -34,4 +34,5 @@ public interface PostDAO extends JpaRepository<Post, Integer>{
 					+"ON p.postNumber = pr.postNumber "  
 					+"WHERE pr.userNumber = :no ")
 	public List<Object> findAllByUserRecommend(int no,Pageable pageable);
+	public Post save(Post post);
 }

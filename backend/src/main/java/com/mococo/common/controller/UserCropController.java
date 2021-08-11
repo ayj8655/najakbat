@@ -195,9 +195,9 @@ public class UserCropController {
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "모든 작물 정보 조회")
+	@ApiOperation(value = "사용자의 모든 작물 정보 조회")
 	public ResponseEntity<?> searchCrop(@RequestParam int userNumber) throws IOException {
-		logger.info("모든 작물 정보 조회");
+		logger.info("사용자의 모든 작물 정보 조회");
 
 		try {
 			List<UserCrop> userCropList = userCropService.findAllByUserNumber(userNumber);

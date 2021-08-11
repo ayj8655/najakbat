@@ -1,20 +1,27 @@
 package com.mococo.common.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mococo.common.dao.PostDAO;
+import com.mococo.common.dao.PostPhotoDAO;
 import com.mococo.common.dao.PostRecommendDAO;
 import com.mococo.common.model.Post;
+import com.mococo.common.model.PostPhoto;
 import com.mococo.common.model.PostRecommend;
 import com.mococo.common.model.PostRecommendPK;
 import com.mococo.common.model.User;
@@ -27,6 +34,9 @@ public class PostService {
 	
 	@Autowired
 	PostRecommendDAO postrecommendDAO;
+	
+	@Autowired
+	PostPhotoDAO postphotoDAO;
 	
 	// 게시글 번호로 해당 Post 리턴
 	public Optional<Post> findPostByPostNumber(int no){
@@ -143,7 +153,46 @@ public class PostService {
 		
 	}
 
+	public Post insertPost(Post post, MultipartFile[] files) throws IllegalStateException, IOException {
+		Post p = postDAO.save(post);
+		
+        if(files.length==0){
+            // TODO : 파일이 없을 땐 어떻게 해야할까.. 고민을 해보아야 할 것
+        }
+        // 파일에 대해 DB에 저장하고 가지고 있을 것
+        else{
+			for(MultipartFile mfile : files) {
+				PostPhoto photo = new PostPhoto();
+				String originalFileName = mfile.getOriginalFilename();
+				if (!originalFileName.isEmpty()) {
+					String sourceFileName = mfile.getOriginalFilename();
+					String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
+					File destinationFile;
+					String destinationFileName;
+					String fileUrl = "C:\\SSAFY\\Mococo\\backend\\src\\main\\resources\\photos\\";
+					do {
+						destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
+						destinationFile = new File(fileUrl + destinationFileName);
+					} while (destinationFile.exists());
+	
+					destinationFile.getParentFile().mkdirs();
+					mfile.transferTo(destinationFile);
+	
+					photo.setSaveFile(destinationFileName);
+					photo.setOriginFile(sourceFileName);
+					photo.setSaveFolder(fileUrl);
+					
+					System.out.println("길이" + photo.getSaveFolder().length());
+					photo.setPost(post);
+					System.out.println(photo.getSaveFile());
+					postphotoDAO.save(photo);
+				}
 
+			}
+			
+        }
 
-
+        return p;
+	}
+	
 }
