@@ -246,7 +246,7 @@ public class UserCropController {
 
 	@RequestMapping(value = "/record", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "해당 작물의 모든 상태 기록 조회 -")
+	@ApiOperation(value = "해당 작물의 모든 상태 기록 조회")
 	public ResponseEntity<?> searchAllCropRecord(@RequestParam int userCropNumber) throws IOException {
 		logger.info("해당 작물의 모든 상태 기록 조회");
 
@@ -286,7 +286,7 @@ public class UserCropController {
 
 	@RequestMapping(value = "/water", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "해당 작물에게 물 준 기록 조회 - 현재달만")
+	@ApiOperation(value = "해당 작물에게 물 준 기록 조회")
 	public ResponseEntity<?> searchAllWaterRecord(@RequestParam int userCropNumber) throws IOException {
 		logger.info("해당 작물에게 물 준 기록 조회");
 
