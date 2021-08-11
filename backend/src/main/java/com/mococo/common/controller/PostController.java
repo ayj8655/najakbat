@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -178,14 +179,17 @@ public class PostController {
 
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(value = "/", method = RequestMethod.POST, consumes =  {"multipart/form-data"})
 	@ApiOperation(value = "게시글 업로드")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	public ResponseEntity<String> insertPost(@RequestParam(value = "type") String type,
-			@RequestParam(value = "content") String content, @RequestParam(value = "title") String title,
+	public ResponseEntity<String> insertPost(
+			@RequestParam(value = "type") String type,
+			@RequestParam(value = "content") String content,
+			@RequestParam(value = "title") String title,
 			@RequestParam(value = "keyword") String keyword,
 			@RequestParam(value = "user_nickname") String user_nickname,
-			@RequestParam(value = "user_number") int user_number, @RequestPart MultipartFile mfile) throws IOException {
+			@RequestParam(value = "user_number") int user_number,
+			@RequestPart(value = "image") MultipartFile[] files) throws IOException {
 		Post post = new Post();
 		post.setContent(content);
 		int postType = 0;
@@ -205,42 +209,16 @@ public class PostController {
 		post.setUserNumber(user_number);
 		Date time = new Date();
 		post.setDate(time);
+		System.out.println(user_number);
+		
+		
+		System.out.println("z"+files);
 
-		List<PostPhoto> photoInfos = new ArrayList<PostPhoto>();
 		try {
 			logger.info("게시글 등록");
 
-			// for(MultipartFile mfile : files) {
-			PostPhoto photo = new PostPhoto();
-			String originalFileName = mfile.getOriginalFilename();
-			if (!originalFileName.isEmpty()) {
-				String sourceFileName = mfile.getOriginalFilename();
-				String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
-				File destinationFile;
-				String destinationFileName;
-				String fileUrl = "C:\\SSAFY\\Mococo\\backend\\src\\main\\resources\\photos\\";
-				do {
-					destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
-					destinationFile = new File(fileUrl + destinationFileName);
-				} while (destinationFile.exists());
-
-				destinationFile.getParentFile().mkdirs();
-				mfile.transferTo(destinationFile);
-
-				photo.setSaveFile(destinationFileName);
-				photo.setOriginFile(sourceFileName);
-				photo.setSaveFolder(fileUrl);
-				System.out.println("길이" + photo.getSaveFolder().length());
-
-			}
-
-			Post ret = postService.insertPost(post);
-
-			photoInfos.add(photo);
-			photo.setPost(ret);
-			postphotoService.save(photo);
-			// }
-
+			Post ret = postService.insertPost(post,files);
+			
 			if (ret == null) {
 				logger.info("게시글 등록 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);

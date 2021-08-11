@@ -33,7 +33,14 @@ public class CommentService {
 		
 		return comments;
 	}
-
+	
+	public List<Object> findAllByUserNumber(int postno, int userno) {
+		List<Object> comments = commentrecommendDAO.findAllByUserNumber(postno, userno);
+		
+		return comments;
+	}
+	
+	
 	public boolean insertComment(Comment comment) {
 		Optional<Comment> ret = commentDAO.findCommentByCommentNumber(comment.getCommentNumber());
 		if(ret.isPresent()) {

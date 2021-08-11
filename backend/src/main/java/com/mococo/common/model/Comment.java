@@ -28,6 +28,8 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "comment_number")
 	private int commentNumber;
+	
+	@Column(name = "post_number")
 	private int postNumber;
 	private int userNumber;
 	private String userNickname;
