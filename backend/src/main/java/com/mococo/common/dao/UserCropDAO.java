@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mococo.common.model.Crop;
 import com.mococo.common.model.UserCrop;
+import com.mococo.common.model.UserCropDetailResponse;
 
 @Repository
 public interface UserCropDAO extends JpaRepository<UserCrop, Integer>{
@@ -31,4 +32,5 @@ public interface UserCropDAO extends JpaRepository<UserCrop, Integer>{
 			+"FROM crop as c " 
 			+"WHERE crop_number = :no ")
 	public Optional<Crop> findNameByCropNumber(int no);
+	
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.mococo.common.dao.UserCropDAO;
 import com.mococo.common.model.Crop;
 import com.mococo.common.model.UserCrop;
+import com.mococo.common.model.UserCropDetailResponse;
 
 @Service
 public class UserCropService {
@@ -65,5 +66,10 @@ public class UserCropService {
 		
 		return userCropDAO.findByFinishFalse();
 	}
+
+//	public Optional<UserCropDetailResponse> findDetail(int no) {
+//		
+//		return userCropDAO.findDetail(no);
+//	}
 
 }
