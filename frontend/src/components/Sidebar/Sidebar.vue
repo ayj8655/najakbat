@@ -13,6 +13,7 @@
             </div>
           </div>
         </div>
+
         <div class="d-flex flex-column bd-highlight mb-3">
           <router-link to="/Settings" class="p-2 bd-highlight">설정</router-link>
           <router-link to="/DirectQuery" class="p-2 bd-highlight">1:1 문의</router-link>
@@ -83,12 +84,18 @@ export default {
   directives: {
     clickOutside: vClickOutside.directive
   },
+  data () {
+    return {
+      profileNumber: localStorage.getItem('userNumber')
+    }
+  },
   methods: {
     onClickOutside () {
       this.$store.state.sidebar = false
     },
     Sidebaron () {
       this.$store.state.sidebar = ! this.$store.state.sidebar
+      console.log(this.profileNumber)
     },
     ...mapActions ([
       'logout'
@@ -97,7 +104,8 @@ export default {
   },
   computed: {
     ...mapState ([
-      'sidebar'
+      'sidebar',
+      'myNumber'
     ])
   }
 }
