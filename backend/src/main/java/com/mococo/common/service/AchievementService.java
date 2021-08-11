@@ -71,4 +71,9 @@ public class AchievementService {
 	public List<AchievementCondition> findAllConditionByAchieveNumber(int achieveNumber) {
 		return achievementConditionDAO.findAllByAchieveNumber(achieveNumber);
 	}
+	
+	// 모든 업적의 필요 조건 리스트 반환
+	public List<AchievementCondition> findAllCondition() {
+		return achievementConditionDAO.findAll();
+	}
 }
