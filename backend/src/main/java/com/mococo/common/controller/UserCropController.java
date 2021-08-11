@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.UserCrop;
+import com.mococo.common.model.UserCropDetailResponse;
 import com.mococo.common.model.UserCropRecord;
 import com.mococo.common.model.UserCropResponse;
 import com.mococo.common.model.WaterRecord;
@@ -337,9 +338,42 @@ public class UserCropController {
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "디테일 페이지에서 보여줄 작물 정보 조회")
 	public ResponseEntity<?> searchDetailRecord(@RequestParam int userCropNumber) throws IOException {
-		logger.info("해당 작물에게 물 준 기록 조회");
+		logger.info("디테일 페이지에서 보여줄 작물 정보 조회");
 
 		try {
+//			List<UserCropResponse> resList = new ArrayList<>();
+//			Calendar getToday = Calendar.getInstance();
+//			getToday.setTime(new Date()); // 금일 날짜
+//
+//			Calendar cmpDate = Calendar.getInstance();
+//
+//			for (UserCrop crop : userCropList) {
+//				UserCropResponse res = new UserCropResponse();
+//
+//				res.setCropNumber(crop.getCropNumber());
+//				res.setUserCropNumber(crop.getUserCropNumber());
+//				res.setUserNumber(crop.getUserNumber());
+//
+//				cmpDate.setTime(crop.getTargetDate()); // 수확 날짜
+//
+//				long diffSec = (cmpDate.getTimeInMillis() - getToday.getTimeInMillis()) / 1000;
+//				long diffDays = diffSec / (24 * 60 * 60); // 일자수 차이
+//
+//				res.setRemainDate((int) diffDays); // 수확까지 남은 날짜
+//
+//				cmpDate.setTime(crop.getNeedDate());
+//
+//				diffSec = (cmpDate.getTimeInMillis() - getToday.getTimeInMillis()) / 1000;
+//				diffDays = diffSec / (24 * 60 * 60); // 물 주기 d-day
+//
+//				res.setWaterDate((int) diffDays); // 수확까지 남은 날짜
+//
+//				res.setWater(crop.isWater());
+//				resList.add(res);
+//			}
+//			
+//			
+//			Optional<UserCropDetailResponse> ret = userCropService.findDetail(userCropNumber);
 			return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
 
 		} catch (Exception e) {
