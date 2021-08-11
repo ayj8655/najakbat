@@ -59,7 +59,7 @@ public class UserCropController {
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 등록")
-	public ResponseEntity<String> insertCrop(@RequestParam String cropno, @RequestParam String userno)
+	public ResponseEntity<String> insertCrop(@RequestParam String cropno, @RequestParam String userno, @RequestParam String cropnickname, @RequestParam String cropdesc)
 			throws IOException {
 		logger.info("작물 등록");
 
@@ -77,6 +77,10 @@ public class UserCropController {
 			userCrop.setPlantedDate(now_time);
 			userCrop.setUserNumber(user_number);
 			userCrop.setFinish(false);
+			
+			userCrop.setCropNickname(cropnickname);
+			userCrop.setDesc(cropdesc);
+			
 			// target date, need_date: 물줘야하는날짜, finish=false, water_cycle, 다음 물 줘야하는날
 			Optional<Object> dayInfo = userCropService.findGrowingPeriodAndWaterPeriod(crop_number);
 			JSONObject jsonDayInfo = new JSONObject((Map) dayInfo.get());

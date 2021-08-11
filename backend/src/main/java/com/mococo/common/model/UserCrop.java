@@ -25,6 +25,8 @@ public class UserCrop {
 	private int userCropNumber;
 	private int userNumber;
 	private int cropNumber;
+	private String cropNickname;
+	private String desc;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date plantedDate;
 	@Temporal(TemporalType.TIMESTAMP)
