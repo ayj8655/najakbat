@@ -96,8 +96,10 @@
         <div></div>
       </div>
     </div>
+    <div v-show="this.$store.state.sidebar == false">
     <div id="foot"></div>
     <menubar id="menubar"></menubar>
+    </div>
   </div>
 </template>
 
