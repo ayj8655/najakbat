@@ -22,6 +22,7 @@ public class UserCropResponse {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int userCropNumber;
 	private int userNumber;
+	private String cropNickname;
 	private int cropNumber;
 	private int remainDate;
 	private int waterDate;

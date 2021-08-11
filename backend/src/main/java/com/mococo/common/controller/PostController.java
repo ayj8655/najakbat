@@ -189,7 +189,7 @@ public class PostController {
 			@RequestParam(value = "keyword", required=false) String keyword,
 			@RequestParam(value = "user_nickname") String user_nickname,
 			@RequestParam(value = "user_number") int user_number,
-			@RequestPart(value = "image", required=false) MultipartFile[] files) throws IOException {
+			@RequestParam(value = "image", required=false) MultipartFile[] files) throws IOException {
 		Post post = new Post();
 		post.setContent(content);
 		int postType = 0;
