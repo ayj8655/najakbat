@@ -10,9 +10,13 @@
       <div v-if="searchNotice.isRead" class="isRead-false border border-end-0 border-start-0 bg-white" @click="Reading (searchNotice)">
         <div class="container notice mt-2">
           <div class="row">
-            <div class="col-1 px-0" v-show="isdeleteactivated" @click="Checkingnotice (searchNotice.noticeNumber)">
-              <img v-if="noticechecked" src="@/assets/select_on.png" alt="">
-              <img v-else src="@/assets/select_off.png" alt="">
+            <div class="col-1 px-0" v-show="isdeleteactivated">
+              <!-- <img v-if="noticechecked" src="@/assets/select_on.png" alt="">
+              <img v-else src="@/assets/select_off.png" alt=""> -->
+
+              <input class="mt-2" type="checkbox" id="checkbox" @click="checkingNotice(searchNotice)">
+              <label for="checkbox"></label>
+            
             </div>
             <div class="col-2 px-0">
               <img v-if="searchNotice.isRead" src="@/assets/noti.png" width="30px" height="30px" alt="">
@@ -30,12 +34,14 @@
           </div>
         </div>
       </div>
-      <div v-else class="isRead-false border border-end-0 border-start-0" @click="Reading (searchNotice)">
+      <div v-else class="isRead-false border border-end-0 border-start-0" @click.self="Reading (searchNotice)">
         <div class="container notice mt-2">
           <div class="row">
-            <div class="col-1 px-0" v-show="isdeleteactivated" @click="Checkingnotice (searchNotice.noticeNumber)">
-              <img v-if="noticechecked" src="@/assets/select_on.png" alt="">
-              <img v-else src="@/assets/select_off.png" alt="">
+            <div class="col-1 px-0" v-show="isdeleteactivated">
+              <!-- <img v-if="noticechecked" src="@/assets/select_on.png" alt="">
+              <img v-else src="@/assets/select_off.png" alt=""> -->
+              <input class="mt-2" type="checkbox" id="checkbox" @click="checkingNotice(searchNotice)">
+              <label for="checkbox"></label>
             </div>
             <div class="col-2 px-0">
               <!-- <img v-if="searchNotice.isRead" src="@/assets/noti.png" width="30px" height="30px" alt=""> -->
@@ -79,6 +85,8 @@ export default {
     return {
       isdeleteactivated: false,
       noticechecked: false,
+      checked: false,
+      checkedList: [],
     }
   },
 
@@ -96,17 +104,21 @@ export default {
       this.$store.state.searchNotices[mynoticeStatus[1] - 1].isRead = mynoticeStatus[0] 
       this.$store.dispatch('updateIsread', mynoticeStatus)
     },
-    test () {
-      console.log('success')
-    },
     Activatedelete () {
       this.isdeleteactivated = ! this.isdeleteactivated
       // console.log(this.isdeleteactivated)
     },
-    Checkingnotice (mynotice) {
-      this.$store.state.searchNotices[mynotice] = ! this.$store.state.searchNotices[mynotice]
-    }
-  },
+    checkingNotice (mynotice) {
+        if (this.checkedList.includes(mynotice.noticeNumber)) {
+          this.checkedList.splice(this.checkedList.indexOf(mynotice.noticeNumber), 1)
+        }
+        else {
+          this.checkedList.push(mynotice.noticeNumber)
+        }
+        console.log(this.checkedList)
+      }
+
+    },
   computed: {
     ...mapState([
       'searchNotices',
