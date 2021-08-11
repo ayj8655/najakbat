@@ -51,29 +51,28 @@ public class UserCropWaterSchedule {
 		for (UserCrop usercrop : usercrops) {
 			cal.setTime(usercrop.getNeedDate());
 
-			// 물줘야하는 마지막날의 다음날이 된 경우
-			cal.add(Calendar.DATE, 1);
+
 			String needTime = sdf.format(cal.getTime());
 
-			// case: 물을 기한내에 주었고, 물 기한이 다된 경우 -> water true -> false로 만든다. + (need date를 + 물
-			// 주는 주기)
+			// case: 물주는 날짜가 되면 TRUE인것들을 물준 여부 FALSE로 바꾼다.
 			if (usercrop.isWater() && nowTime.equals(needTime)) {
 				
-				usercrop.setWater(false);
+	
 				cal.setTime(usercrop.getNeedDate());
 
 				cal.add(Calendar.DATE, usercrop.getWaterCycle());
 				usercrop.setNeedDate(cal.getTime());
+				usercrop.setWater(false);
 				usercropService.updateCrop(usercrop);
 
 			}
+			
+			// 물줘야하는 마지막날의 다음날이 된 경우
+			cal.add(Calendar.DATE, 1);
 
-			// case: 물을 기한내에 주지 못하고 물기한이 다된경우 -> water은 false 그대로 need date를 + 1
-			else if (!usercrop.isWater() && nowTime.equals(needTime)) {
+			// case: 물을 기한내에 주지 못하고 물주는날 다음날 된 경우 -> water은 false 그대로 하고 need date를 그 날짜로
+			if (!usercrop.isWater() && nowTime.equals(needTime)) {
 				
-				cal.setTime(usercrop.getNeedDate());
-
-				cal.add(Calendar.DATE, 1);
 				usercrop.setNeedDate(cal.getTime());
 
 			}
@@ -121,12 +120,14 @@ public class UserCropWaterSchedule {
 				// user number하나만 저장하여서 보낸다.
 				int userNumber = usercrop.getUserNumber();
 				noticeMap.put(userNumber, 0);
+				usercrop.setWater(false); // 알림이 갈 때 물주기 버튼의 불을 끈다.
 				
 			}
 
 		}
 		///////////////// 알림 보내는 부분
 		for(Integer userno : noticeMap.keySet()) {
+
 			noticeService.insertNotice(userno,0,title,content);
 		}
 
