@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="">
-        <button type="button" v-if="content" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
+        <button type="button" v-if="content" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
         <button type="button" v-else disabled class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
         <button type="button" class="btn btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
       </div>
