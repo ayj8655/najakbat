@@ -331,4 +331,22 @@ public class UserCropController {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	
+	@RequestMapping(value = "/detail", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "디테일 페이지에서 보여줄 작물 정보 조회")
+	public ResponseEntity<?> searchDetailRecord(@RequestParam int userCropNumber) throws IOException {
+		logger.info("해당 작물에게 물 준 기록 조회");
+
+		try {
+			return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
+	
 }
