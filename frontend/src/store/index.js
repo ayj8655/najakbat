@@ -372,24 +372,6 @@ export default new Vuex.Store({
       router.go(-1)
     },
 
-    updateModity(context, credentials) {
-      axios.get('user/my')
-      .then(res => {
-        var addressPut = { ...res.data, nickname: credentials[0], phone: credentials[1], address: credentials[2]}
-        axios.put('user/', addressPut)
-        .then(res => {
-          res
-          alert('저장이 완료되었습니다')
-        })
-        .catch(err => {
-          console.error(err);
-        })
-      })
-      .catch(err => {
-        console.error(err);
-      })
-    },
-
     // Signup actions
     signup({ commit }, credentials) {
       axios.post('user/signup', {
@@ -458,27 +440,61 @@ export default new Vuex.Store({
     },
 
     login({ commit }, credentials) {
-      axios.post('user/authenticate', {
-        id: credentials[0],
-        password: credentials[1]
-      })
-      .then(res => {
-        localStorage.setItem('access_token', res.data.token)
-        commit('UPDATE_LOGIN_USER', res.data)
-        axios.get('user/my')
+      var getToken = null
+        try {
+          getToken = WebViewBridge.webViewToApp('겟토큰');
+          console.log(getToken);
+        } catch (error) {}
+      
+      if(getToken) {
+        axios({
+          method: 'post',
+          url: `phone/authenticate`,
+          params: {
+            id: credentials[0],
+            password: credentials[1],
+            token: getToken
+          }
+        })
         .then(res => {
-          localStorage.setItem('userId', res.data.id)
-          localStorage.setItem('userNumber', res.data.userNumber)
-          localStorage.setItem('nickname', res.data.nickname)
-          router.push({ name: 'Main' })
+          localStorage.setItem('access_token', res.data.token)
+          commit('UPDATE_LOGIN_USER', res.data)
+          axios.get('user/my')
+          .then(res => {
+            localStorage.setItem('userId', res.data.id)
+            localStorage.setItem('userNumber', res.data.userNumber)
+            router.push({ name: 'Main' })
+          })
+          .catch(err => {
+            console.error(err);
+          })
         })
         .catch(err => {
           console.error(err);
         })
-      })
-      .catch(err => {
-        console.error(err);
-      })
+      }
+      else {
+        axios.post('user/authenticate', {
+          id: credentials[0],
+          password: credentials[1]
+        })
+        .then(res => {
+          localStorage.setItem('access_token', res.data.token)
+          commit('UPDATE_LOGIN_USER', res.data)
+          axios.get('user/my')
+          .then(res => {
+            localStorage.setItem('userId', res.data.id)
+            localStorage.setItem('userNumber', res.data.userNumber)
+            router.push({ name: 'Main' })
+          })
+          .catch(err => {
+            console.error(err);
+          })
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      }
     },
 
     // Profile actions

@@ -2,7 +2,6 @@
   <div>
     <header-nav></header-nav>
     <div class="modify-font container w-75">
-      회원정보 수정
       <div class="d-flex justify-content-between my-2">
         닉네임 : {{ this.nickname }}
         <button
@@ -223,7 +222,29 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["backToProfile", "updateModity"]),
+    ...mapActions(["backToProfile"]),
+
+    updateModity(credentials) {
+      axios.get('user/my')
+      .then(res => {
+        var addressPut = { ...res.data, nickname: credentials[0], phone: credentials[1], address: credentials[2]}
+        axios.put('user/', addressPut)
+        .then(res => {
+          res
+          this.$fire({
+            title: "성공!",
+            text: "저장이 완료되었습니다",
+            type: "success",
+          })
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    },
 
     nicknameModify() {
       this.nicknameCheck = !this.nicknameCheck;
