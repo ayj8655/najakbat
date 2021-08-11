@@ -1,5 +1,5 @@
 <template>
-<div class="pt-4">
+<div class="pt-3 pb-3">
 <button type="button" class="btn buttoncolor" data-bs-toggle="modal" data-bs-target="#exampleModal">
   새 쪽지 쓰기
 </button>
@@ -74,6 +74,7 @@ export default {
       content: '',
       nickname: '',
       sword: '',
+      skey: 'content',
       // receiver: '',
     }
   },
@@ -101,6 +102,7 @@ export default {
       }
       // console.log(this.$store.state.receiver)
       this.$store.dispatch('messagePost', [this.content, this.$store.state.receiver])
+      this.$router.go(0)
     },
     syncronizeNickname (receiverNickname) {
       // console.log(localStorage.getItem('userNumber'))
