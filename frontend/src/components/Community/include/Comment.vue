@@ -20,7 +20,11 @@
       <div v-else class="body" v-html="enterToBr(comment.content)"></div>
       <div class="foot">
         <span class="recc">
-          <span><img src="@/assets/leaf_gray.png" width="15px" />{{comment.recommend}}</span>
+          <span>
+            <img v-if="this.recoFlag" src="@/assets/leaf_lightgreen.png" width="15px" />
+            <img v-else src="@/assets/leaf_gray.png" width="15px" />
+            {{comment.recommend}}
+          </span>
           <span v-if="this.comment.parent==0"><img src="@/assets/comment.png" width="15px" />{{comment.commentCount}}</span>
         </span>
         <span
@@ -40,7 +44,8 @@
             !comment.isdeleted
           "
         >
-          <label @click="recommendComment">좋아요</label> |
+          <span v-if="this.recoFlag"><label @click="recommendComment">좋아요 취소</label> | </span>
+          <span v-else><label @click="recommendComment">좋아요</label> | </span>
           <label @click="writeChildChange">답글달기</label>
         </span>
       </div>
@@ -107,6 +112,7 @@ export default {
   components: {},
   props: {
     comment: Object,
+    recoFlag: Boolean,
   },
   data() {
     return {

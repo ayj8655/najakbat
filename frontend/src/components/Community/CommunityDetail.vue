@@ -32,6 +32,7 @@
         v-for="(comment, index) in comments"
         :key="index"
         :comment="comment"
+        :recoFlag="wasRecommended(comment.commentNumber)"
         @modify-comment="onModifyComment"
       ></comment>
       <comment-write
@@ -64,10 +65,9 @@ export default {
       post: Object,
       typeimg: null,
       comments: [],
+      recoComments: [],
       isModifyShow: false,
       modifyComment: Object,
-      recommended: "@/assets/leaf_lightgreen.png",
-      notRecommended: "@/assets/leaf_gray.png",
     };
   },
   created() {
@@ -91,7 +91,9 @@ export default {
     });
     axios.get(`comment/${this.no}`).then(({ data }) => {
       this.comments = data;
-      // console.log(this.comments)
+    });
+    axios.get(`comment/${this.no}/${this.$store.state.myNumber}`).then(({ data }) => {
+      this.recoComments = data;
     });
   },
   methods: {
@@ -111,6 +113,14 @@ export default {
           this.$router.push("/community/list");
         });
       }
+    },
+    wasRecommended(no) {
+      let flag = false;
+      this.recoComments.forEach(reco => {
+        if(reco==no) flag = true;
+      });
+      if(flag) return true;
+      else return false;
     },
     onModifyComment(comment) {
       this.modifyComment = comment;
