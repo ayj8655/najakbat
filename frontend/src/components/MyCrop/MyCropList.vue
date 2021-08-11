@@ -46,7 +46,7 @@
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">작물 선택</h5>
@@ -57,28 +57,46 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body d-flex justify-content-around">
-            <select
-              v-model="cropNoSelected"
-              required
-              class="form-select form-select-lg m-2"
-              aria-label=".form-select-lg example"
-            >
-              <option value="">작물 선택</option>
-              <option
-                v-for="(crop, index) in crops"
-                :key="index"
-                :value="crop.cropNumber"
+          <div class="modal-body">
+            <div>
+              <select
+                v-model="cropNoSelected"
+                required
+                class="form-select form-select-lg mx-0 my-2 p-2 text-center"
+                aria-label=".form-select-lg example"
               >
-                {{ crop.name }}
-              </option>
-            </select>
+                <option value="">작물 선택</option>
+                <option
+                  v-for="(crop, index) in crops"
+                  :key="index"
+                  :value="crop.cropNumber"
+                >
+                  {{ crop.name }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <hr>
+              <div class="d-flex justify-content-start mt-2">
+                <h5 class="mb-0">나만의 작물 소개를 적어보세요😊</h5>
+                <p class="text-success ms-auto">(선택 사항)</p>
+              </div>
+              <div class="form-floating">
+                <textarea class="form-control my-3" placeholder="Leave a comment here" id="floatingTextarea" v-model="cropNick"></textarea>
+                <label for="floatingInputValue">작물 이름을 지어주세요!</label>
+              </div>
+              <div class="form-floating">
+                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" v-model="cropDesc"></textarea>
+                <label for="floatingInputValue">작물 소개를 작성해주세요!</label>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <button
               type="button"
               class="btn btn-success"
               data-bs-dismiss="modal"
+              :disabled="!this.cropNoSelected"
               @click="saveCrop"
             >
               <!-- :disabled="!this.userSelectCrop === ''" -->
@@ -103,6 +121,8 @@ export default {
       cropImg: [],
       usercropImg: [],
       userSelectCrop: "",
+      cropDesc: null,
+      cropNick: null,
       pickCrop: {
         userNumber: null,
       },
@@ -116,6 +136,7 @@ export default {
         axios
           .get(`user/crop/list?userNumber=${this.pickCrop.userNumber}`)
           .then((res) => {
+            console.log(res.data);
             this.usercrops = res.data;
           })
           .catch((err) => {
@@ -153,20 +174,37 @@ export default {
     //   this.userSelectCrop = event;
     // },
     saveCrop() {
-      // let form = new FormData()
-      // form.append('cropno', this.userSelectCrop)
-      // form.append('userno', this.pickCrop.userNumber)
-      axios
-        .post(
-          `user/crop/?cropno=${this.cropNoSelected}&userno=${this.pickCrop.userNumber}`
-        )
-        .then((res) => {
-          // console.log(res);
-          if (res.data == "success") window.location.reload();
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      if (!this.cropNick) {
+        for (var i = 0; i < this.crops.length; i++) {
+          if (this.cropNoSelected == this.crops[i].cropNumber) {
+            this.cropNick = this.crops[i].name
+          }
+        }
+      }
+
+      if (!this.cropDesc) {
+        this.cropDesc = '작물소개를 작성해주세요!'
+      }
+
+      axios({
+        method: 'post',
+        url: 'user/crop/',
+        params: {
+          cropdesc: this.cropDesc,
+          cropnickname: this.cropNick,
+          cropno: this.cropNoSelected,
+          userno: this.pickCrop.userNumber
+        }
+      })
+      .then((res) => {
+        if (res.data == "success") window.location.reload();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+      this.cropNick = null
+      this.cropDesc = null
     },
   },
 };
