@@ -62,9 +62,14 @@ public class NoticeService {
 	
 	public void insertNotice(int userNumber,int postNumber,String title, String content) {
 		Date date = new Date();
-		Notice notice = new Notice(0,userNumber,0,0, date, title,content);
+		Notice notice = new Notice(0,userNumber,postNumber,0, date, title,content);
 		
 		noticeDAO.save(notice);
+	}
+
+	public int deleteAllByIdIn(List<Integer> noticeno) {
+		// TODO Auto-generated method stub
+		return noticeDAO.deleteAllByNoticeNumberIn(noticeno);
 	}
 
 }

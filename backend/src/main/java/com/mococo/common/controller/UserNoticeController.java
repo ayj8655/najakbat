@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.Notice;
@@ -80,20 +81,44 @@ public class UserNoticeController {
 
 	}
 
-	// 삭제는 선택해서 갈거라 아래 두개가 같은거같음 어떻게 해야할지 미정 -> 맵으로 하면 될거같긴함
 	@RequestMapping(value = "/notice", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteAllNotice(@RequestBody User user) throws IOException {
+	public ResponseEntity<String> deleteAllNotice(@RequestParam List<Integer> noticeno) throws IOException {
 		logger.info("읽은 알림 전체 삭제");
+		try {
+			int ret = 0;
 
-		return null;
+
+			ret = noticeService.deleteAllByIdIn(noticeno);
+			System.out.println(ret);
+			System.out.println("읽은 알림 전체 삭제 성공");
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println("읽은 알림 전체 삭제 에러");
+			e.printStackTrace();
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
 	}
 
 	@RequestMapping(value = "/notice/{no}", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteNotice(@PathVariable String no) throws IOException {
-		logger.info("알림 하나 삭제");
+	public ResponseEntity<String> deleteNotice(@RequestParam List<Integer> noticeno) throws IOException {
+		logger.info("선택 알림 전체 삭제");
+		try {
+			int ret = 0;
+		
 
-		return null;
+			ret = noticeService.deleteAllByIdIn(noticeno);
+			System.out.println(ret);
+
+			System.out.println("선택 알림  전체 삭제 성공");
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println("선택 알림  전체 삭제 에러");
+			e.printStackTrace();
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
 	}
 
