@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="mycontainer py-4">
+    <div class="py-4">
       <h2 class="mb-5">회원가입</h2>
       <form action="">
         <div class="mb-3 container w-75">
@@ -47,6 +47,7 @@
 import PhoneCertified from '@/components/Login/PhoneCertified.vue'
 import { mapActions } from 'vuex'
 import axios from "axios"
+import router from "@/router"
 
 export default {
   name: 'Signup',
@@ -80,12 +81,12 @@ export default {
     checkId() {
       axios.get(`user/pass/confirmId/${this.username}`)
       .then(res => {
-        if (res.data === 'fail') {
-          this.idOverlap = true
-        }
-        else {
+        if (res.data === 'success') {
           this.idOverlap = false
           this.check.id = true
+        }
+        else {
+          this.idOverlap = true
         }
       })
       .catch(err => {
@@ -95,18 +96,26 @@ export default {
     checkNickname(nick) {
       axios.get(`user/pass/confirmNickname/${nick}`)
       .then(res => {
-        if (res.data === 'fail') {
+        if (res.data === 'success') {
+          this.nicknameOverlap = false
+          this.check.nickname = true
+        }
+        else {
           this.nicknameOverlap = true
-          return
         } 
-        this.nicknameOverlap = false
-        this.check.nickname = true
       })
       .catch(err => {
         console.error(err);
       })
     }
   },
+
+  created() {
+    if(this.$store.state.accessToken) {
+      router.push({name: 'Main'})
+    }
+  },
+
   watch: {
     username() {
       this.check.id = false

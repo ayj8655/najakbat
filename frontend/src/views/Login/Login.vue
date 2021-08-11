@@ -20,6 +20,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import router from "@/router"
 
 export default {
   name: 'Login',
@@ -33,6 +34,11 @@ export default {
     ...mapActions([
       'login'
     ])
+  },
+  created() {
+    if(this.$store.state.accessToken) {
+      router.push({name: 'Main'})
+    }
   }
 
 }

@@ -388,7 +388,7 @@ export default new Vuex.Store({
         })
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
-          commit('UPDATE_TOKEN', res.data.token)
+          commit
           axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
@@ -429,7 +429,7 @@ export default new Vuex.Store({
     },
 
     findMyId({ commit }, myPhone) {
-      axios.post('user/idFind', {phone: myPhone})
+      axios.post('user/pass/idFind', {phone: myPhone})
       .then(res => {
         commit('FIND_ID', res.data)
         router.push({ name: 'FindIdNext' })
