@@ -107,6 +107,7 @@ import HeaderNav from "../components/Menu/HeaderNav.vue";
 import Menubar from "../components/Menu/Menubar.vue";
 import Sidebar from "../components/Sidebar/Sidebar.vue";
 export default {
+  name: 'Main',
   components: { Menubar, HeaderNav, Sidebar },
   data() {
     return {

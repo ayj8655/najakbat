@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="mycontainer py-4">
+    <div class="py-4">
       <h2 class="mb-5">아이디 찾기</h2>
       <form action="">
         <div class="mb-3 container w-75">
@@ -20,6 +20,7 @@
 <script>
 import FindIdPhoneCertified from '@/components/Login/FindIdPhoneCertified.vue'
 import { mapActions } from 'vuex'
+import router from "@/router"
 
 export default {
   name: 'FindId',
@@ -39,6 +40,12 @@ export default {
     phonecertified() {
       this.checkPhone = true
     },
+  },
+
+  created() {
+    if(this.$store.state.accessToken) {
+      router.push({name: 'Main'})
+    }
   }
 }
 </script>

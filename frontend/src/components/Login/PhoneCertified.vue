@@ -74,7 +74,10 @@ export default {
         .get(`user/pass/confirmPhone/${phone}`)
         .then((res) => {
           if (res.data === "fail") {
-            alert("이미 가입된 번호입니다");
+            this.$fire({
+            text: "이미 가입된 번호입니다",
+            type: "error",
+          })
           } else {
             this.counting = true;
             this.numberConfirmation = true;

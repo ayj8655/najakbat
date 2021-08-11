@@ -46,23 +46,26 @@ export default {
         startCountdown() {
             let phone = this.$props.phoneNum
 
-            axios.get(`user/confirmPhone/${phone}`)
+            axios.get(`user/pass/confirmPhone/${phone}`)
             .then(res => {
-                if (res.data === 'fail') {
-                  this.counting = true;
-                  this.numberConfirmation = true
-                  // axios.post('http://localhost:8080/user/phone', {
-                  //     phone: this.$props.phoneNum
-                  // })
-                  // .then(res => {
-                  //     this.certifiedNumber = res.data
-                  // })
-                  // .catch(err => {
-                  //     console.error(err);
-                  // })
+                if (res.data === 'success') {
+                this.$fire({
+                    text: "해당 번호로 가입된 아이디가 없습니다",
+                    type: "error",
+                })
                 }
                 else {
-                    alert('해당 번호로 가입된 아이디가 없습니다')
+                    this.counting = true;
+                    this.numberConfirmation = true
+                    // axios.post('http://localhost:8080/user/phone', {
+                    //     phone: this.$props.phoneNum
+                    // })
+                    // .then(res => {
+                    //     this.certifiedNumber = res.data
+                    // })
+                    // .catch(err => {
+                    //     console.error(err);
+                    // })
                 }
             })
             .catch(err => {
