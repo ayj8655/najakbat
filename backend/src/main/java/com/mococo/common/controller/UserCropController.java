@@ -79,7 +79,7 @@ public class UserCropController {
 			userCrop.setFinish(false);
 			
 			userCrop.setCropNickname(cropnickname);
-			userCrop.setDesc(cropdesc);
+			userCrop.setDescription(cropdesc);
 			
 			// target date, need_date: 물줘야하는날짜, finish=false, water_cycle, 다음 물 줘야하는날
 			Optional<Object> dayInfo = userCropService.findGrowingPeriodAndWaterPeriod(crop_number);
@@ -134,11 +134,16 @@ public class UserCropController {
 	@RequestMapping(value = "/", method = RequestMethod.PUT)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 정보 수정")
-	public ResponseEntity<String> updateCrop(@RequestBody UserCrop userCrop) throws IOException {
+	public ResponseEntity<String> updateCrop(@RequestParam int userCropNumber, @RequestParam String userCropNickname,@RequestParam String description) throws IOException {
 		logger.info("작물 정보 수정");
 
 		try {
-			boolean result = userCropService.updateCrop(userCrop);
+			Optional<UserCrop> uc = userCropService.findByUserCropNumber(userCropNumber);
+			
+			uc.get().setCropNickname(userCropNickname);
+			uc.get().setDescription(description);
+			
+			boolean result = userCropService.updateCrop(uc.get());
 
 			if (result) {
 				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
@@ -215,13 +220,18 @@ public class UserCropController {
 
 	@RequestMapping(value = "/record", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "작물 상태 기록")
-	public ResponseEntity<String> insertCropRecord(@RequestBody UserCropRecord userCropRecord) throws IOException {
-		logger.info("작물 상태 기록");
+	@ApiOperation(value = "작물 상태 기록하기")
+	public ResponseEntity<String> insertCropRecord(@RequestParam int userCropNumber, @RequestParam int state, @RequestParam String detail) throws IOException {
+		logger.info("작물 상태 기록하기");
 
 		try {
-			userCropRecord.setRecordDate(new Date());
-			boolean result = userCropRecordService.insertCropRecord(userCropRecord);
+			UserCropRecord ucr = new UserCropRecord();
+			ucr.setUserCropNumber(userCropNumber);
+			ucr.setState(state);
+			ucr.setRecordDate(new Date());
+			ucr.setDetail(detail);
+			ucr.setRecordDate(new Date());
+			boolean result = userCropRecordService.insertCropRecord(ucr);
 
 			if (result) {
 				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
@@ -236,7 +246,7 @@ public class UserCropController {
 
 	@RequestMapping(value = "/record", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "해당 작물의 모든 상태 기록 조회")
+	@ApiOperation(value = "해당 작물의 모든 상태 기록 조회 -")
 	public ResponseEntity<?> searchAllCropRecord(@RequestParam int userCropNumber) throws IOException {
 		logger.info("해당 작물의 모든 상태 기록 조회");
 
@@ -276,7 +286,7 @@ public class UserCropController {
 
 	@RequestMapping(value = "/water", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	@ApiOperation(value = "해당 작물에게 물 준 기록 조회")
+	@ApiOperation(value = "해당 작물에게 물 준 기록 조회 - 현재달만")
 	public ResponseEntity<?> searchAllWaterRecord(@RequestParam int userCropNumber) throws IOException {
 		logger.info("해당 작물에게 물 준 기록 조회");
 
@@ -289,4 +299,36 @@ public class UserCropController {
 		}
 	}
 
+	
+	
+	
+	@RequestMapping(value = "/record/month", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "해당 작물의 모든 상태 기록 조회 -현재달만")
+	public ResponseEntity<?> searchAllCropRecordMonth(@RequestParam int userCropNumber) throws IOException {
+		logger.info("해당 작물의 모든 상태 기록 조회 - 현재달만");
+
+		try {
+			List<UserCropRecord> userCropRecordList = userCropRecordService.findAllByUserCropNumberAndDate(userCropNumber);
+			return new ResponseEntity<>(userCropRecordList, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/water/month", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "해당 작물에게 물 준 기록 조회 - 현재달만")
+	public ResponseEntity<?> searchAllWaterRecordMonth(@RequestParam int userCropNumber) throws IOException {
+		logger.info("해당 작물에게 물 준 기록 조회 - 현재달만");
+
+		try {
+			List<WaterRecord> waterRecordList = waterRecordService.findAllByUserCropNumberAndDate(userCropNumber);
+			return new ResponseEntity<>(waterRecordList, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
