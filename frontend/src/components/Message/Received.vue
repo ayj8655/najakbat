@@ -22,8 +22,12 @@
         </div>
       </div>
     </div>
-    <div v-for="(receivedMessage, idx) in receivedMessages" :key="idx">
-    <div class="container px-0" @click="[detail(receivedMessage), reading([idx, receivedMessage.messageNumber])]" >
+
+<!-- Search list -->
+
+    <div v-if="isSearch">    
+      <div v-for="(receivedMessage, idx) in receivedMessages" :key="idx">
+    <div v-if="((sword=='') || (skey=='content' && receivedMessage.content.includes(sword)) || (skey=='nickname' && receivedMessage.senderNickname.includes(sword)))" class="container px-0" @click="[detail(receivedMessage), reading([idx, receivedMessage.messageNumber])]" >
       <div class="isRead-false border border-end-0 border-start-0 bg-white">
         <div class="container notice mt-2">
           <div class="row">
@@ -52,25 +56,71 @@
         </div>
       </div>
     </div>
+
 <!-- Modal -->
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          {{ messageContent }}
-        </div>
-        <div class="modal-footer">
-          <!-- <message-reply-form/> -->
-          <button type="button" class="btn btn-primary">Understood</button>
+  
+</div>
+</div>
+
+<!-- Normal list -->
+
+<div v-else>
+    <div v-for="(receivedMessage, idx) in receivedMessages" :key="idx">
+    <div class="container px-0" @click="[detail(receivedMessage), reading([idx, receivedMessage.messageNumber])]" >
+      <div class="isRead-false border border-end-0 border-start-0 bg-white">
+        <div class="container notice mt-2" >
+          <div class="row" >
+            <div class="font2 col-2 px-0">
+              {{ receivedMessage.senderNickname }}
+            </div>
+            <div class="col-5 px-0">
+              <div class="font2">
+                {{receivedMessage.content}}
+              </div>
+            </div>
+            <div class="font1 col-2 px-0">
+              <div v-if="receivedMessage.isRead">
+                읽음
+              </div>
+              <div v-else>
+                안읽음
+              </div>
+            </div>
+            <div class="col-3 px-0">
+              <div class="font1 mx-1">
+                {{ receivedMessage.time | moment('YYYY-MM-DD') }} 
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 </div>
+</div>
+<messageform/>
+<div class="container">
+    <div class="row">
+      <select class="col-3 selectdesign px-0" name="key" id="skey" v-model="skey">
+        <option disabled value="">검색기준</option>
+          <option value="content">
+             내용
+            </option>
+          <option value="nickname">
+            닉네임
+            </option>
+      </select>
+      <input
+        type="text"
+        class="mx-1 inputdesign col-7 px-0"
+        
+        name="sword"
+        v-model="sword"
+        placeholder="쪽지 검색"
+        
+        />
+        <img src="../../assets/search_green.png" type="button" width="30px" height="30px" class="col px-0" @click="searchingmessage"/>
+    </div>
+  </div>
 </div>
 </keep-alive>
 </div>
@@ -82,16 +132,22 @@ import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
 // import MessageReplyForm from './include/MessageReplyForm.vue'
 import MessageObject from './include/MessageObject.vue'
-
+import Messageform from '@/components/Message/Messageform.vue'
+// import SearchMessage from './include/SearchMessage.vue'
 
 export default {
   components: {
-    // MessageReplyForm
-    MessageObject
+    // MessageReplyForm,
+    Messageform,
+    MessageObject,
+    // SearchMessage
   },
   data() {
     return {
       isClick: false,
+      isSearch: false,
+      sword: '',
+      skey: 'content',
     }
   },
   computed: {
@@ -113,6 +169,7 @@ export default {
       this.$store.state.messageContent = message.content
       this.$store.state.messageTime = message.time
       this.$store.state.messageSenderNickname = message.senderNickname
+      this.$store.state.messageNumber = message.messageNumber
       console.log(this.$store.state.messageSenderNickname)
     },
     reading(messageinfo) {
@@ -123,6 +180,23 @@ export default {
       // console.log(this.$store.state.receivedMessages[messageIdx].isRead)
       this.$store.dispatch('readingMessage', messageNum)
     },
+    searchingmessage() {
+      this.isSearch = ! this.isSearch
+      console.log(this.isSelect)
+    },
+    selectContent () {
+      this.isSelect = false
+      console.log(this.isSelect)
+    },
+    selectNickname () {
+      this.isSelect = true
+      console.log(this.isSelect)
+    }
+  },
+  watch: {
+    sword: function () {
+        this.isSearch = false
+    }
   }
 }
 
@@ -147,5 +221,17 @@ export default {
   font-weight: normal;
   font-size: 15px;
   line-height: 25px;
+}
+.selectdesign {
+  background: #FFFFFF;
+  border: 1px solid #B6C790;
+  box-sizing: border-box;
+  border-radius: 5px 5px 0px 0px;
+}
+.inputdesign {
+  background: #FFFFFF;
+  border: 3px solid #B6C790;
+  box-sizing: border-box;
+  border-radius: 5px;
 }
 </style>

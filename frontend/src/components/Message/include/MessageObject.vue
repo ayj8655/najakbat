@@ -21,23 +21,40 @@
           </div>
         </div>
       </div>
-
+      <div class="d-flex justify-content-center">
+        <message-reply-form/>
+        <button type="button" class="btn btn-secondary mb-3 mx-2" @click="deletingmessage">삭제</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
+// import { mapState } from 'vuex'
+import { mapActions } from 'vuex'
 import vueMoment from 'vue-moment'
+import MessageReplyForm from '@/components/Message/include/MessageReplyForm.vue'
 // import history from 'window'
 Vue.use(vueMoment)
 
 export default {
   methods: {
+    ...mapActions([
+      'messageDelete'
+    ]),
     goingback() {
-      this.$router.go(this.$router.currentRoute)
+      this.$router.go(0)
+    },
+    deletingmessage() {
+      // console.log(this.$store.state.messageNumber)
+      this.$router.go(0)
+      this.$store.dispatch('messageDelete', [this.$store.state.messageNumber])
     }
-    
+
+  },
+  components: {
+    MessageReplyForm,
   }
 
 }
@@ -45,7 +62,7 @@ export default {
 
 <style>
 .messageDesign {
-  height: 250px;
+  height: 300px;
   background: #FFFFFF;
   border: 3px solid #B6C790;
   box-sizing: border-box;
@@ -93,4 +110,5 @@ export default {
   width: 20px;
   height: 20px;
 }
+
 </style>

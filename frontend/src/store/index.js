@@ -3,6 +3,8 @@ import Vuex from "vuex";
 import axios from "axios";
 import router from "../router"
 
+
+
 Vue.use(Vuex);
 axios.defaults.baseURL = 'http://localhost:8080/'
 
@@ -38,9 +40,11 @@ export default new Vuex.Store({
     messageTime: '',
     messageReceiverNickname: '',
     alluserInfo: '',
+    messageNumber: '',
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
+    nickname: localStorage.getItem('nickname') || '',
     myNumber: localStorage.getItem('userNumber') || '',
     myId: null,
     loginCheck: false,
@@ -91,15 +95,17 @@ export default new Vuex.Store({
     // Sidebar mutations
 
     DELETE_TOKEN(state) {
-      state.accessToken = ''
-      state.userId = ''
-      state.myNumber = ''
+      state.accessToken = '';
+      state.userId = '';
+      state.myNumber = '';
+      state.nickname = '';
     },
 
     // Get User
     UPDATE_LOGIN_USER(state, payload) {
       state.accessToken = payload.token
       state.myNumber = payload.userNumber
+      state.myNickname = payload.nickname
       state.userId = payload.id
     },
 
@@ -166,7 +172,7 @@ export default new Vuex.Store({
         }
       })
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         context.commit('GET_RECEIVED_MESSAGES', res.data)
       })
       .catch(err => {
@@ -292,12 +298,31 @@ export default new Vuex.Store({
             // }} )
           })
           .catch(err => {
-            console.log(this.receiver)
-            console.log(receiver)
+            // console.log(this.receiver)
+            // console.log(receiver)
             console.error(err)
           })
         context
       },
+    messageDelete(context, [messageNum]) {
+      axios({
+        method: 'delete',
+        url: `message/`,
+        params: {
+          messageNumber: messageNum
+        }
+        })
+        .then(res => {
+          // console.log(this.messageNumber)
+          console.log(res.data)
+        })
+        .catch(err => {
+          // console.log(messageNum)
+          console.log(err)
+          // console.log(this.messageNumber)
+        })
+      // context
+    },
 
 
 
@@ -337,9 +362,9 @@ export default new Vuex.Store({
     // Logout actions
 
     logout({ commit }) {
-      commit('DELETE_TOKEN')
-      localStorage.removeItem('access_token')
-      sessionStorage.clear()
+      commit('DELETE_TOKEN');
+      localStorage.removeItem('access_token');
+      localStorage.clear();
     },
 
     //Modify actions

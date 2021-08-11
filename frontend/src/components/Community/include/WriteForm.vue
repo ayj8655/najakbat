@@ -1,13 +1,15 @@
 <template>
   <div id="writeform" class="mt-5 mb-5">
+    <div v-if="type == 'create'"><h3>게시글 작성</h3></div>
+    <div v-else><h3>게시글 수정</h3></div>
     <div class="form-group" align="left">
       <label for="sel1">게시글 분류</label>
       <select class="form-control" id="sel1" v-model="postType">
         <option value="0">게시글 분류를 선택하세요.</option>
-        <option value="1">자유</option>
-        <option value="2">정보</option>
-        <option value="3">질문</option>
-        <option value="4">나눔</option>
+        <option value="자유">자유</option>
+        <option value="정보">정보</option>
+        <option value="질문">질문</option>
+        <option value="나눔">나눔</option>
       </select>
     </div>
     <div class="form-group" align="left">
@@ -33,7 +35,7 @@
       ></textarea>
     </div>
     <form>
-      <div class="custom-file">
+      <div class="custom-file" :v-model="file">
         <label for="customFile">사진첨부:</label>
         <input type="file" class="custom-file-input" id="customFile" />
         <label class="custom-file-label" for="customFile"
@@ -44,11 +46,9 @@
     <div class="form-group" align="left">
       <label for="sel1">농작물 태그</label>
       <select class="form-control" id="sel1" v-model="keyword">
-        <option>농작물 태그를 원하시면 선택하세요.</option>
-        <option>자유</option>
-        <option>정보</option>
-        <option>질문</option>
-        <option>나눔</option>
+        <option v-for="crop in crops" :key="crop" :value="crop.cropNumber">
+          {{ crop.name }}
+        </option>
       </select>
     </div>
     <div v-if="type == 'create'">
@@ -79,16 +79,18 @@ export default {
     return {
       user: null,
       postNumber: this.$route.params.no,
-      userNumber: this.$store.userNumber,
+      userNumber: this.$store.state.myNumber,
+      userNickname: this.$store.state.myNickname,
       postType: 0,
       title: null,
       content: null,
-      files: null,
+      file: null,
       keyword: null,
+      crops: [],
     };
   },
   created() {
-    this.$store.dispatch("getProfile", this.$route.params.usernumber);
+    this.file = new FormData();
     if (this.type === "modify") {
       axios.get(`post/${this.postNumber}`).then(({ data }) => {
         this.postType = data.postType;
@@ -97,12 +99,15 @@ export default {
         this.keyword = data.keyword;
       });
     }
+    axios.get("guide/plant/summary").then((data) => {
+      this.crops = data.data;
+    });
   },
   methods: {
     checkValid() {
       let err = true;
       let msg = "";
-      !(this.postType > 0) &&
+      !(this.postType != "0") &&
         ((msg = "게시글 분류를 선택해주세요."), (err = false));
       err && !this.title && ((msg = "제목을 입력해주세요."), (err = false));
       err && !this.content && ((msg = "내용을 입력해주세요."), (err = false));
@@ -110,24 +115,29 @@ export default {
       else this.type == "create" ? this.writePost() : this.modifyPost();
     },
     writePost() {
-      axios
-        .post("post/", {
-          userNumber: this.profile.userNumber,
-          userNickname: this.profile.nickname,
-          postType: this.postType,
+      axios({
+        headers: { 'Content-Type': 'multipart/form-data' },
+        method: "post",
+        url: "post/",
+        params: {
+          type: this.postType,
           title: this.title,
           content: this.content,
           keyword: this.keyword,
-        })
-        .then(() => {
-          this.$router.push("/community/list");
-        });
+          user_nickname: this.$store.state.nickname,
+          user_number: this.$store.state.myNumber,
+          mfile: this.file,
+        },
+      }).then(() => {
+        this.$router.push("/community/list");
+      });
     },
     modifyPost() {
       axios
         .put(`post/${this.postNumber}`, {
           postNumber: this.postNumber,
           userNumber: this.userNumber,
+          userNickname: this.userNickname,
           title: this.title,
           content: this.content,
           keyword: this.keyword,
@@ -135,16 +145,6 @@ export default {
         .then(() => {
           this.$router.push(`/community/detail/${this.postNumber}`);
         });
-    },
-    getNickname() {
-      if (this.profile.nickname) {
-        return this.profile.nickname;
-      } else {
-        return false;
-      }
-    },
-    getUserNumber() {
-      return this.profile.userNumber;
     },
   },
 };
@@ -154,4 +154,9 @@ export default {
 // });
 </script>
 
-<style></style>
+<style scoped>
+.writeform > * {
+  font-family: Noto Sans KR;
+  font-style: normal;
+}
+</style>

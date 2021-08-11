@@ -20,7 +20,7 @@
         <span>
           <img src="@/assets/comment_green.png" width="15px" />{{this.post.commentCount}}
         </span>
-        <div v-if="this.$store.state.profile.userNumber == this.post.userNumber">
+        <div v-if="this.$store.state.myNumber == this.post.userNumber">
           <span class="modifyBtn" @click="modifyPost">수정</span> |
           <span class="deleteBtn" @click="deletePost">삭제</span>
         </div>
@@ -91,7 +91,7 @@ export default {
     });
     axios.get(`comment/${this.no}`).then(({ data }) => {
       this.comments = data;
-      console.log(this.comments)
+      // console.log(this.comments)
     });
   },
   methods: {
@@ -107,7 +107,7 @@ export default {
     deletePost() {
       if (confirm("정말로 삭제하시겠습니까?")) {
         axios.delete(`post/${this.post.postNumber}`).then(() => {
-          alert("삭제되었습니다.");
+          // alert("삭제되었습니다.");
           this.$router.push("/community/list");
         });
       }

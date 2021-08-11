@@ -13,7 +13,7 @@
     <Received v-if="componentNum === 0"/>
     <Sent v-else/>
   </div>
-  <Messageform/>
+  <!-- <Messageform/> -->
   <div id="foot"></div>
   <menubar id="menubar"></menubar>
 </div>
@@ -24,7 +24,7 @@ import HeaderNav from '@/components/Menu/HeaderNav.vue';
 import Menubar from '@/components/Menu/Menubar.vue';
 import Received from '../../components/Message/Received.vue';
 import Sent from '../../components/Message/Sent.vue';
-import Messageform from '../../components/Message/Messageform.vue';
+// import Messageform from '../../components/Message/Messageform.vue';
 
 
 export default {
@@ -33,7 +33,7 @@ export default {
     Menubar,
     Received,
     Sent,
-    Messageform,
+    // Messageform,
     // Sent,
     // Received,
   },
