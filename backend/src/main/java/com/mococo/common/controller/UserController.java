@@ -103,7 +103,7 @@ public class UserController {
 			User user = userService.signup(userDto);
 			if (user == null) {
 				logger.info("회원가입실패");
-				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
 
 		} catch (Exception e) {
@@ -253,7 +253,7 @@ public class UserController {
 
 			if (!findUser.isPresent()) {
 				logger.info("id찾기 실패");
-				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
 
 			System.out.println("id찾기 성공");
@@ -267,10 +267,52 @@ public class UserController {
 	}
 
 	// 핸드폰번호 받음 -> 랜덤숫자만듦 -> 메시지 보냄 -> 숫자 프론트에 보냄
+//	@RequestMapping(value = "/pass/phone", method = RequestMethod.POST)
+//	@ApiOperation(value = "헨드폰인증", notes = "번호입력받으면 인증번호 생성 후 핸드폰에 메시지를 보내고 인증번호를 프론트로 전송한다", response = String.class)
+//	public ResponseEntity<String> phoneaCertification(@RequestBody User user) throws IOException {
+//		logger.info("핸드폰인증");
+//
+//		String userPhone = user.getPhone();
+//
+//		Random rd = new Random();// 랜덤 객체 생성
+//		int ran = (rd.nextInt(888888) + 111111);// 111111~999999 사이 랜덤값
+//
+//		String randomNumber = Integer.toString(ran);
+//
+//		System.out.println(userPhone);
+//		System.out.println(randomNumber);
+//
+//		try {// 가져온 핸드폰번호로 랜덤넘버를 메시지로 보낸다
+//			boolean ret = userService.sendMessage(userPhone, randomNumber);
+//
+//			if (!ret) {
+//				logger.info("인증번호 전송 실패");
+//				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+//			}
+//
+//			System.out.println("인증번호 전송 성공");// 랜덤넘버 프론트로 전달
+//			return new ResponseEntity<String>(randomNumber, HttpStatus.OK);
+//
+//		} catch (Exception e) {
+//			System.out.println("인증번호 전송 오류");
+//			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//
+//	}
+
+	// 핸드폰번호 받음 -> 랜덤숫자만듦 -> 메시지 보냄 -> 숫자 프론트에 보냄
 	@RequestMapping(value = "/pass/phone", method = RequestMethod.POST)
-	@ApiOperation(value = "헨드폰인증", notes = "번호입력받으면 인증번호 생성 후 핸드폰에 메시지를 보내고 인증번호를 프론트로 전송한다", response = String.class)
-	public ResponseEntity<String> phoneaCertification(@RequestBody User user) throws IOException {
+	@ApiOperation(value = "핸드폰인증", notes = "아이디와 핸드폰 번호를 입력하면 맞는사용자인지 확인후 성공 또는 실패 반환", response = String.class)
+	public ResponseEntity<String> phoneAuthenticate(@RequestBody User user) throws IOException {
 		logger.info("핸드폰인증");
+
+		User findUser = userService.findByIdAndPhone(user.getId(), user.getPhone());
+
+		if (findUser == null) {
+			System.out.println("찾은유저가없음");
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+		}
+		System.out.println("찾은유저가있음");
 
 		String userPhone = user.getPhone();
 
@@ -287,7 +329,7 @@ public class UserController {
 
 			if (!ret) {
 				logger.info("인증번호 전송 실패");
-				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
 
 			System.out.println("인증번호 전송 성공");// 랜덤넘버 프론트로 전달
@@ -295,6 +337,30 @@ public class UserController {
 
 		} catch (Exception e) {
 			System.out.println("인증번호 전송 오류");
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	
+	@RequestMapping(value = "/pass/pwFind", method = RequestMethod.POST)
+	@ApiOperation(value = "비밀번호변경", notes = "아이디와변경할 비밀번호를 입력하면 성공 실패 반환", response = String.class)
+	public ResponseEntity<String> pwFind(@RequestBody User user) throws IOException {
+		logger.info("비밀번호변경");
+
+		try {
+			boolean ret = userService.updateById(user);
+
+			if (!ret) {
+				logger.info("비밀번호 변경 실패");
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+			}
+
+			System.out.println("비밀번호 변경 성공");
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println("비밀번호 변경 오류");
 			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -340,7 +406,7 @@ public class UserController {
 
 			if (!ret) {
 				logger.info("회원탈퇴 실패");
-				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
 
 			System.out.println("회원 탈퇴 성공");
@@ -362,7 +428,7 @@ public class UserController {
 
 			if (!ret) {
 				logger.info("게시글 수정 실패");
-				return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
 
 			System.out.println("회원 수정 성공");
