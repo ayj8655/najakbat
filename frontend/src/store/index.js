@@ -50,6 +50,7 @@ export default new Vuex.Store({
     myId: null,
     loginCheck: false,
     accessToken: localStorage.getItem('access_token') || '',
+    userCertificate: true,
 
     // profile 정보
     profile: {
@@ -108,6 +109,11 @@ export default new Vuex.Store({
       state.userNumber = payload.userNumber
       state.userNickname = payload.nickname
       state.userId = payload.id
+    },
+
+    // user certificate
+    LOGIN_CERTIFICATE(state, payload) {
+      state.userCertificate = payload
     },
 
     // Find Id
@@ -379,7 +385,8 @@ export default new Vuex.Store({
         id: credentials[0],
         password: credentials[1],
         nickname: credentials[2],
-        phone: credentials[3]
+        phone: credentials[3],
+        user_name: credentials[4]
       })
       .then(res => {
         res
@@ -464,7 +471,11 @@ export default new Vuex.Store({
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
+<<<<<<< frontend/src/store/index.js
+            commit('LOGIN_CERTIFICATE', true)
+=======
             localStorage.setItem('userNickname', res.data.nickname)
+>>>>>>> frontend/src/store/index.js
             router.push({ name: 'Main' })
           })
           .catch(err => {
@@ -473,6 +484,7 @@ export default new Vuex.Store({
         })
         .catch(err => {
           console.error(err);
+          commit('LOGIN_CERTIFICATE', false)
         })
       }
       else {
@@ -488,6 +500,7 @@ export default new Vuex.Store({
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
             localStorage.setItem('userNickname', res.data.nickname)
+            commit('LOGIN_CERTIFICATE', true)
             router.push({ name: 'Main' })
           })
           .catch(err => {
@@ -496,6 +509,7 @@ export default new Vuex.Store({
         })
         .catch(err => {
           console.error(err);
+          commit('LOGIN_CERTIFICATE', false)
         })
       }
     },

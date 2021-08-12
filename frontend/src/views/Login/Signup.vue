@@ -25,6 +25,8 @@
             <span class="me-auto" v-else-if="check.nickname">사용 가능한 닉네임입니다</span>
             <button class="btn btn-success" :disabled="!nickname || nickname.length > 12" @click.prevent="checkNickname(nickname)">중복확인</button>
           </div>
+          <label class="form-label d-flex align-items-start">이름</label>
+          <input type="text" class="form-control  mb-3" name="between_field" placeholder="이름을 입력하세요" v-model="userrealname">
           <label class="form-label d-flex align-items-start">휴대폰 번호</label>
           <input type="text" class="form-control" v-validate="'digits:11'" name="digits_field" placeholder="휴대폰 번호를 입력하세요" v-model="phone">
           <div class="d-flex justify-content-end my-3" v-if="errors.first('digits_field') || !this.phone">
@@ -35,8 +37,8 @@
         </div>
         <button
          class="btn btn-success"
-         :disabled="!(this.check.id && this.check.password && this.check.nickname && this.check.phone && (this.password === this.passwordConfirmation))"
-         @click.prevent="signup([username, password, nickname, phone])"
+         :disabled="!(this.check.id && this.check.password && this.check.nickname && this.check.phone && (this.password === this.passwordConfirmation) && this.userrealname)"
+         @click.prevent="signup([username, password, nickname, phone, userrealname])"
         >회원가입 하기</button>
       </form>
     </div>
@@ -60,12 +62,13 @@ export default {
         id: false,
         password: false,
         nickname: false,
-        phone:false
+        phone:false,
       },
       username: null,
       password: null,
       passwordConfirmation: null,
       nickname: null,
+      userrealname: null,
       phone: null,
       idOverlap: false,
       nicknameOverlap: false
