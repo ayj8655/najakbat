@@ -1,8 +1,6 @@
 package com.mococo.common.controller;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,6 +29,7 @@ import com.mococo.common.model.UserCropResponse;
 import com.mococo.common.model.WaterRecord;
 import com.mococo.common.service.UserCropRecordService;
 import com.mococo.common.service.UserCropService;
+import com.mococo.common.service.UserRecordService;
 import com.mococo.common.service.WaterRecordService;
 
 import io.swagger.annotations.ApiOperation;
@@ -51,6 +50,9 @@ public class UserCropController {
 
 	@Autowired
 	WaterRecordService waterRecordService;
+	
+	@Autowired
+	UserRecordService userRecordService;
 
 	private static final Logger logger = LoggerFactory.getLogger(UserCropController.class);
 	private static final String SUCCESS = "success";
@@ -105,6 +107,7 @@ public class UserCropController {
 			userCrop.setWaterCycle(waterPeriod);
 
 			boolean result = userCropService.insertCrop(userCrop);
+			userRecordService.addCropCount(user_number);
 
 			if (result) {
 				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
@@ -282,11 +285,12 @@ public class UserCropController {
 			usercrop.get().setNeedDate(cal.getTime());
 			userCropService.updateCrop(usercrop.get());
 			
-			
-			
 			boolean result = waterRecordService.insertWaterRecord(waterRecord);
-
+			userRecordService.addWaterCount(usercrop.get().getUserNumber());
+			
 			if (result) {
+				
+				
 				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
