@@ -282,15 +282,8 @@ public class UserCropController {
 			WaterRecord waterRecord = new WaterRecord(userCropNumber, new Date());
 
 			Optional<UserCrop> usercrop = userCropService.findByUserCropNumber(userCropNumber);
+			
 			usercrop.get().setWater(true);
-			
-			
-			//물주기 버튼 누르면 WATER CYCLE만클 더해서 업데이트 해준다.
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(usercrop.get().getNeedDate());
-
-			cal.add(Calendar.DATE, usercrop.get().getWaterCycle());
-			usercrop.get().setNeedDate(cal.getTime());
 			userCropService.updateCrop(usercrop.get());
 			
 			
