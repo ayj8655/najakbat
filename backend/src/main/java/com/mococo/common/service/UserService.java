@@ -49,7 +49,7 @@ public class UserService {
 
 		// 유저정보 생성
 		User user = User.builder().id(userDto.getId()).password(passwordEncoder.encode(userDto.getPassword()))
-				.nickname(userDto.getNickname()).authorities(Collections.singleton(authority)).activated(true)
+				.nickname(userDto.getNickname()).authorities(Collections.singleton(authority)).activated(true).userName(userDto.getUserName())
 				.joinDate(new Date()).phone(userDto.getPhone()).build();
 
 		return userDAO.save(user);
