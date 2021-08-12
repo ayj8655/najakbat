@@ -149,7 +149,7 @@ export default {
         axios
           .get(`user/crop/list?userNumber=${this.pickCrop.userNumber}`)
           .then((res) => {
-            // console.log(res.data);
+            console.log(res.data);
             this.usercrops = res.data;
           })
           .catch((err) => {
