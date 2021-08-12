@@ -98,7 +98,7 @@ public class UserController {
 	@PostMapping("/signup")
 	@ApiOperation(value = "회원가입", notes = "유저 정보를 통해 회원가입을 진행한다. 필수 : Id, Pw, Nickname, Phone", response = String.class)
 	public ResponseEntity<String> signup(@RequestBody User userDto) {
-
+		System.out.println(userDto);
 		try {
 			User user = userService.signup(userDto);
 			if (user == null) {
