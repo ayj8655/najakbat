@@ -202,17 +202,19 @@ public class PostController {
 		} else if (type.equals("나눔")) {
 			postType = 4;
 		}
+		
+		if(keyword!=null) {
+			post.setKeyword(keyword);
+		}
+		
 		post.setPostType(postType);
 		post.setTitle(title);
-		post.setKeyword(keyword);
 		post.setUserNickname(user_nickname);
 		post.setUserNumber(user_number);
 		Date time = new Date();
 		post.setDate(time);
-		System.out.println(user_number);
 		
-		
-		System.out.println("z"+files);
+
 
 		try {
 			logger.info("게시글 등록");

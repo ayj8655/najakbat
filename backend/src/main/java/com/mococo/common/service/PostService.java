@@ -156,7 +156,7 @@ public class PostService {
 	public Post insertPost(Post post, MultipartFile[] files) throws IllegalStateException, IOException {
 		Post p = postDAO.save(post);
 		
-        if(files.length==0){
+        if(files == null){
             // TODO : 파일이 없을 땐 어떻게 해야할까.. 고민을 해보아야 할 것
         }
         // 파일에 대해 DB에 저장하고 가지고 있을 것
