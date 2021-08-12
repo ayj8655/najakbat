@@ -302,11 +302,11 @@ public class UserController {
 
 	// 핸드폰번호 받음 -> 랜덤숫자만듦 -> 메시지 보냄 -> 숫자 프론트에 보냄
 	@RequestMapping(value = "/pass/phone", method = RequestMethod.POST)
-	@ApiOperation(value = "핸드폰인증", notes = "아이디와 핸드폰 번호를 입력하면 맞는사용자인지 확인후 성공 또는 실패 반환", response = String.class)
+	@ApiOperation(value = "핸드폰인증", notes = "사용자 이름과 핸드폰 번호를 입력하면 맞는사용자인지 확인후 성공 또는 실패 반환", response = String.class)
 	public ResponseEntity<String> phoneAuthenticate(@RequestBody User user) throws IOException {
 		logger.info("핸드폰인증");
 
-		User findUser = userService.findByIdAndPhone(user.getId(), user.getPhone());
+		User findUser = userService.findByUserNameAndPhone(user.getUserName(), user.getPhone());
 
 		if (findUser == null) {
 			System.out.println("찾은유저가없음");
@@ -348,6 +348,17 @@ public class UserController {
 	public ResponseEntity<String> pwFind(@RequestBody User user) throws IOException {
 		logger.info("비밀번호변경");
 
+		
+		//아이디랑 핸드폰이 일치하는지 확인
+		
+		boolean temp = userService.findByIdAndPhone(user.getId(), user.getPhone());
+		
+		if(!temp) {
+			System.out.println("일치하는사용자가없어용");
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+		}
+		
+		
 		try {
 			boolean ret = userService.updateById(user);
 

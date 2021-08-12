@@ -238,9 +238,9 @@ public class UserService {
 	}
 
 
-	public User findByIdAndPhone(String id, String phone) {
-		
-		Optional<User> loginUser = userDAO.findByIdAndPhone(id,phone);
+
+	public User findByUserNameAndPhone(String userName, String phone) {
+			Optional<User> loginUser = userDAO.findByUserNameAndPhone(userName,phone);
 		
 		if (!loginUser.isPresent()) {
 			return null;
@@ -248,6 +248,18 @@ public class UserService {
 		
 		return loginUser.get();
 	}
+	
+	public boolean findByIdAndPhone(String id, String phone) {
+		Optional<User> loginUser = userDAO.findByIdAndPhone(id,phone);
+	
+	if (!loginUser.isPresent()) {
+		return false;
+	}
+	
+	return true;
+}
+	
+	
 
 	/*
 	 * public void updateById(String userId, User user) {
