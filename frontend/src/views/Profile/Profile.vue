@@ -10,7 +10,9 @@
             <router-link to="/user/modify"><font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" /></router-link>
           </div>
           <div class="d-flex align-items-start ms-3 mt-1">
+            <router-link to="/message">
             <font-awesome-icon :icon="['fas', 'envelope']" size="lg" class="message-color"/>
+            </router-link>
             <span class="message-style ms-2">쪽지함</span>
           </div>
         </div>
