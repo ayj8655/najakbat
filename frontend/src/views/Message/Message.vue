@@ -3,7 +3,7 @@
   <header-nav></header-nav>
   <router-view></router-view>
   <h3 class="mb-3 mt-5 fw-bold">메세지</h3>
-  <div class="container w-75 d-flex justify-content-evenly my-3 mb-5">
+  <div class="container w-75 d-flex justify-content-evenly my-3 mb-2">
     <span @click="changeComponent(0)" v-bind:class="[componentNum === 0 ? 'select-font' : 'select-font-none']">받은쪽지</span>
     <span class="select-font-none"> | </span>
     <span @click="changeComponent(1)" v-bind:class="[componentNum === 1 ? 'select-font' : 'select-font-none']">보낸쪽지</span>

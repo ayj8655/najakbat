@@ -18,6 +18,7 @@ export default new Vuex.Store({
   state: {
     // user 정보
     userNumber: '',
+    userNickname: '',
     // sidebar 변수
     sidebar: false,
     // Settings 변수
@@ -44,8 +45,8 @@ export default new Vuex.Store({
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
-    nickname: localStorage.getItem('nickname') || '',
-    myNumber: localStorage.getItem('userNumber') || '',
+    userNickname: localStorage.getItem('userNickname') || '',
+    userNumber: localStorage.getItem('userNumber') || '',
     myId: null,
     loginCheck: false,
     accessToken: localStorage.getItem('access_token') || '',
@@ -55,7 +56,7 @@ export default new Vuex.Store({
     profile: {
       id: null,
       userNumber: null,
-      nickname: null,
+      userNickname: null,
       gold: null
     },
   },
@@ -98,15 +99,15 @@ export default new Vuex.Store({
     DELETE_TOKEN(state) {
       state.accessToken = '';
       state.userId = '';
-      state.myNumber = '';
-      state.nickname = '';
+      state.userNumber = '';
+      state.userNickname = '';
     },
 
     // Get User
     UPDATE_LOGIN_USER(state, payload) {
       state.accessToken = payload.token
-      state.myNumber = payload.userNumber
-      state.myNickname = payload.nickname
+      state.userNumber = payload.userNumber
+      state.userNickname = payload.nickname
       state.userId = payload.id
     },
 
@@ -470,7 +471,11 @@ export default new Vuex.Store({
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
+<<<<<<< frontend/src/store/index.js
             commit('LOGIN_CERTIFICATE', true)
+=======
+            localStorage.setItem('userNickname', res.data.nickname)
+>>>>>>> frontend/src/store/index.js
             router.push({ name: 'Main' })
           })
           .catch(err => {
@@ -494,6 +499,7 @@ export default new Vuex.Store({
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
+            localStorage.setItem('userNickname', res.data.nickname)
             commit('LOGIN_CERTIFICATE', true)
             router.push({ name: 'Main' })
           })

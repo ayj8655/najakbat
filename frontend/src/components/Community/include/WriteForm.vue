@@ -33,9 +33,9 @@
       ></textarea>
     </div>
     <form>
-      <div class="custom-file" :v-model="file">
+      <div class="custom-file">
         <label for="customFile">사진첨부:</label>
-        <input type="file" class="custom-file-input" id="customFile" />
+        <input type="file" class="custom-file-input" id="customFile" ref="file" v-on:change="fileSlc" />
         <label class="custom-file-label" for="customFile"
           >첨부할 사진을 선택하세요. (최대 5개)</label
         >
@@ -54,13 +54,13 @@
         @click="checkValid"
         type="button"
         id="writeBtn"
-        class="btn btn-primary m-2"
+        class="btn btn-success m-2"
       >
         작성
       </button>
     </div>
     <div v-else>
-      <button class="btn btn-danger m-2" @click="checkValid">수정</button>
+      <button class="btn btn-success m-2" @click="checkValid">수정</button>
       <!-- <button type="button" class="btn btn-warning m-2" @click="deleteArticle">삭제</button> -->
     </div>
   </div>
@@ -77,21 +77,34 @@ export default {
     return {
       user: null,
       postNumber: this.$route.params.no,
-      userNumber: this.$store.state.myNumber,
-      userNickname: this.$store.state.myNickname,
+      userNumber: this.$store.state.userNumber,
+      userNickname: this.$store.state.userNickname,
       postType: 0,
       title: null,
       content: null,
-      file: null,
+      file: {},
+      files: [],
       keyword: null,
       crops: [],
     };
   },
   created() {
-    this.file = new FormData();
     if (this.type === "modify") {
       axios.get(`post/${this.postNumber}`).then(({ data }) => {
-        this.postType = data.postType;
+        switch (data.postType) {
+          case 1: 
+            this.postType = "자유";
+            break;
+          case 2: 
+            this.postType = "정보";
+            break;
+          case 3: 
+            this.postType = "질문";
+            break;
+          case 4: 
+            this.postType = "나눔";
+            break;
+        }
         this.title = data.title;
         this.content = data.content;
         this.keyword = data.keyword;
@@ -113,21 +126,17 @@ export default {
       else this.type == "create" ? this.writePost() : this.modifyPost();
     },
     writePost() {
-      axios({
-        headers: { 'Content-Type': 'multipart/form-data' },
-        method: "post",
-        url: "post/",
-        params: {
-          type: this.postType,
-          title: this.title,
-          content: this.content,
-          keyword: this.keyword,
-          user_nickname: this.$store.state.nickname,
-          user_number: this.$store.state.myNumber,
-          mfile: this.file,
-        },
-      }).then(() => {
-        this.$router.push("/community/list");
+      console.log(this.file);
+      const formData = new FormData();
+      formData.append("type", this.postType);
+      formData.append("title", this.title);
+      formData.append("content", this.content);
+      formData.append("keyword", this.keyword);
+      formData.append("user_nickname", this.userNickname);
+      formData.append("user_number", this.userNumber);
+      formData.append("image", this.file);
+      axios.post('post/', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((data) => {
+        if(data.data=="success") this.$router.push("/community/list");
       });
     },
     modifyPost() {
@@ -144,6 +153,11 @@ export default {
           this.$router.push(`/community/detail/${this.postNumber}`);
         });
     },
+    fileSlc(){
+      console.log(this.$refs);
+      this.file = this.$refs.file.files[0]
+
+          },
   },
 };
 // $(".custom-file-input").on("change", function() {

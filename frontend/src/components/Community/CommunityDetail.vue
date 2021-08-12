@@ -20,7 +20,7 @@
         <span>
           <img src="@/assets/comment_green.png" width="15px" />{{this.post.commentCount}}
         </span>
-        <div v-if="this.$store.state.myNumber == this.post.userNumber">
+        <div v-if="this.$store.state.userNumber == this.post.userNumber">
           <span class="modifyBtn" @click="modifyPost">수정</span> |
           <span class="deleteBtn" @click="deletePost">삭제</span>
         </div>

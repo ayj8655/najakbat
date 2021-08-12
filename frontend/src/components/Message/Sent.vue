@@ -71,7 +71,7 @@
         <div class="container notice mt-2" >
           <div class="row" >
             <div class="font2 col-2 px-0">
-              {{ sentMessage.senderNickname }}
+              {{ sentMessage.receiverNickname }}
             </div>
             <div class="col-5 px-0">
               <div class="font2">
