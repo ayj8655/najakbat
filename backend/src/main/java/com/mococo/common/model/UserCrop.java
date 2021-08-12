@@ -25,18 +25,18 @@ public class UserCrop {
 	private int userCropNumber;
 	private int userNumber;
 	private int cropNumber;
-	private String cropNickname;
-	private String description;
+	private String cropNickname;// 사용자가 정한 별칭
+	private String description;	// 사용자가 적는 설명
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date plantedDate;
+	private Date plantedDate;	// 심은날
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date targetDate;
+	private Date targetDate;	// 수확 예정일 (db에서 계산한거)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date realDate;
+	private Date realDate;		// 실제 수확일 (완전 수확한 날 기록함)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date needDate;
-	private boolean finish;
-	private int waterCycle;
-	private boolean isWater;
+	private Date needDate;		// 돌아오는 물줘야하는 날짜
+	private boolean finish;		// 수확이 완전끝났는지 여부
+	private int waterCycle;		// 물주는 주기
+	private boolean isWater;	// 현재 물을 잘 주었는지 여부 - 물줘야하는 D-DAY만 FALSE가 됨
 	
 }
