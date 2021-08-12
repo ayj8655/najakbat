@@ -401,6 +401,7 @@ export default new Vuex.Store({
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
+            localStorage.setItem('userNickname', res.data.nickname)
             router.push({ path: 'SignupNext' })
           })
           .catch(err => {

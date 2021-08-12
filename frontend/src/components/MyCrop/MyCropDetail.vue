@@ -1,35 +1,58 @@
 <template>
   <div class="container" id="bg">
     <div align="left">
-      <span id="left"><img src="@/assets/modal_back.png" width="25px" @click="moveBack"></span>
+      <span id="left"
+        ><img src="@/assets/modal_back.png" width="25px" @click="moveBack"
+      /></span>
       <span id="right">
         <button>수확</button>
         <button>삭제</button>
       </span>
     </div>
     <div>
-      <img v-if="ucrop.is_water" src="@/assets/water_on.png" width="30px">
-      <img v-else src="@/assets/water_off.png" width="30px">
+      <img v-if="ucrop.is_water" src="@/assets/water_on.png" width="30px" />
+      <img v-else src="@/assets/water_off.png" width="30px" />
     </div>
     <div id="gray-box">
-      <div>{{crop.name}}</div>
-      <div>{{ucrop.nickname}}</div>
-      <div>{{ucrop.description}}</div>
+      <div>{{ crop.name }}</div>
+      <div>
+        <h3>{{ ucrop.cropNickname }}</h3>
+      </div>
+      <div>{{ ucrop.description }}</div>
     </div>
-    <div id="gray-box">
-      <div>D-{{}}</div>
-      <hr />
-      <div>{{ucrop.plantedDate}}</div>
-      <div>{{ucrop.targetDate}}</div>
+    <div class="row" id="gray-box">
+      <div>
+        <h3>D - {{ ucrop.remainDate }}</h3>
+      </div>
+      <hr class="m-2" />
+      <div class="col-6">
+        <div>등록일</div>
+        <div>{{ this.plantedDate }}</div>
+      </div>
+      <div class="col-6">
+        <div>수확목표일</div>
+        <div>{{ this.targetDate }}</div>
+      </div>
     </div>
     <div>
       <h4>날씨</h4>
     </div>
-    <div>
+    <div id="contents-area">
       <h4>상태달력</h4>
+      <div>
+        <b-calendar
+          v-model="value"
+          locale="ko"
+          :hide-header="hideHeader"
+          label-help=""
+          :date-info-fn="dateClass"
+        ></b-calendar>
+      </div>
     </div>
-    <div>
+    <div class="row">
       <h4>기록</h4>
+      <div class="col-6"></div>
+      <div class="col-6"></div>
     </div>
     <div>
       <h4>통계</h4>
@@ -44,21 +67,25 @@
           <div class="mt-5 mb-5">
             <p><strong>햇빛 선호도</strong></p>
             <div id="sun-area">
-              <span v-for="(s, index) in suns" :key="index"><img :src="s"></span>
+              <span v-for="(s, index) in suns" :key="index"
+                ><img :src="s"
+              /></span>
             </div>
           </div>
           <div class="mb-5">
             <p><strong>물 선호도</strong></p>
             <div id="water-area">
-              <span v-for="(w, index) in waters" :key="index"><img :src="w"></span>
+              <span v-for="(w, index) in waters" :key="index"
+                ><img :src="w"
+              /></span>
             </div>
           </div>
           <div class="mb-5">
             <p><strong>생육 온도</strong></p>
             <div id="temp-area">
-              <span v-text="getLowTemp(this.crop.temperature)"></span>
+              <span>{{ this.lowTemp }}</span>
               <span><div id="temp" /></span>
-              <span v-text="getHighTemp(this.crop.temperature)"></span>
+              <span>{{ this.highTemp }}</span>
             </div>
           </div>
         </div>
@@ -75,7 +102,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 
 export default {
   data() {
@@ -85,42 +112,67 @@ export default {
       record: [],
       water: [],
       crop: {},
+      value : '',
+      hideHeader: true,
+      disabled : true,
       suns: [null, null, null, null, null],
       waters: [null, null, null, null, null],
-    }
+      plantedDate: "",
+      targetDate: "",
+      lowTemp: "",
+      highTemp: "",
+    };
   },
   created() {
-    // axios.get(`user/crop?cropNumber=${this.ucropno}`).then((data) => {
-    //   this.ucrop = data.data;
-    // });
-    // axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
-    //   this.crop = data.data;
-    //   this.suns.forEach((s, index) => {
-    //     this.suns[index] = (index < this.crop.sun)? require("@/assets/sun.png"):require("@/assets/sun_off.png");
-    //   });
-    //   this.waters.forEach((w, index) => {
-    //     this.waters[index] = (index < this.crop.water)? require("@/assets/water_on.png"):require("@/assets/water_off.png");
-    //   });
-    // });
-    // axios.get(`user/crop/record?cropNumber=${this.ucropno}`).then((data) => {
-    //   this.record = data.data;
-    // });
-    // axios.get(`user/crop/water?cropNumber=${this.ucropno}`).then((data) => {
-    //   this.water = data.data;
-    // });
+    axios
+      .get(`user/crop/all?userNumber=${this.$store.state.userNumber}`)
+      .then((data) => {
+        data.data.forEach((c) => {
+          if (this.ucropno == c.cropNumber) {
+            this.ucrop = c;
+            // break;
+          }
+        });
+        this.plantedDate = this.ucrop.plantedDate.substring(0, 10);
+        this.targetDate = this.ucrop.targetDate.substring(0, 10);
+        console.log(this.ucrop);
+        axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
+          this.crop = data.data;
+          this.lowTemp = this.crop.temperature.split("~")[0] + "℃";
+          this.highTemp = this.crop.temperature.split("~")[1] + "℃";
+          this.suns.forEach((s, index) => {
+            this.suns[index] =
+              index < this.crop.sun
+                ? require("@/assets/sun.png")
+                : require("@/assets/sun_off.png");
+          });
+          this.waters.forEach((w, index) => {
+            this.waters[index] =
+              index < this.crop.water
+                ? require("@/assets/water_on.png")
+                : require("@/assets/water_off.png");
+          });
+        });
+        axios
+          .get(`user/crop/record?cropNumber=${this.ucropno}`)
+          .then((data) => {
+            this.record = data.data;
+          });
+        axios.get(`user/crop/water?cropNumber=${this.ucropno}`).then((data) => {
+          this.water = data.data;
+        });
+      });
   },
   methods: {
     moveBack() {
       this.$router.push("/mycrop");
     },
-    getLowTemp(str) {
-      return str.split('~')[0] + "℃";
-    },
-    getHighTemp(str) {
-      return str.split('~')[1] + "℃";
-    },
+    dateClass(ymd, date) {
+        const day = date.getDate()
+        return day >= 10 && day <= 20 ? 'table-info' : ''
+      },
   },
-}
+};
 </script>
 
 <style scoped>
@@ -167,7 +219,8 @@ h4 {
   display: inline-block;
   margin: 0px 5px;
 }
-#sun-area img, #water-area img {
+#sun-area img,
+#water-area img {
   width: 30px;
   margin: 5px;
 }

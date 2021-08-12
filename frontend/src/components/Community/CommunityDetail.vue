@@ -20,7 +20,7 @@
         <span>
           <img src="@/assets/comment_green.png" width="15px" />{{this.post.commentCount}}
         </span>
-        <div v-if="this.$store.state.userNumber == this.post.userNumber">
+        <div id="right" v-if="this.$store.state.userNumber == this.post.userNumber">
           <span class="modifyBtn" @click="modifyPost">수정</span> |
           <span class="deleteBtn" @click="deletePost">삭제</span>
         </div>
@@ -92,7 +92,7 @@ export default {
     axios.get(`comment/${this.no}`).then(({ data }) => {
       this.comments = data;
     });
-    axios.get(`comment/${this.no}/${this.$store.state.myNumber}`).then(({ data }) => {
+    axios.get(`comment/${this.no}/${this.$store.state.userNumber}`).then(({ data }) => {
       this.recoComments = data;
     });
   },
@@ -119,8 +119,7 @@ export default {
       this.recoComments.forEach(reco => {
         if(reco==no) flag = true;
       });
-      if(flag) return true;
-      else return false;
+      return flag;
     },
     onModifyComment(comment) {
       this.modifyComment = comment;
