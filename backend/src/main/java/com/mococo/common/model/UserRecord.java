@@ -1,9 +1,5 @@
 package com.mococo.common.model;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED) 
-@Entity(name="user_record")
+@Entity(name="userRecord")
 public class UserRecord {
 	
 	@Id
@@ -31,4 +27,5 @@ public class UserRecord {
 	private int recommendCount;
 	private int cropFinishCount;
 	private int cropCount;
+	private int waterCount;
 }

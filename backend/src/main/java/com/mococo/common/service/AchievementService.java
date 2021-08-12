@@ -153,6 +153,14 @@ public class AchievementService {
 						}
 						break;
 						
+					case "water_count":
+						if(condition.getMax() <= record.getWaterCount()) {
+							count++;
+						} else {
+							check = false;
+						}
+						break;
+						
 					default:
 						break;
 					}
