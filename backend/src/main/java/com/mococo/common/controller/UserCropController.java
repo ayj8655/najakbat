@@ -52,12 +52,7 @@ public class UserCropController {
 	WaterRecordService waterRecordService;
 	
 	@Autowired
-<<<<<<< HEAD
 	UserRecordService userRecordService;
-=======
-	UserRecordService userrecordService;
-	
->>>>>>> 69b54b0efe2c46c80f6db75f4402e5c803220010
 
 	private static final Logger logger = LoggerFactory.getLogger(UserCropController.class);
 	private static final String SUCCESS = "success";
@@ -422,7 +417,7 @@ public class UserCropController {
 			
 			uc.get().setFinish(true); 		  // 수확 완료
 			uc.get().setRealDate(new Date()); // 현재 날로 실제 수확날짜 적기
-			userrecordService.addCropFinishCount(uc.get().getUserNumber()); // 유저 기록에 반영
+			userRecordService.addCropFinishCount(uc.get().getUserNumber()); // 유저 기록에 반영
 
 			  							      // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
 			return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
@@ -468,7 +463,7 @@ public class UserCropController {
 			uc.get().setNeedDate(cal.getTime());  // 물주기날 crop db에서 저장된 물 주기로 가져다가 계산해서 넣기 
 
 	
-			userrecordService.addCropFinishCount(uc.get().getUserNumber());			      // 유저기록에 반영
+			userRecordService.addCropFinishCount(uc.get().getUserNumber());			      // 유저기록에 반영
 													
 
 		      									  // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
