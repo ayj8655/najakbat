@@ -12,8 +12,6 @@ import com.mococo.common.model.Post;
 
 @Repository
 public interface CommentDAO extends JpaRepository<Comment, Integer> {
-
-
 	
 	//List<Comment> findAllByPostNumber(int no);
 	Optional<Comment> findCommentByCommentNumber(int postNumber);
@@ -26,9 +24,7 @@ public interface CommentDAO extends JpaRepository<Comment, Integer> {
 	//  1댓글의 두번째 대댓글
 	// 2댓글
 	// 순서로 sorting
-	// http://www.gurubee.net/article/66870 에서 가져옴
 	
-	// 쿼리가 10번을 돌아서 SQL최적화 가능한지 봐야함
 	@Query(value = 
 			"SELECT c0.*"
 			+"     , CONCAT("
@@ -37,12 +33,11 @@ public interface CommentDAO extends JpaRepository<Comment, Integer> {
 			+"             ) x"
 			+"  FROM comment c0"
 			+"  LEFT OUTER JOIN comment c1 ON c1.comment_number = c0.parent"
-			+" WHERE c0.post_number =1"
+			+" WHERE c0.post_number =?"
 			+" ORDER BY x;" 
 			, nativeQuery = true	
 			)
 	List<Comment> findAllByPostNumber(int no);
-
 
 	Optional<Comment> findCommentByParent(int parent);
 }

@@ -23,7 +23,7 @@
         v-show="(searchKey=='') || (crop.name.includes(searchKey))"
       >
         <div>
-          <img id="thumbnail" :src="cropImg[index]" width="45px" />
+          <img id="thumbnail" :src="findCropImg(crop)" />
           <strong>{{ crop.name }}</strong>
         </div>
         <hr />
@@ -45,16 +45,16 @@ export default {
   },
   created() {
     axios.get("guide/plant/summary").then((data) => {
-      this.crops = data.data;
-      this.crops.forEach((c, index) => {
-        this.cropImg[index] = (this.crops[index].image)? require("@/assets/crop/"+this.crops[index].image):require("@/assets/thumbnail.png");
-      });
+      this.crops = data.data; 
     });
   },
   methods: {
     movePage(cropNumber) {
       this.$router.push(`/dict/detail/${cropNumber}`);
     },
+    findCropImg(crop) {
+      return (crop.image)? require("@/assets/crop/" + crop.image):require("@/assets/thumbnail.png");
+    }
   },
 };
 </script>
@@ -78,5 +78,7 @@ export default {
 }
 #thumbnail {
   margin: 5px 20px;
+  width: 45px; height: 45px;
+  border-radius: 5px;
 }
 </style>

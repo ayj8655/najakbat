@@ -6,8 +6,7 @@
         {{ post.title }}
       </span>
       <span id="right1">
-        {{ post.userNickname }} |
-        <span v-text="changeDate(post.date)" />
+        {{ post.userNickname }} | <span v-text="changeDate(post.date)" />
       </span>
     </div>
     <div class="m-3" id="post-body">

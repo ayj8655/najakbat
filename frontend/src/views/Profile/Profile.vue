@@ -3,14 +3,16 @@
     <header-nav></header-nav>
     <div v-if="getNickname" class="container">
       <div class="d-flex justify-content-start w-75 container">
-        <img src="@/assets/profile_sample.png" class="img-thumbnail profile-size" alt="...">
+        <img src="@/assets/profile_sample.png" class="profile-size" alt="...">
         <div class="row">
           <div class="d-flex align-items-end">
             <h2 class="ms-3 me-1 my-0">{{ getNickname }}</h2>
-            <font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" @click.prevent="changeUserInformation"/>
+            <router-link to="/user/modify"><font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" /></router-link>
           </div>
           <div class="d-flex align-items-start ms-3 mt-1">
+            <router-link to="/message">
             <font-awesome-icon :icon="['fas', 'envelope']" size="lg" class="message-color"/>
+            </router-link>
             <span class="message-style ms-2">쪽지함</span>
           </div>
         </div>
@@ -58,6 +60,7 @@ export default {
   data() {
     return {
       id: null,
+      userProfile: null,
       componentNum: 0
     };
   },
@@ -65,9 +68,6 @@ export default {
     changeComponent(num) {
       this.componentNum = num
     },
-    changeUserInformation() {
-      console.log('췤');
-    }
   },
   computed: {
     ...mapState([

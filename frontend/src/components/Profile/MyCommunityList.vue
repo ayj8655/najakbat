@@ -8,7 +8,7 @@
         <span class="question" @click="changeType(3, '질문')">질문</span>
         <span class="share" @click="changeType(4, '나눔')">나눔</span>
       </span>
-      <span class="etc" v-if="this.$store.state.myNumber == this.$props.userNumber">
+      <span class="etc" v-if="myNumber == this.$props.userNumber">
         <font-awesome-icon :icon="['fas', 'pencil-alt']" size="lg" @click="postWrite" class="pen-color" />
       </span>
       <hr>
@@ -43,6 +43,7 @@ export default {
       list: [],
       limit: 0,
       type: 0,
+      myNumber: null
     };
   },
   components: {
@@ -91,6 +92,15 @@ export default {
         });
     },
   },
+  created() {
+    axios.get('user/my')
+    .then(res => {
+      this.myNumber = res.data.userNumber
+    })
+    .catch(err => {
+      console.error(err);
+    })
+  }
 };
 </script>
 

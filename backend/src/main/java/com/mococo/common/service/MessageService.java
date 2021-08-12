@@ -30,8 +30,6 @@ public class MessageService {
 		message1.setTime(message.getTime());
 		message1.setRead(true);
 		messageList.add(message1);
-		Optional<Message> messageOpt1 = messageDAO.findByMessageNumber(message1.getMessageNumber());
-		if(messageOpt1.isPresent()) return false;
 		
 		if(message.getUserSender() != message.getUserReceiver()) {
 			Message message2 = new Message();
@@ -42,8 +40,6 @@ public class MessageService {
 			message2.setTime(message.getTime());
 			message2.setRead(false);
 			messageList.add(message2);
-			Optional<Message> messageOpt2 = messageDAO.findByMessageNumber(message2.getMessageNumber());
-			if(messageOpt2.isPresent()) return false;
 		}
 		
 		messageDAO.saveAll(messageList);

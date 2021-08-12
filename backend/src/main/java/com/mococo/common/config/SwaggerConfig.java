@@ -40,11 +40,11 @@ public class SwaggerConfig {
     
     private ApiInfo metaData() {
         return new ApiInfoBuilder()
-                .title("GreenByMe REST API")
-                .description("Green by me, Green by earth(us)")
-                .version("0.4.0")
-                .termsOfServiceUrl("Terms of service")
-                .contact(new Contact("Tae Jeong, Da hun", "https://github.com/GreenByMe/GreenByMe_Server", "xowjd41@naver.com"))
+                .title("모코코 REST API")
+                .description("나만의 작은 텃밭")
+                .version("0.1.0")
+//              .termsOfServiceUrl("Terms of service")
+//              .contact(new Contact("Tae Jeong, Da hun", "https://github.com/GreenByMe/GreenByMe_Server", "xowjd41@naver.com"))
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .build();

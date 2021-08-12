@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 @Data 
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED) 
+@NoArgsConstructor(access = AccessLevel.PUBLIC) 
 @Entity(name="userCropRecord")
 public class UserCropRecord {
 	@Id

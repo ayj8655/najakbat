@@ -3,6 +3,8 @@ import Vuex from "vuex";
 import axios from "axios";
 import router from "../router"
 
+
+
 Vue.use(Vuex);
 axios.defaults.baseURL = 'http://localhost:8080/'
 
@@ -16,6 +18,7 @@ export default new Vuex.Store({
   state: {
     // user 정보
     userNumber: '',
+    userNickname: '',
     // sidebar 변수
     sidebar: false,
     // Settings 변수
@@ -24,6 +27,9 @@ export default new Vuex.Store({
     newcomments_notice: false,
     newtwits_notice: false,
     nightmode_notice: false,
+    noticeTime: '',
+    receiver: '',
+
 
     // Alerts 변수
     searchNotices: [],
@@ -33,22 +39,24 @@ export default new Vuex.Store({
     sentMessages: [],
     messageContent: '',
     messageTime: '',
-    messageSenderNickname: '',
+    messageReceiverNickname: '',
+    alluserInfo: '',
+    messageNumber: '',
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
-    myNumber: localStorage.getItem('userNumber') || '',
+    userNickname: localStorage.getItem('userNickname') || '',
+    userNumber: localStorage.getItem('userNumber') || '',
     myId: null,
     loginCheck: false,
     accessToken: localStorage.getItem('access_token') || '',
+    userCertificate: true,
 
     // profile 정보
-    profile: {
-      id: null,
-      userNumber: null,
-      nickname: null,
-      gold: null
-    },
+    profile: [],
+
+    // 비밀번호 찾기 정보
+    findUserPhone: localStorage.getItem('FindUserPhone') || '',
   },
   mutations: {
 
@@ -59,6 +67,7 @@ export default new Vuex.Store({
       state.newcomments_notice = (data.commentNotice)? true:false;
       state.newtwits_notice = (data.messageNotice)? true:false;
       state.nightmode_notice = (data.darkMode)? true:false;
+      state.noticeTime = data.noticeTime
     },
 
     GET_SEARCH_NOTICE(state, searchNotice) {
@@ -81,18 +90,28 @@ export default new Vuex.Store({
 
     GET_MESSAGE(state, message_data) {
       state.Message = message_data
+  
     },
     // Sidebar mutations
 
     DELETE_TOKEN(state) {
-      state.accessToken = ''
-      state.userId = ''
-      state.myNumber = ''
+      state.accessToken = '';
+      state.userId = '';
+      state.userNumber = '';
+      state.userNickname = '';
     },
 
-    // Get Token
-    UPDATE_TOKEN(state, accessToken) {
-      state.accessToken = accessToken
+    // Get User
+    UPDATE_LOGIN_USER(state, payload) {
+      state.accessToken = payload.token
+      state.userNumber = payload.userNumber
+      state.userNickname = payload.nickname
+      state.userId = payload.id
+    },
+
+    // user certificate
+    LOGIN_CERTIFICATE(state, payload) {
+      state.userCertificate = payload
     },
 
     // Find Id
@@ -111,11 +130,16 @@ export default new Vuex.Store({
 
     // Profile
     GET_PROFILE(state, payload) {
-      state.profile['id'] = payload.id
-      state.profile['userNumber'] = payload.userNumber
-      state.profile['nickname'] = payload.nickname
-      state.profile['gold'] = payload.gold
+      state.profile = payload
     },
+    GET_USERINFO_ALL(state, data){
+      state.alluserInfo = data
+    },
+
+    //Find Password
+    PUT_PHONENUM(state, payload) {
+      state.findUserPhone = payload
+    }
   },
 
 
@@ -155,7 +179,7 @@ export default new Vuex.Store({
         }
       })
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         context.commit('GET_RECEIVED_MESSAGES', res.data)
       })
       .catch(err => {
@@ -178,6 +202,18 @@ export default new Vuex.Store({
         console.error(err)
       })
     },
+    getUserinfoAll (context){
+      axios.get(`user/all`)
+      .then(res => {
+        context.commit('GET_USERINFO_ALL', res.data)
+        // console.log(this.state.alluserInfo)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    },
+
+
 
     updateNotice(context, settingsStatus) {  
       settingsStatus[0] = (settingsStatus[0])? 1:0;
@@ -225,25 +261,99 @@ export default new Vuex.Store({
           console.error(err)
         })
       },
-    readingMessage(context, messageinfo) {
+
+
+    readingMessage(context, messageNum) {
       axios({
         method: 'put',
-        url: `message`,
+        url: `message/`,
         params: {
-          messageNumber: messageinfo[1]      
+          messageNumber: Number(messageNum),
         },
-        data: {
-          userNumber: 1,
-          isRead: 1
-        }
+        // data: {
+        //   isRead: 1
+        //   // messageNumber: Number(messageNum)
+        // }
       })
         .then(res => {
           console.log(res.data)
         })
         .catch(err => {
+          console.log(messageNum)
           console.error(err)
         })
       },
+
+      // 메세지 작성
+    messagePost(context, [content, receiver]) {
+        axios({
+          method: 'post',
+          url: `message/`,
+          params: {
+            content: content,
+            sender: localStorage.getItem('userNumber'),
+            receiver: receiver
+          }
+          })
+          .then(res => {
+            this.dispatch('getUserinfoAll')
+            console.log(res.data)
+            // console.log(receiver)
+            // router.push({name: 'Profile', params: {
+            //   userNumber: 1,
+            //   page: 0
+            // }} )
+          })
+          .catch(err => {
+            // console.log(this.receiver)
+            // console.log(receiver)
+            console.error(err)
+          })
+        context
+      },
+    messageDelete(context, [messageNum]) {
+      axios({
+        method: 'delete',
+        url: `message/`,
+        params: {
+          messageNumber: messageNum
+        }
+        })
+        .then(res => {
+          // console.log(this.messageNumber)
+          console.log(res.data)
+        })
+        .catch(err => {
+          // console.log(messageNum)
+          console.log(err)
+          // console.log(this.messageNumber)
+        })
+      // context
+    },
+    messageListDelete(context, messageList) {
+      var myurl = "";
+      for (var item of messageList) {
+        myurl += "messageNumberList=" + item + "&";
+      }
+      myurl = myurl.slice(0, -1);
+
+      axios({
+        method: 'delete',
+        url: `message/list?` + myurl,
+        // params: {
+        //   messageNumberList: 20
+        // },
+      })
+      .then(res => {
+        console.log(res.data)
+        console.log(url)
+      })
+      .catch(err => {
+        console.log(err)
+        console.log(url)
+      })
+    },
+
 
     deleteallNotices() {
       axios({
@@ -281,17 +391,24 @@ export default new Vuex.Store({
     // Logout actions
 
     logout({ commit }) {
-      commit('DELETE_TOKEN')
-      localStorage.removeItem('access_token')
-      sessionStorage.claer()
+      commit('DELETE_TOKEN');
+      localStorage.removeItem('access_token');
+      localStorage.clear();
     },
+
+    //Modify actions
+    backToProfile() {
+      router.go(-1)
+    },
+
     // Signup actions
     signup({ commit }, credentials) {
       axios.post('user/signup', {
         id: credentials[0],
         password: credentials[1],
         nickname: credentials[2],
-        phone: credentials[3]
+        phone: credentials[3],
+        userName: credentials[4]
       })
       .then(res => {
         res
@@ -301,11 +418,12 @@ export default new Vuex.Store({
         })
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
-          commit('UPDATE_TOKEN', res.data.token)
-          axios.get('user/user1')
+          commit
+          axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
+            localStorage.setItem('userNickname', res.data.nickname)
             router.push({ path: 'SignupNext' })
           })
           .catch(err => {
@@ -324,13 +442,13 @@ export default new Vuex.Store({
     updateAddress({ commit }, myAddress) {
       commit
       myAddress
-      axios.get('user/user1')
+      axios.get('user/my')
       .then(res => {
         var addressPut = { ...res.data, address: myAddress}
         axios.put('user/', addressPut)
         .then(res => {
           res
-          router.push({ path: 'main' })
+          router.push({ name: 'Main' })
         })
         .catch(err => {
           console.error(err);
@@ -342,7 +460,7 @@ export default new Vuex.Store({
     },
 
     findMyId({ commit }, myPhone) {
-      axios.post('user/idFind', {phone: myPhone})
+      axios.post('user/pass/idFind', {phone: myPhone})
       .then(res => {
         commit('FIND_ID', res.data)
         router.push({ name: 'FindIdNext' })
@@ -353,26 +471,68 @@ export default new Vuex.Store({
     },
 
     login({ commit }, credentials) {
-      axios.post('user/authenticate', {
-        id: credentials[0],
-        password: credentials[1]
-      })
-      .then(res => {
-        localStorage.setItem('access_token', res.data.token)
-        commit('UPDATE_TOKEN', res.data.token)
-        axios.get('user/user1')
+      var getToken = null
+        try {
+          getToken = WebViewBridge.webViewToApp('겟토큰');
+          console.log(getToken);
+        } catch (error) {}
+      
+      if(getToken) {
+        axios({
+          method: 'post',
+          url: `phone/authenticate`,
+          params: {
+            id: credentials[0],
+            password: credentials[1],
+            token: getToken
+          }
+        })
         .then(res => {
-          localStorage.setItem('userId', res.data.id)
-          localStorage.setItem('userNumber', res.data.userNumber)
-          router.push({ path: 'main' })
+          localStorage.setItem('access_token', res.data.token)
+          commit('UPDATE_LOGIN_USER', res.data)
+          axios.get('user/my')
+          .then(res => {
+            localStorage.setItem('userId', res.data.id)
+            localStorage.setItem('userNumber', res.data.userNumber)
+            localStorage.setItem('userNickname', res.data.nickname)
+            commit('LOGIN_CERTIFICATE', true)
+
+            router.push({ name: 'Main' })
+          })
+          .catch(err => {
+            console.error(err);
+          })
         })
         .catch(err => {
           console.error(err);
+          commit('LOGIN_CERTIFICATE', false)
         })
-      })
-      .catch(err => {
-        console.error(err);
-      })
+      }
+      else {
+        axios.post('user/authenticate', {
+          id: credentials[0],
+          password: credentials[1]
+        })
+        .then(res => {
+          localStorage.setItem('access_token', res.data.token)
+          commit('UPDATE_LOGIN_USER', res.data)
+          axios.get('user/my')
+          .then(res => {
+            localStorage.setItem('userId', res.data.id)
+            localStorage.setItem('userNumber', res.data.userNumber)
+            localStorage.setItem('userNickname', res.data.nickname)
+            commit('LOGIN_CERTIFICATE', true)
+            router.push({ name: 'Main' })
+          })
+          .catch(err => {
+            console.error(err);
+          })
+        })
+        .catch(err => {
+          console.error(err);
+          commit('LOGIN_CERTIFICATE', false)
+        })
+      }
     },
 
     // Profile actions
@@ -384,8 +544,16 @@ export default new Vuex.Store({
       .catch(err => {
         console.error(err);
       })
+    },
+
+    // FindPassword actions
+    putNextPage({ commit }, phoneNum) {
+      commit('PUT_PHONENUM', phoneNum)
+      localStorage.setItem('FindUserPhone', phoneNum)
+      router.push({ name: 'FindPasswordNext' })
     }
   },
+
 
   modules: {},
 });

@@ -20,7 +20,7 @@
         <span>
           <img src="@/assets/comment_green.png" width="15px" />{{this.post.commentCount}}
         </span>
-        <div v-if="this.$store.userNumber == this.post.userNumber">
+        <div id="right" v-if="this.$store.state.userNumber == this.post.userNumber">
           <span class="modifyBtn" @click="modifyPost">수정</span> |
           <span class="deleteBtn" @click="deletePost">삭제</span>
         </div>
@@ -32,6 +32,7 @@
         v-for="(comment, index) in comments"
         :key="index"
         :comment="comment"
+        :recoFlag="wasRecommended(comment.commentNumber)"
         @modify-comment="onModifyComment"
       ></comment>
       <comment-write
@@ -56,17 +57,17 @@ export default {
     CommentWrite,
   },
   props: {
-    post: Object,
+    // post: Object,
   },
   data() {
     return {
       no: this.$route.params.no,
+      post: Object,
       typeimg: null,
       comments: [],
+      recoComments: [],
       isModifyShow: false,
       modifyComment: Object,
-      recommended: "@/assets/leaf_lightgreen.png",
-      notRecommended: "@/assets/leaf_gray.png",
     };
   },
   created() {
@@ -90,13 +91,14 @@ export default {
     });
     axios.get(`comment/${this.no}`).then(({ data }) => {
       this.comments = data;
-      // console.log(data);
+    });
+    axios.get(`comment/${this.no}/${this.$store.state.userNumber}`).then(({ data }) => {
+      this.recoComments = data;
     });
   },
   methods: {
     changeDate(str) {
-      console.log(str);
-      return str.substring(0, 10) + " " + str.substring(11, 19);
+      if(str) return str.substring(0, 10) + " " + str.substring(11, 19);
     },
     enterToBr(str) {
       if (str) return str.replace(/(?:\r\n|\r|\n)/g, "<br />");
@@ -107,10 +109,17 @@ export default {
     deletePost() {
       if (confirm("정말로 삭제하시겠습니까?")) {
         axios.delete(`post/${this.post.postNumber}`).then(() => {
-          alert("삭제되었습니다.");
+          // alert("삭제되었습니다.");
           this.$router.push("/community/list");
         });
       }
+    },
+    wasRecommended(no) {
+      let flag = false;
+      this.recoComments.forEach(reco => {
+        if(reco==no) flag = true;
+      });
+      return flag;
     },
     onModifyComment(comment) {
       this.modifyComment = comment;
@@ -120,6 +129,7 @@ export default {
       this.isModifyShow = isShow;
     },
   },
+  computed: {},
 };
 </script>
 

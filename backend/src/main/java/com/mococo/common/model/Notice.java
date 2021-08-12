@@ -9,7 +9,7 @@ import lombok.*;
 
 @Data 
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED) 
+@NoArgsConstructor(access = AccessLevel.PUBLIC) 
 @Entity(name="notice")
 public class Notice {
 	
@@ -18,6 +18,8 @@ public class Notice {
 	private int noticeNumber;
 	
 	private int userNumber;
+	
+	private int postNumber;
 	
 	@Column(name="is_read", columnDefinition = "TINYINT", length=1)//read가 예약어라서 바꿈
 	private int isRead;

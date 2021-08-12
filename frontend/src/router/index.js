@@ -1,6 +1,5 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
-import Home from "../views/Home.vue"
 // 준호 라우터
 import DirectQuery from "../views/Sidebar/DirectQuery.vue"
 import MyAlerts from "../views/Sidebar/MyAlerts.vue"
@@ -16,32 +15,55 @@ import SignupNext from "../views/Login/SignupNext.vue"
 import FindId from "../views/Login/FindId.vue"
 import FindIdNext from "../views/Login/FindIdNext.vue"
 import FindPassword from "../views/Login/FindPassword.vue"
+import FindPasswordNext from "../views/Login/FindPasswordNext.vue"
 import Profile from "../views/Profile/Profile.vue"
+import UserModify from "../views/Profile/UserModify.vue"
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home,
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-    import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  },
   // 수정 라우터
   
   {
-    path: "/main",
+    path: "/",
     name: "Main",
     component: () =>
     import("../views/Main.vue"),
+  },
+  {
+    path: "/admin",
+    name: "Admin",
+    component: () => import("../views/Admin.vue"),
+    children : [
+      {
+        path: "/admin/users",
+        name: "AdminUserList",
+        component: () => import("../components/Admin/UserList.vue")
+      },
+      {
+        path: "/admin/crops",
+        name: "AdminCropList",
+        component: () => import("../components/Admin/CropList.vue")
+      },
+      {
+        path: "/admin/posts",
+        name: "AdminPostList",
+        component: () => import("../components/Admin/PostList.vue")
+      },
+      {
+        path: "/admin/qna",
+        name: "AdminQnAList",
+        component: () => import("../components/Admin/QnAList.vue")
+      },
+      {
+        path: "/admin/message",
+        name: "AdminSendingMessage",
+        component: () => import("../components/Admin/SendMessage.vue")
+      },
+    ],
+    redirect: () => {
+      return "/admin/users";
+    },
   },
   {
     path: "/community",
@@ -158,9 +180,47 @@ const routes = [
     component: FindPassword,
   },
   {
+    path: '/findpasswordnext',
+    name: 'FindPasswordNext',
+    component: FindPasswordNext,
+  },
+  {
     path: '/profile/:usernumber',
     name: 'Profile',
     component: Profile,
+  },
+  {
+    path: '/user/modify',
+    name: 'UserModify',
+    component: UserModify,
+  },
+    // 용직
+    
+  {
+    path: '/mycrop',
+    name: 'MyCrop',
+    component: () =>
+    import("../views/MyCrop/MyCrop.vue"),
+    children : [
+      {
+        path: "/mycrop/list",
+        name: "MyCropList",
+        component: () => import("../components/MyCrop/MyCropList.vue")
+      },
+      {
+        path: "/mycrop/detail/:no",
+        name: "MyCropDetail",
+        component: () => import("../components/MyCrop/MyCropDetail.vue")
+      },
+      {
+        path: "/mycrop/insert",
+        name: "MyCropInsert",
+        component: () => import("../components/MyCrop/MyCropInsert.vue")
+      },
+    ],
+    redirect: () => {
+      return "/mycrop/list";
+    },
   },
 ];
 

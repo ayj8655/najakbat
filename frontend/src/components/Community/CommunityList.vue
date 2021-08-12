@@ -40,9 +40,7 @@
         <span class="search" @click="changeFlag"
           ><img :src="searchImg" width="30px"
         /></span>
-        <span class="write" v-if="this.$store.userNumber" @click="postWrite"
-          >글쓰기</span
-        >
+        <font-awesome-icon :icon="['fas', 'pencil-alt']" size="lg" @click="postWrite" class="pen-color" />
       </span>
       <div class="row mt-3" id="search-area" v-show="isSearch">
         <span class="col-4">
@@ -151,7 +149,7 @@ export default {
           setTimeout(() => {
             if (response.data.length) {
               this.list = this.list.concat(response.data);
-              this.limit += 3;
+              this.limit += 1;
               $state.loaded();
             } else {
               $state.complete();
@@ -199,6 +197,9 @@ export default {
   display: inline-block;
 }
 .etc span {
-  margin-left: 5px;
+  margin-right: 5px;
+}
+.pen-color {
+  color: #B6C790;
 }
 </style>

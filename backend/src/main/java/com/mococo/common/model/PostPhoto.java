@@ -30,8 +30,8 @@ public class PostPhoto {
     // 동일한 이름을 가진 파일이 업로드가 된다면 오류가 생긴다.
     // 이를 해결하기 위함
     
-	private String saveFolder;
-	private String originFile;
+	private String saveFolder; // 파일 저장 경로
+	private String originFile; // 파일 원본 이름
 	private String saveFile;
     
     public void setPost(Post post) {

@@ -1,9 +1,9 @@
 <template>
   <div class="container">
-    <div class="mycontainer py-4 text-center">
+    <div class="py-4 text-center">
       <div class="my-5">
         <p>회원님의 아이디는</p>
-        <h4>{{ viewId }}</h4>
+        <h3 class="id-margin">{{ viewId }}</h3>
         <p>입니다</p>
       </div>
       <div class="d-flex flex-row-reverse">
@@ -18,6 +18,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import router from "@/router"
 
 export default {
   name: 'FindIdNext',
@@ -28,18 +29,19 @@ export default {
     viewId() {
       return this.myId
     }
+  },
+
+  created() {
+    if(this.$store.state.accessToken) {
+      router.push({name: 'Main'})
+    }
   }
 
 }
 </script>
 
 <style scoped>
-.mycontainer {
-  background: none;
-  /* width: 500px; */
-  /* margin: 8rem auto 0; */
-  /* text-align: center; */
-  box-shadow: 0 1rem 1rem 0 rgba(0, 0, 0, .15);
-  position: relative;
+.id-margin {
+  margin: 0 auto 16px;
 }
 </style>
