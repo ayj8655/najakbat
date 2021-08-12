@@ -30,7 +30,7 @@
         <span
           class="btn"
           v-if="
-            comment.userNumber == this.$store.state.myNumber &&
+            comment.userNumber == this.$store.state.userNumber &&
             !comment.isdeleted
           "
         >
@@ -40,7 +40,7 @@
         <span
           class="btn"
           v-if="
-            comment.userNumber != this.$store.state.myNumber &&
+            comment.userNumber != this.$store.state.userNumber &&
             !comment.isdeleted
           "
         >
@@ -117,8 +117,8 @@ export default {
   data() {
     return {
       col: this.comment.commentNumber == 0 || !this.comment.parent ? 12 : 11,
-      userNumber: this.$store.state.myNumber,
-      userNickname: this.$store.state.nickname,
+      userNumber: this.$store.state.userNumber,
+      userNickname: this.$store.state.userNickname,
       isShow: true,
       childWrite: false,
       modifyComment: {},
