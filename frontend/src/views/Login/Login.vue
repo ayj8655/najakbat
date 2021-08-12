@@ -13,13 +13,14 @@
             <router-link to="/findpassword">비밀번호 찾기</router-link>
           </div>
         </div>
-        <button class="btn btn-success" :disabled="!this.username || !this.password" @click.prevent="login([username, password])">로그인 하기</button>
+        <button class="btn btn-success" :disabled="!this.username || !this.password" @click.prevent="[login([username, password]), loginError()]">로그인 하기</button>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import router from "@/router"
 
 export default {
@@ -33,12 +34,31 @@ export default {
   methods: {
     ...mapActions([
       'login'
-    ])
+    ]),
+    loginError() {
+      setTimeout(() => {
+        if (!this.loginCertificate) {
+          this.$fire({
+              title: "실패",
+              text: "로그인 정보가 일치하지 않습니다",
+              type: "error",
+            })
+        }
+      }, 100);
+    }
   },
   created() {
     if(this.$store.state.accessToken) {
       router.push({name: 'Main'})
     }
+  },
+  computed: {
+    ...mapState([
+      'userCertificate'
+      ]),
+      loginCertificate() {
+        return this.userCertificate
+      }
   }
 
 }
