@@ -1,23 +1,14 @@
 package com.mococo.common.controller;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,15 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mococo.common.model.Post;
-import com.mococo.common.model.PostPhoto;
 import com.mococo.common.service.PostPhotoService;
 import com.mococo.common.service.PostService;
+import com.mococo.common.service.UserRecordService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -56,6 +45,9 @@ public class PostController {
 
 	@Autowired
 	PostPhotoService postphotoService;
+	
+	@Autowired
+	UserRecordService userRecordService;
 
 	// 하나의 게시물의 내용 조회
 	@RequestMapping(value = "/{no}", method = RequestMethod.GET)
@@ -222,6 +214,9 @@ public class PostController {
 				logger.info("게시글 등록 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
+			
+			// 게시글 수 증가
+			userRecordService.addPostCount(user_number);
 
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
@@ -290,9 +285,11 @@ public class PostController {
 			logger.info("게시글 추천 올리기");
 			int post_number = Integer.parseInt(postno);
 			boolean ret = postService.recommendPost(post_number, user_number);
-			if (ret == false) {
-
+			if(ret) {
+				userRecordService.addRecommendCount(user_number, 1);
+			} else {
 				logger.info("게시글 추천 내리기");
+				userRecordService.addRecommendCount(user_number, -1);
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 
