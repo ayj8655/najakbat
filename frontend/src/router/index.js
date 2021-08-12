@@ -15,6 +15,7 @@ import SignupNext from "../views/Login/SignupNext.vue"
 import FindId from "../views/Login/FindId.vue"
 import FindIdNext from "../views/Login/FindIdNext.vue"
 import FindPassword from "../views/Login/FindPassword.vue"
+import FindPasswordNext from "../views/Login/FindPasswordNext.vue"
 import Profile from "../views/Profile/Profile.vue"
 import UserModify from "../views/Profile/UserModify.vue"
 
@@ -177,6 +178,11 @@ const routes = [
     path: '/findpassword',
     name: 'FindPassword',
     component: FindPassword,
+  },
+  {
+    path: '/findpasswordnext',
+    name: 'FindPasswordNext',
+    component: FindPasswordNext,
   },
   {
     path: '/profile/:usernumber',

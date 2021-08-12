@@ -44,7 +44,7 @@ export default {
               type: "error",
             })
         }
-      }, 100);
+      }, 200);
     }
   },
   created() {

@@ -4,16 +4,16 @@
       <h2 class="mb-5">비밀번호 찾기</h2>
       <form action="">
         <div class="mb-3 container w-75">
-          <label for="" class="form-label d-flex align-items-start">아이디</label>
-          <input type="text" class="form-control mb-3" placeholder="아이디를 입력하세요" v-model="userId">
+          <label for="" class="form-label d-flex align-items-start">이름</label>
+          <input type="text" class="form-control mb-3" placeholder="이름을 입력하세요" v-model="name">
           <label class="form-label d-flex align-items-start">휴대폰 번호</label>
           <input type="text" class="form-control" v-validate="'digits:11'" name="digits_field" placeholder="휴대폰 번호를 입력하세요" v-model="phone">
           <div class="d-flex justify-content-end my-3" v-if="errors.first('digits_field') || !this.phone">
             <button class="btn btn-success" :disabled=true>인증번호 받기</button>
           </div>
-          <FindIdPhoneCertified :phoneNum="phone" v-else @phonecertified="phonecertified" />
+          <FindIdPhoneCertified :phoneNum="phone" :userName="name" v-else @phonecertified="phonecertified" />
         </div>
-        <button class="btn btn-success" :disabled="!checkPhone || !userId">비밀번호 찾기</button>
+        <button class="btn btn-success" :disabled="!checkPhone" @click.prevent="putNextPage(phone)">비밀번호 찾기</button>
       </form>
     </div>
   </div>
@@ -21,6 +21,7 @@
 
 <script>
 import FindIdPhoneCertified from '@/components/Login/FindIdPhoneCertified.vue'
+import { mapActions } from 'vuex'
 import router from "@/router"
 
 export default {
@@ -32,13 +33,16 @@ export default {
     return {
       checkPhone: false,
       phone: null,
-      userId: null
+      name: null
     }
   },
   methods: {
+    ...mapActions([
+      'putNextPage'
+    ]),
     phonecertified() {
       this.checkPhone = true
-    },
+    }
   },
 
   created() {
