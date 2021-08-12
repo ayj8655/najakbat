@@ -30,11 +30,11 @@ export default {
   methods: {
     registComment() {
       axios
-        .post(`comment/?postno=${this.no}&user_number=${this.$store.state.myNumber}&parent=${this.parent}`,
+        .post(`comment/?postno=${this.no}&user_number=${this.$store.state.userNumber}&parent=0`,
           {
             postno: this.no,
-            userNumber: Number(this.$store.state.myNumber),
-            userNickname: this.$store.state.nickname,
+            userNumber: Number(this.$store.state.userNumber),
+            userNickname: this.$store.state.userNickname,
             parent: 0,
             content: this.content,
           },
