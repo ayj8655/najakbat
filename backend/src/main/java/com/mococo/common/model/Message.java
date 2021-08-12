@@ -4,14 +4,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import com.mococo.common.listener.MessageListener;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,7 +18,6 @@ import lombok.NoArgsConstructor;
 @Data 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@EntityListeners(MessageListener.class)
 @Entity(name="message")
 public class Message {
 	@Id
