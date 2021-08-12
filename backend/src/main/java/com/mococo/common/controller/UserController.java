@@ -1,13 +1,9 @@
 package com.mococo.common.controller;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-
-import javax.annotation.security.PermitAll;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -35,7 +30,9 @@ import com.mococo.common.jwt.TokenProvider;
 import com.mococo.common.model.LoginDto;
 import com.mococo.common.model.TokenDto;
 import com.mococo.common.model.User;
+import com.mococo.common.model.UserRecord;
 import com.mococo.common.model.UserSetting;
+import com.mococo.common.service.UserRecordService;
 import com.mococo.common.service.UserService;
 import com.mococo.common.service.UserSettingService;
 
@@ -59,6 +56,9 @@ public class UserController {
 
 	@Autowired
 	UserSettingService userSettingService;// 회원가입시 유저세팅을 저장해야하기 때문에 서비스 가져왔음
+	
+	@Autowired
+	UserRecordService userRecordService;
 
 	private final TokenProvider tokenProvider;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -114,6 +114,11 @@ public class UserController {
 		Optional<User> tempuser = userService.findById(userDto.getId());
 		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0, 6); // 유저 설정 디폴트값 초기에 6시로 알림 세팅
 		userSettingService.save(us);
+		
+		// 유저 로그를 기록할 데이터 추가
+		UserRecord ur = new UserRecord();
+		ur.setUserNumber(tempuser.get().getUserNumber());
+		userRecordService.insertUserRecord(ur);
 
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 
