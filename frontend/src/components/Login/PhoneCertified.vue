@@ -73,12 +73,7 @@ export default {
       axios
         .get(`user/pass/confirmPhone/${phone}`)
         .then((res) => {
-          if (res.data === "fail") {
-            this.$fire({
-            text: "이미 가입된 번호입니다",
-            type: "error",
-          })
-          } else {
+          if (res.data === 'success') {
             this.counting = true;
             this.numberConfirmation = true;
             // axios.post('http://localhost:8080/user/pass/phone', {
@@ -90,6 +85,11 @@ export default {
             // .catch(err => {
             //     console.error(err);
             // })
+          } else {
+            this.$fire({
+            text: "이미 가입된 번호입니다",
+            type: "error",
+          })
           }
         })
         .catch((err) => {
