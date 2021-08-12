@@ -31,12 +31,12 @@ import axios from 'axios'
 
 export default {
     name: 'PhoneCertified',
-    props: ['phoneNum'],
+    props: ['phoneNum', 'userName'],
     data() {
         return {
             counting: false,
             numberConfirmation: false,
-            certifiedNumber: '123123',
+            certifiedNumber: null,
             certifiedInput: null,
             certifiedPhone: false,
             missCertifiedNumber: true
@@ -45,27 +45,24 @@ export default {
     methods: {
         startCountdown() {
             let phone = this.$props.phoneNum
+            let userName = this.$props.userName
 
-            axios.get(`user/pass/confirmPhone/${phone}`)
+            axios.post('user/pass/phone', {
+                phone: phone,
+                userName: userName
+            })
             .then(res => {
-                if (res.data === 'success') {
+                if (!res.data) {
                 this.$fire({
-                    text: "해당 번호로 가입된 아이디가 없습니다",
+                    text: "정보가 일치하지 않습니다",
                     type: "error",
                 })
                 }
                 else {
                     this.counting = true;
                     this.numberConfirmation = true
-                    // axios.post('http://localhost:8080/user/phone', {
-                    //     phone: this.$props.phoneNum
-                    // })
-                    // .then(res => {
-                    //     this.certifiedNumber = res.data
-                    // })
-                    // .catch(err => {
-                    //     console.error(err);
-                    // })
+                    this.certifiedNumber = res.data
+                    console.log(this.certifiedNumber);
                 }
             })
             .catch(err => {
@@ -77,7 +74,7 @@ export default {
             this.counting = false
         },
         checkCertifiedInput() {
-            if(this.certifiedNumber === this.certifiedInput) {
+            if(this.certifiedNumber == this.certifiedInput) {
                 this.certifiedPhone = true
                 this.$emit('phonecertified', true)
             }

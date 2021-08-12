@@ -53,12 +53,10 @@ export default new Vuex.Store({
     userCertificate: true,
 
     // profile 정보
-    profile: {
-      id: null,
-      userNumber: null,
-      userNickname: null,
-      gold: null
-    },
+    profile: [],
+
+    // 비밀번호 찾기 정보
+    findUserPhone: localStorage.getItem('FindUserPhone') || '',
   },
   mutations: {
 
@@ -132,14 +130,16 @@ export default new Vuex.Store({
 
     // Profile
     GET_PROFILE(state, payload) {
-      state.profile['id'] = payload.id
-      state.profile['userNumber'] = payload.userNumber
-      state.profile['nickname'] = payload.nickname
-      state.profile['gold'] = payload.gold
+      state.profile = payload
     },
     GET_USERINFO_ALL(state, data){
       state.alluserInfo = data
     },
+
+    //Find Password
+    PUT_PHONENUM(state, payload) {
+      state.findUserPhone = payload
+    }
   },
 
 
@@ -543,6 +543,13 @@ export default new Vuex.Store({
       .catch(err => {
         console.error(err);
       })
+    },
+
+    // FindPassword actions
+    putNextPage({ commit }, phoneNum) {
+      commit('PUT_PHONENUM', phoneNum)
+      localStorage.setItem('FindUserPhone', phoneNum)
+      router.push({ name: 'FindPasswordNext' })
     }
   },
 
