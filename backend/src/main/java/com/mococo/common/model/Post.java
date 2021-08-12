@@ -33,6 +33,7 @@ public class Post {
 	private Date date;
 	private String content;
 	private String keyword;
+	private boolean isFinish; // 나눔/질문 게시글에서 쓸 완료 기록
 	private boolean isDelete; // 게시글이 지워졌는지 여부 - 지워졌어도 db에는 존재
 	
 	

@@ -71,21 +71,22 @@ public class PostController {
 		return new ResponseEntity<Optional<Post>>(postService.findPostByPostNumber(post_number), HttpStatus.OK);
 	}
 
-	
-	 // 게시물 전체 조회
-	 
-	 @RequestMapping(value = "/all", method = RequestMethod.GET) public
-	 ResponseEntity<?> searchAllPost () throws IOException { try {
-	 
-	 logger.info("게시물 전체 조회");
-	 
-	 return new ResponseEntity<List<Post>>(postService.findAllPost(),
-	 HttpStatus.OK); } catch (Exception e){ e.printStackTrace();
-	 logger.info("게시물 전체 조회 에러"); return new
-	 ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); }
-	 
-	 }
-	 
+	// 게시물 전체 조회
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	public ResponseEntity<?> searchAllPost() throws IOException {
+		try {
+
+			logger.info("게시물 전체 조회");
+
+			return new ResponseEntity<List<Post>>(postService.findAllPost(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("게시물 전체 조회 에러");
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
 
 	// 게시물 n개씩 조회해서 보내주는 것
 	@RequestMapping(value = "/infinite", method = RequestMethod.GET)
@@ -179,17 +180,15 @@ public class PostController {
 
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.POST, consumes =  {"multipart/form-data"})
+	@RequestMapping(value = "/", method = RequestMethod.POST, consumes = { "multipart/form-data" })
 	@ApiOperation(value = "게시글 업로드")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	public ResponseEntity<String> insertPost(
-			@RequestParam(value = "type") String type,
-			@RequestParam(value = "content") String content,
-			@RequestParam(value = "title") String title,
-			@RequestParam(value = "keyword", required=false) String keyword,
+	public ResponseEntity<String> insertPost(@RequestParam(value = "type") String type,
+			@RequestParam(value = "content") String content, @RequestParam(value = "title") String title,
+			@RequestParam(value = "keyword", required = false) String keyword,
 			@RequestParam(value = "user_nickname") String user_nickname,
 			@RequestParam(value = "user_number") int user_number,
-			@RequestParam(value = "image", required=false) MultipartFile[] files) throws IOException {
+			@RequestParam(value = "image", required = false) MultipartFile[] files) throws IOException {
 		Post post = new Post();
 		post.setContent(content);
 		int postType = 0;
@@ -202,25 +201,23 @@ public class PostController {
 		} else if (type.equals("나눔")) {
 			postType = 4;
 		}
-		
-		if(keyword!=null) {
+
+		if (keyword != null) {
 			post.setKeyword(keyword);
 		}
-		
+
 		post.setPostType(postType);
 		post.setTitle(title);
 		post.setUserNickname(user_nickname);
 		post.setUserNumber(user_number);
 		Date time = new Date();
 		post.setDate(time);
-		
-
 
 		try {
 			logger.info("게시글 등록");
 
-			Post ret = postService.insertPost(post,files);
-			
+			Post ret = postService.insertPost(post, files);
+
 			if (ret == null) {
 				logger.info("게시글 등록 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
@@ -307,6 +304,30 @@ public class PostController {
 			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+
+	@RequestMapping(value = "/finish/{postno}", method = RequestMethod.PUT)
+	@ApiOperation(value = "질문/나눔게시글 완료")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<String> finishPost(@PathVariable String postno) throws IOException {
+
+		try {
+			logger.info("질문/나눔게시글 완료");
+			int post_number = Integer.parseInt(postno);
+			Optional<Post> post = postService.findPostByPostNumber(post_number);
+			post.get().setFinish(true);
+			boolean ret = postService.updatePost(post.get());
+			if (ret == false) {
+				logger.info("질문/나눔게시글 완료 실패");
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+			}
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.info("질문/나눔게시글 완료 오류");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }
