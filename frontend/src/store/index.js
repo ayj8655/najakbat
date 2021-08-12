@@ -386,7 +386,7 @@ export default new Vuex.Store({
         password: credentials[1],
         nickname: credentials[2],
         phone: credentials[3],
-        user_name: credentials[4]
+        userName: credentials[4]
       })
       .then(res => {
         res
@@ -471,11 +471,9 @@ export default new Vuex.Store({
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
-<<<<<<< frontend/src/store/index.js
-            commit('LOGIN_CERTIFICATE', true)
-=======
             localStorage.setItem('userNickname', res.data.nickname)
->>>>>>> frontend/src/store/index.js
+            commit('LOGIN_CERTIFICATE', true)
+
             router.push({ name: 'Main' })
           })
           .catch(err => {
