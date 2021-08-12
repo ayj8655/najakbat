@@ -324,7 +324,29 @@ export default new Vuex.Store({
         })
       // context
     },
+    messageListDelete(context, messageList) {
+      var myurl = "";
+      for (var item of messageList) {
+        myurl += "messageNumberList=" + item + "&";
+      }
+      myurl = myurl.slice(0, -1);
 
+      axios({
+        method: 'delete',
+        url: `message/list?` + myurl,
+        // params: {
+        //   messageNumberList: 20
+        // },
+      })
+      .then(res => {
+        console.log(res.data)
+        console.log(url)
+      })
+      .catch(err => {
+        console.log(err)
+        console.log(url)
+      })
+    },
 
 
     deleteallNotices() {

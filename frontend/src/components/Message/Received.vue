@@ -116,7 +116,7 @@
     </div>
 </div>
 </div>
-  <button type="button" class="btn btn-danger mt-3 mb-3" v-if="isdeleteactivated">선택 삭제</button>
+  <button type="button" class="btn btn-danger mt-3 mb-3" v-if="isdeleteactivated" @click="deleteMessageList">선택 삭제</button>
   <messageform v-else />
 <div class="container">
     <div class="row">
@@ -230,6 +230,11 @@ export default {
           this.checkedList.push(mymessage.messageNumber)
         }
         console.log(this.checkedList)
+    },
+    deleteMessageList() {
+      // this.$router.go(0)
+      const messageList = JSON.parse(JSON.stringify((this.checkedList)))
+      this.$store.dispatch('messageListDelete', messageList)
     }
   },
   watch: {
