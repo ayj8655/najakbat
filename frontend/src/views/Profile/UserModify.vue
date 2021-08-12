@@ -2,6 +2,12 @@
   <div>
     <header-nav></header-nav>
     <div class="modify-font container w-75">
+      <div class="mt-3 mb-5">
+        <h1>회원정보 수정</h1>
+        <div>
+          <p class="text-danger fs-6">저장을 눌러야 정보가 반영됩니다</p>
+        </div>
+      </div>
       <div class="d-flex justify-content-between my-2">
         닉네임 : {{ this.nickname }}
         <button
@@ -66,6 +72,35 @@
       </div>
       <hr class="profile-line container my-3" />
       <div class="d-flex justify-content-between mb-2">
+        비밀번호 변경하기
+        <button 
+          type="button"
+          class="btn btn-outline-dark btn-sm"
+           @click="passwordodify"
+          v-if="!passwordCheck"
+          >
+          수정
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm"
+          @click="passwordodify"
+          v-else
+        >
+          취소
+        </button>
+      </div>
+      <div v-if="passwordCheck">
+        <input type="password" class="form-control mb-3" v-validate="'min:8'" name="min_field" placeholder="최소 8글자 이상 입력하세요" v-model="password">
+        <span class="text-danger d-flex align-items-start mb-3 fs-6" v-if="errors.first('min_field')">비밀번호가 너무 짧습니다</span>
+        <input type="password" class="form-control  mb-3" placeholder="비밀번호를 한번 더 입력하세요" v-model="passwordConfirmation">
+        <span class="text-danger d-flex align-items-start fs-6" v-if="password != passwordConfirmation">비밀번호가 서로 다릅니다</span>
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-success btn-sm" :disabled="!passwordSameCheck" @click.prevent="chagePassword">수정</button>
+        </div>
+      </div>
+      <hr class="profile-line container my-3" />
+      <div class="d-flex justify-content-between mb-2">
         휴대폰 : {{ this.phone }}
         <button
           type="button"
@@ -125,7 +160,7 @@
         <button
           type="button"
           class="btn btn-success btn-sm"
-          @click="updateModity([nickname, phone, address])"
+          @click="[updateModity([nickname, phone, address]), putPassword()]"
         >
           저장
         </button>
@@ -199,10 +234,16 @@ export default {
       address: null,
       temporaryAddress: null,
       userNum: null,
+      password: null,
+      passwordConfirmation: null,
+      userId: null,
 
       nicknameCheck: false,
       phoneCheck: false,
       addressCheck: false,
+      passwordCheck: false,
+      passwordSameCheck: false,
+      passwordRealChange: false,
 
       modify: {
         nickname: null,
@@ -259,6 +300,17 @@ export default {
       this.addressCheck = !this.addressCheck;
     },
 
+    passwordodify() {
+      this.passwordCheck = !this.passwordCheck
+      this.password = null
+      this.passwordConfirmation = null
+    },
+
+    chagePassword() {
+      this.passwordCheck = !this.passwordCheck
+      this.passwordRealChange = true
+    },
+
     // 닉네임
     modifyNick() {
       this.nickname = this.modify.nickname;
@@ -300,8 +352,38 @@ export default {
       this.region = this.temporaryAddress.region;
       this.city = this.temporaryAddress.city;
     },
+
+    // 비밀번호 수정
+    putPassword() {
+      if (this.passwordRealChange) {
+        if (this.password) {
+          axios.post('user/pass/pwFind', {
+            id: this.userId,
+            password: this.password,
+            phone: this.phone
+          })
+          .then(res => {
+            res
+          })
+          .err(err => {
+            console.error(err);
+          })
+        }
+      }
+      console.log(this.passwordRealChange, this.password);
+    }
   },
-  computed: {},
+  watch: {
+    passwordConfirmation() {
+      if (this.password && !this.errors.first('min_field')) {
+        if (this.password === this.passwordConfirmation) {
+          this.passwordSameCheck = true
+          return
+        }
+      }
+      this.passwordSameCheck = false
+    }
+  },
   created() {
     axios
       .get("user/my")
@@ -313,6 +395,7 @@ export default {
         var getAddress = res.data.address.split(",");
         this.region = getAddress[0];
         this.city = getAddress[1];
+        this.userId = res.data.id
       })
       .catch((err) => {
         console.error(err);
