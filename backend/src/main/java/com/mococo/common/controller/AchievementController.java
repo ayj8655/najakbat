@@ -3,6 +3,7 @@ package com.mococo.common.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,6 +188,21 @@ public class AchievementController {
 		try {
 			achievementService.deleteCondition(target, achieveNumber);
 			return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/user", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "해당 유저의 모든 업적 상태 조회")
+	public ResponseEntity<?> searchAllUserAchievement(@RequestParam int userNumber) throws IOException {
+		logger.info("해당 유저의 모든 업적 상태 조회");
+
+		try {
+			JSONArray achievementList = achievementService.findAllUserAchievement(userNumber);
+			return new ResponseEntity<>(achievementList, HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
