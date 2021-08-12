@@ -99,6 +99,7 @@ export default {
     });
     if (this.type === "modify") {
       axios.get(`post/${this.postNumber}`).then(({ data }) => {
+        console.log(data);
         switch (data.postType) {
           case 1:
             this.postType = "자유";
@@ -116,6 +117,7 @@ export default {
         this.title = data.title;
         this.content = data.content;
         this.keyword = data.keyword;
+        this.files = data.photos;
       });
     }
   },

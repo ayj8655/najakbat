@@ -1,17 +1,43 @@
 <template>
   <div class="container" id="bg">
-    <div align="left">
+    <div id="head" align="left">
       <span id="left"
         ><img src="@/assets/modal_back.png" width="25px" @click="moveBack"
       /></span>
       <span id="right">
-        <button>수확</button>
-        <button>삭제</button>
+        <button class="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#harvModal"
+          @click="getDelModal(ucrop.userCropNumeber)">
+          수확
+        </button>
+        <button
+          class="btn btn-danger"
+          data-bs-toggle="modal"
+          data-bs-target="#delModal"
+          @click="getDelModal(ucrop.userCropNumeber)"
+        >
+          삭제
+        </button>
       </span>
     </div>
-    <div>
-      <img v-if="ucrop.is_water" src="@/assets/water_on.png" width="30px" />
-      <img v-else src="@/assets/water_off.png" width="30px" />
+    <div id="thumbnail-area" align="center">
+      <div><img src="@/assets/leaf_darkgreen.png" width="60px" /></div>
+    </div>
+    <div class="m-2">
+      <font-awesome-icon
+        v-if="ucrop.water"
+        :icon="['fas', 'tint']"
+        size="lg"
+        class="water-color"
+      />
+      <font-awesome-icon
+        v-else
+        :icon="['fas', 'tint']"
+        size="lg"
+        class="no-water-color"
+        @click.prevent="commitWater(this.ucrop.userCropNumber)"
+      />
     </div>
     <div id="gray-box">
       <div>{{ crop.name }}</div>
@@ -51,8 +77,55 @@
     </div>
     <div class="row">
       <h4>기록</h4>
-      <div class="col-6"></div>
-      <div class="col-6"></div>
+      <div class="col-6" v-if="this.water.length">
+        <div id="more"><span>more ></span></div>
+        <div id="water-content">
+          <span>
+            <img src="@/assets/water_on.png" width="30px" />
+            물 주기
+            <div>{{ this.water[0].recordDate }}</div>
+          </span>
+          <span>
+            <img src="@/assets/water_on.png" width="30px" />
+            물 주기
+            <div>{{ this.water[1].recordDate }}</div>
+          </span>
+          <span>
+            <img src="@/assets/water_on.png" width="30px" />
+            물 주기
+            <div>{{ this.water[2].recordDate }}</div>
+          </span>
+        </div>
+      </div>
+      <div class="col-6" v-else>
+        <div>물을 준 기록이 없습니다 :(</div>
+      </div>
+      <div class="col-6" v-if="this.record.length">
+        <div id="more"><span>more ></span></div>
+        <div id="record-content">
+          <span>
+            <img width="30px" />
+            상태기록
+            <div>{{ this.record[0].state }}</div>
+            <div>{{ this.record[0].recordDate }}</div>
+          </span>
+          <span>
+            <img width="30px" />
+            상태기록
+            <div>{{ this.record[1].state }}</div>
+            <div>{{ this.record[1].recordDate }}</div>
+          </span>
+          <span>
+            <img width="30px" />
+            상태기록
+            <div>{{ this.record[2].state }}</div>
+            <div>{{ this.record[2].recordDate }}</div>
+          </span>
+        </div>
+      </div>
+      <div class="col-6" v-else>
+        <div>등록한 상태기록이 없습니다 :(</div>
+      </div>
     </div>
     <div>
       <h4>통계</h4>
@@ -94,10 +167,95 @@
     <div>
       <h4>커뮤니티</h4>
     </div>
-    <div>
-      <h4></h4>
-    </div>
     <div id="foot"></div>
+    
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="harvModal"
+        tabindex="-1"
+        aria-labelledby="harvModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="harvModalLabel">수확하기</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              해당 작물 재배를 계속하시겠습니까? :)
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-success"
+                @click="harvestCrop()"
+              >
+                재배 계속하기
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="deleteCrop()"
+              >
+                재배 그만두기
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="delModal"
+        tabindex="-1"
+        aria-labelledby="delModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="delModalLabel">내 농작물 삭제하기</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">해당 농작물의 삭제를 진행하시겠습니까?</div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="deleteCrop()"
+              >
+                삭제
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -112,9 +270,10 @@ export default {
       record: [],
       water: [],
       crop: {},
-      value : '',
+      harvestCropNo: "",
+      value: "",
       hideHeader: true,
-      disabled : true,
+      disabled: true,
       suns: [null, null, null, null, null],
       waters: [null, null, null, null, null],
       plantedDate: "",
@@ -154,23 +313,54 @@ export default {
           });
         });
         axios
-          .get(`user/crop/record?cropNumber=${this.ucropno}`)
+          .get(`user/crop/record?userCropNumber=${this.ucropno}`)
           .then((data) => {
             this.record = data.data;
+          })
+          .catch((err) => {
+            console.log(err);
           });
-        axios.get(`user/crop/water?cropNumber=${this.ucropno}`).then((data) => {
-          this.water = data.data;
-        });
+        axios
+          .get(`user/crop/water?userCropNumber=${this.ucropno}`)
+          .then((data) => {
+            this.water = data.data;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       });
   },
   methods: {
     moveBack() {
       this.$router.push("/mycrop");
     },
+    getDelModal(no) {
+      this.harvestCropNo = no;
+    },
+    harvestCrop() {},
+    deleteCrop() {
+      // axios.
+    },
+    commitWater(event) {
+      axios
+        .post(`user/crop/water?userCropNumber=${event}`)
+        .then((res) => {
+          if (res.data === "success") {
+            for (var i = 0; i < this.usercrops.length; i++) {
+              if (this.usercrops[i].userCropNumber == event) {
+                this.usercrops[i].water = true;
+              }
+            }
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     dateClass(ymd, date) {
-        const day = date.getDate()
-        return day >= 10 && day <= 20 ? 'table-info' : ''
-      },
+      const day = date.getDate();
+      return day >= 10 && day <= 20 ? "table-info" : "";
+    },
   },
 };
 </script>
@@ -188,10 +378,27 @@ export default {
   float: right;
   display: inline-block;
 }
+#thumbnail-area > div {
+  align: center;
+  background-color: #ffffff;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+#thumbnail-area img {
+  margin-top: 20px;
+}
+.water-color {
+  color: #0bc3fd;
+}
+.no-water-color {
+  color: #999999;
+}
 #gray-box {
   /* border: 2px solid #446631; */
+  color: #ffffff;
   box-sizing: border-box;
-  background-color: #c6c6c6;
+  background-color: #aaaaaa;
   border-radius: 5px;
   min-height: 100px;
   padding: 20px;
@@ -201,6 +408,17 @@ h4 {
   text-align: left;
   font-weight: bold;
   color: #ffffff;
+}
+#more {
+  color: #ffffff;
+  text-align: right;
+}
+#water-content,
+#record-content {
+  min-height: 60px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  margin: 5px;
 }
 #contents-area > div {
   /* border: 2px solid #446631; */
