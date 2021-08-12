@@ -60,6 +60,7 @@ export default {
   data() {
     return {
       id: null,
+      userProfile: null,
       componentNum: 0
     };
   },

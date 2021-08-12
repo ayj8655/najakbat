@@ -53,12 +53,10 @@ export default new Vuex.Store({
     userCertificate: true,
 
     // profile 정보
-    profile: {
-      id: null,
-      userNumber: null,
-      userNickname: null,
-      gold: null
-    },
+    profile: [],
+
+    // 비밀번호 찾기 정보
+    findUserPhone: localStorage.getItem('FindUserPhone') || '',
   },
   mutations: {
 
@@ -132,14 +130,16 @@ export default new Vuex.Store({
 
     // Profile
     GET_PROFILE(state, payload) {
-      state.profile['id'] = payload.id
-      state.profile['userNumber'] = payload.userNumber
-      state.profile['nickname'] = payload.nickname
-      state.profile['gold'] = payload.gold
+      state.profile = payload
     },
     GET_USERINFO_ALL(state, data){
       state.alluserInfo = data
     },
+
+    //Find Password
+    PUT_PHONENUM(state, payload) {
+      state.findUserPhone = payload
+    }
   },
 
 
@@ -330,7 +330,29 @@ export default new Vuex.Store({
         })
       // context
     },
+    messageListDelete(context, messageList) {
+      var myurl = "";
+      for (var item of messageList) {
+        myurl += "messageNumberList=" + item + "&";
+      }
+      myurl = myurl.slice(0, -1);
 
+      axios({
+        method: 'delete',
+        url: `message/list?` + myurl,
+        // params: {
+        //   messageNumberList: 20
+        // },
+      })
+      .then(res => {
+        console.log(res.data)
+        console.log(url)
+      })
+      .catch(err => {
+        console.log(err)
+        console.log(url)
+      })
+    },
 
 
     deleteallNotices() {
@@ -401,6 +423,7 @@ export default new Vuex.Store({
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
+            localStorage.setItem('userNickname', res.data.nickname)
             router.push({ path: 'SignupNext' })
           })
           .catch(err => {
@@ -521,6 +544,13 @@ export default new Vuex.Store({
       .catch(err => {
         console.error(err);
       })
+    },
+
+    // FindPassword actions
+    putNextPage({ commit }, phoneNum) {
+      commit('PUT_PHONENUM', phoneNum)
+      localStorage.setItem('FindUserPhone', phoneNum)
+      router.push({ name: 'FindPasswordNext' })
     }
   },
 

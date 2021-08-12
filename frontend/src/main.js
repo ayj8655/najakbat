@@ -15,7 +15,7 @@ import vueAwesomeCountdown from 'vue-awesome-countdown'
 
 // FontAwesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCog, faEnvelope, faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faEnvelope, faPencilAlt, faPlus, faTint } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // Alert
@@ -39,7 +39,7 @@ Vue.use(ToggleButton)
 Vue.use(VueSimpleAlert);
 
 // FontAwesome
-library.add(faCog, faEnvelope, faPencilAlt, faPlus)
+library.add(faCog, faEnvelope, faPencilAlt, faPlus, faTint)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

@@ -27,11 +27,24 @@
         <div
           v-for="(ucrop, index) in usercrops"
           :key="index"
-          @click="movePage(ucrop.cropNumber)"
         >
-          <div>
-            <img id="thumbnail" :src="findCropImg(ucrop)" />
-            <strong>{{ ucrop.name }}</strong>
+          <div class="row">
+            <div class="col-4" @click="movePage(ucrop.cropNumber)">
+              <img id="thumbnail" :src="findCropImg(ucrop)" />
+            </div>
+            <div class="col-8">
+              <strong @click="movePage(ucrop.cropNumber)">{{ ucrop.cropNickname }}</strong>
+              <p class="mb-1" @click="movePage(ucrop.cropNumber)">수확까지 <strong>{{ ucrop.remainDate }}일</strong> 남았습니다</p>
+              <div v-if="ucrop.water">
+                <font-awesome-icon :icon="['fas', 'tint']" size="lg" class="water-color" />
+                <span v-if="ucrop.waterDate != 0" class="ms-3">D-{{ ucrop.waterDate }}</span>
+                <span v-else class="ms-3">D-{{ ucrop.waterDate }}</span>
+              </div>
+              <div v-else>
+                <font-awesome-icon :icon="['fas', 'tint']" size="lg" class="no-water-color" @click.prevent="commitWater(ucrop.userCropNumber)"/>
+                <span class="ms-3">👈물을 주세요</span>
+              </div>
+            </div>
           </div>
           <hr />
         </div>
@@ -136,7 +149,7 @@ export default {
         axios
           .get(`user/crop/list?userNumber=${this.pickCrop.userNumber}`)
           .then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             this.usercrops = res.data;
           })
           .catch((err) => {
@@ -206,6 +219,22 @@ export default {
       this.cropNick = null
       this.cropDesc = null
     },
+
+    commitWater(event) {
+      axios.post(`user/crop/water?userCropNumber=${ event }`)
+      .then(res =>{
+        if (res.data === 'success')  {
+          for(var i = 0; i < this.usercrops.length; i++) {
+            if (this.usercrops[i].userCropNumber == event) {
+              this.usercrops[i].water = true
+            }
+          }
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    }
   },
 };
 </script>
@@ -229,8 +258,8 @@ export default {
 }
 #thumbnail {
   margin: 5px 20px;
-  width: 45px;
-  height: 45px;
+  width: 60px;
+  height: 60px;
   border-radius: 5px;
 }
 .crop {
@@ -243,5 +272,13 @@ export default {
 
 .pen-color {
   color: #446631;
+}
+
+.water-color {
+  color: #0BC3FD;
+}
+
+.no-water-color {
+  color: #999999;
 }
 </style>
