@@ -33,8 +33,8 @@ public interface UserRecordDAO extends JpaRepository<UserRecord, Integer> {
 	
 	@Transactional
 	@Modifying
-	@Query("UPDATE userRecord AS r SET r.recommendCount = r.recommendCount + 1 WHERE r.userNumber = :userNumber")
-	public int AddRecommendCount(int userNumber);
+	@Query("UPDATE userRecord AS r SET r.recommendCount = r.recommendCount + :value WHERE r.userNumber = :userNumber")
+	public int AddRecommendCount(int userNumber, int value);
 	
 	@Transactional
 	@Modifying

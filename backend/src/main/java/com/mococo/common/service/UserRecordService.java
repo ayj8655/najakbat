@@ -17,7 +17,7 @@ public class UserRecordService {
 	// 유저 기록 정보 생성
 	public boolean insertUserRecord(UserRecord record) {
 		Optional<UserRecord> recordOpt = userRecordDAO.findByUserNumber(record.getUserNumber());
-		if(!recordOpt.isPresent()) return false;
+		if(recordOpt.isPresent()) return false;
 		
 		userRecordDAO.save(record);
 		return true;
@@ -50,12 +50,12 @@ public class UserRecordService {
 		return true;
 	}
 	
-	// 사용자의 recommend count 증가
-	public boolean addRecommendCount(int userNumber) {
+	// 사용자의 recommend count 증감
+	public boolean addRecommendCount(int userNumber, int value) {
 		Optional<UserRecord> recordOpt = userRecordDAO.findByUserNumber(userNumber);
 		if(!recordOpt.isPresent()) return false;
 		
-		userRecordDAO.AddRecommendCount(userNumber);
+		userRecordDAO.AddRecommendCount(userNumber, value);
 		return true;
 	}
 	

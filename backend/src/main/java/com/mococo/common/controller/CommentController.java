@@ -24,6 +24,7 @@ import com.mococo.common.model.Post;
 import com.mococo.common.service.CommentService;
 import com.mococo.common.service.NoticeService;
 import com.mococo.common.service.PostService;
+import com.mococo.common.service.UserRecordService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -48,6 +49,9 @@ public class CommentController {
 	
 	@Autowired
 	PostService postService;
+	
+	@Autowired
+	UserRecordService userRecordService;
 	
 	@RequestMapping(value = "/{postno}", method = RequestMethod.GET)
 	@ApiOperation(value = "하나의 게시물 안에 있는 댓글들 조회")
@@ -115,8 +119,10 @@ public class CommentController {
 			
 			content = post.get().getTitle() + "에 댓글이 달렸습니다.";
 			noticeService.insertNotice(post.get().getUserNumber(),postno, title, content);
-
 			/////////////////////////////////
+			
+			// 댓글 카운트
+			userRecordService.addCommentCount(user_number);
 
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
@@ -185,8 +191,11 @@ public class CommentController {
 			logger.info("댓글 추천 올리기");
 			int comment_number = Integer.parseInt(commentno);
 			boolean ret = commentService.recommendComment(comment_number, user_number);
-			if (ret == false) {
+			if(ret) {
+				userRecordService.addRecommendCount(user_number, 1);
+			} else {
 				logger.info("댓글 추천 내리기");
+				userRecordService.addRecommendCount(user_number, -1);
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
 			}
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);

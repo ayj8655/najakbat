@@ -135,7 +135,7 @@ public class CommentService {
 			
 			// POST RECOMMNED 테이블에 이번에 누른 정보를 delete
 			commentrecommendDAO.deleteByCommentNumberAndUserNumber(commentno, userno);
-			return true;
+			return false;
 		}
 
 	}
