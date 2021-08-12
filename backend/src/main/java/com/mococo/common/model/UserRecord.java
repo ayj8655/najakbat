@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED) 
+@NoArgsConstructor(access = AccessLevel.PUBLIC) 
 @Entity(name="userRecord")
 public class UserRecord {
 	
