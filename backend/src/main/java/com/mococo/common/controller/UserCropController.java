@@ -31,6 +31,7 @@ import com.mococo.common.model.UserCropResponse;
 import com.mococo.common.model.WaterRecord;
 import com.mococo.common.service.UserCropRecordService;
 import com.mococo.common.service.UserCropService;
+import com.mococo.common.service.UserRecordService;
 import com.mococo.common.service.WaterRecordService;
 
 import io.swagger.annotations.ApiOperation;
@@ -51,6 +52,10 @@ public class UserCropController {
 
 	@Autowired
 	WaterRecordService waterRecordService;
+	
+	@Autowired
+	UserRecordService userrecordService;
+	
 
 	private static final Logger logger = LoggerFactory.getLogger(UserCropController.class);
 	private static final String SUCCESS = "success";
@@ -172,6 +177,12 @@ public class UserCropController {
 			Calendar cmpDate = Calendar.getInstance();
 
 			for (UserCrop crop : userCropList) {
+				
+				// 끝난 작물은 패스
+				if(crop.isFinish()) {
+					continue;
+				}
+				
 				UserCropResponse res = new UserCropResponse();
 
 				res.setCropNumber(crop.getCropNumber());
@@ -191,7 +202,7 @@ public class UserCropController {
 				diffSec = (cmpDate.getTimeInMillis() - getToday.getTimeInMillis()) / 1000;
 				diffDays = diffSec / (24 * 60 * 60); // 물 주기 d-day
 
-				res.setWaterDate((int) diffDays); // 수확까지 남은 날짜
+				res.setWaterDate((int) diffDays); // 물주기까지 남은날짜
 
 				res.setWater(crop.isWater());
 				resList.add(res);
@@ -393,6 +404,86 @@ public class UserCropController {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	
+	// 작물 완전 수확
+	@RequestMapping(value = "/fullharvest", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "완전 수확")
+	public ResponseEntity<String> fullHarvestCrop(@RequestParam int userCropNumber) throws IOException {
+		logger.info("완전 수확 - 작물 리스트에서 뺀다");
+
+		try {
+			Optional<UserCrop> uc = userCropService.findByUserCropNumber(userCropNumber);
+			
+			uc.get().setFinish(true); 		  // 수확 완료
+			uc.get().setRealDate(new Date()); // 현재 날로 실제 수확날짜 적기
+			userrecordService.addCropFinishCount(uc.get().getUserNumber()); // 유저 기록에 반영
+
+			  							      // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
+			return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+			
+		
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	// 작물 임시 수확
+	@RequestMapping(value = "/tempharvest", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "임시 수확 - 작물 그대로 유지")
+	public ResponseEntity<String> tempHarvestCrop(@RequestParam int userCropNumber) throws IOException {
+		logger.info("임시 수확 - 작물 그대로 유지");
+
+		try {
+			Optional<UserCrop> uc = userCropService.findByUserCropNumber(userCropNumber);
+			
+			Calendar cal = Calendar.getInstance();
+			Date now_time = new Date();
+			
+			uc.get().setPlantedDate(now_time); // 현재 날로 심은날  적기
+			
+			// target date, need_date: 물줘야하는날짜, finish=false, water_cycle, 다음 물 줘야하는날
+			Optional<Object> dayInfo = userCropService.findGrowingPeriodAndWaterPeriod(uc.get().getCropNumber()); // 해당 crop의 정보 가져오기
+			JSONObject jsonDayInfo = new JSONObject((Map) dayInfo.get());
+			int growingPeriod = (int) jsonDayInfo.get("growingPeriod");
+			int waterPeriod = (int) jsonDayInfo.get("waterPeriod");
+
+			cal.setTime(now_time);
+
+			// target date는 심은날 부터 + growingPeriod
+			cal.add(Calendar.DATE, growingPeriod);
+			uc.get().setTargetDate(cal.getTime()); // 목표날 crop db에서 저장된 수확기간으로 가져다가 계산해서넣기
+
+			// 다시 심은날로 초기화
+			cal.add(Calendar.DATE, growingPeriod * (-1));
+
+			// 처음 물 줘야하는 날은 심은날 부터 + waterPeriod
+			cal.add(Calendar.DATE, waterPeriod);
+			uc.get().setNeedDate(cal.getTime());  // 물주기날 crop db에서 저장된 물 주기로 가져다가 계산해서 넣기 
+
+	
+			userrecordService.addCropFinishCount(uc.get().getUserNumber());			      // 유저기록에 반영
+													
+
+		      									  // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
+			
+			boolean result = userCropService.updateCrop(uc.get());
+
+			if (result) {
+				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+			}
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
+	
 	
 	
 	
