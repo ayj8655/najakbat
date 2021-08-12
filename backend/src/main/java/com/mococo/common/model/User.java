@@ -38,9 +38,9 @@ public class User {
 	@Temporal(TemporalType.TIMESTAMP)	//이거 써야 자동으로 시간 넣어줌
 	private Date joinDate;
 	private String address;
-	private Integer gold;
 	private Boolean activated;
 	private String token;
+	private String userName;
 	
 	// 유저와 post recommend는 N:M관계
 	@ManyToMany(fetch = FetchType.LAZY)

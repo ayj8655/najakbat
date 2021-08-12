@@ -49,7 +49,7 @@ public class UserService {
 
 		// 유저정보 생성
 		User user = User.builder().id(userDto.getId()).password(passwordEncoder.encode(userDto.getPassword()))
-				.nickname(userDto.getNickname()).authorities(Collections.singleton(authority)).activated(true).gold(0)
+				.nickname(userDto.getNickname()).authorities(Collections.singleton(authority)).activated(true)
 				.joinDate(new Date()).phone(userDto.getPhone()).build();
 
 		return userDAO.save(user);
@@ -213,14 +213,39 @@ public class UserService {
 		
 		return true;
 	}
+	
+	public boolean updateById(User user) {
 
-	public User login(Map<String, String> map) {
+		Optional<User> updateUser = userDAO.findById(user.getId());
+		
 
-		Optional<User> loginUser = userDAO.findByIdAndPassword(map.get("userId"), map.get("userPwd"));
+		// update할 post가 없는 경우
+		if (!updateUser.isPresent()) {
+			return false;
+		}
+		
+		
+		updateUser.ifPresent(selectUser -> {
+
+			selectUser.setPassword((passwordEncoder.encode(user.getPassword())));
+			
+			userDAO.save(selectUser);
+
+		});
+		
+		
+		return true;
+	}
+
+
+	public User findByIdAndPhone(String id, String phone) {
+		
+		Optional<User> loginUser = userDAO.findByIdAndPhone(id,phone);
+		
 		if (!loginUser.isPresent()) {
 			return null;
 		}
-
+		
 		return loginUser.get();
 	}
 
