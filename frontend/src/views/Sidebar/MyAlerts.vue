@@ -5,9 +5,9 @@
   <h3 class="mb-3 mt-5 fw-bold">알림</h3>
   <button type="button" class="btn btn-warning mb-2" v-if="isdeleteactivated" @click="Activatedelete">삭제 취소</button>
   <button type="button" class="btn btn-secondary mb-2" v-else @click="Activatedelete">알림 삭제</button>
-  <div v-for="searchNotice in searchNotices" :key="searchNotice.noticeNumber">
+  <div v-for="(searchNotice, index) in searchNotices" :key="index">
     <div class="container px-0">
-      <div v-if="searchNotice.isRead" class="isRead-false border border-end-0 border-start-0 bg-white" @click="Reading (searchNotice)">
+      <div v-if="searchNotice.isRead" class="isRead-false border border-end-0 border-start-0 bg-white" @click="Reading ([searchNotice, index])">
         <div class="container notice mt-2">
           <div class="row">
             <div class="col-1 px-0" v-show="isdeleteactivated">
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <div v-else class="isRead-false border border-end-0 border-start-0" @click.self="Reading (searchNotice)">
+      <div v-else class="isRead-false border border-end-0 border-start-0" @click="Reading ([searchNotice, index])">
         <div class="container notice mt-2">
           <div class="row">
             <div class="col-1 px-0" v-show="isdeleteactivated">
@@ -61,7 +61,7 @@
       </div>
     </div>
   </div>
-  <button type="button" class="btn btn-danger mt-3" v-show="isdeleteactivated" @click="deleteallNotices">전체 알림 삭제</button>
+  <button type="button" class="btn btn-danger mt-3" v-show="isdeleteactivated" @click="deleteallNotices">선택 삭제</button>
   <div id="foot"></div>
   <menubar id="menubar"></menubar>
 </div>
@@ -96,13 +96,24 @@ export default {
       'deleteallNotices',
       'deleteNotice',
     ]),
-    Reading (mynotice) {
+    Reading (infolist) {
+      if (!this.isdeleteactivated) {
+
+        const mynotice = infolist[0]
+      const myindex = infolist[1]
       mynotice.isRead = 1
       // this.$store.state.searchNotices[mynotice.noticeNumber] = mynotice.isRead
+      this.$store.state.searchNotices[myindex].isRead = 1 
       const mynoticeStatus = [mynotice.isRead, mynotice.noticeNumber]
-      // console.log(this.$store.state.searchNotices)
-      this.$store.state.searchNotices[mynoticeStatus[1] - 1].isRead = mynoticeStatus[0] 
       this.$store.dispatch('updateIsread', mynoticeStatus)
+      if (mynotice.title === '커뮤니티 알림') {
+        this.$router.push({name: 'CommunityDetail', params: {no: mynotice.postNumber}})
+      }
+      else if (mynotice.title === '물주기 알림')
+        this.$router.push({name: 'MyCrop'})
+      else if (mynotice.title === '쪽지 알림')
+        this.$router.push({name: 'Message'})
+        }
     },
     Activatedelete () {
       this.isdeleteactivated = ! this.isdeleteactivated
@@ -115,7 +126,7 @@ export default {
         else {
           this.checkedList.push(mynotice.noticeNumber)
         }
-        console.log(this.checkedList)
+        // console.log(this.checkedList)
       }
 
     },
