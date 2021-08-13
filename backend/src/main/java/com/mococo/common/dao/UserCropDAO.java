@@ -3,6 +3,7 @@ package com.mococo.common.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -33,4 +34,10 @@ public interface UserCropDAO extends JpaRepository<UserCrop, Integer>{
 			+"WHERE crop_number = :no ")
 	public Optional<Crop> findNameByCropNumber(int no);
 	
+	@Query(value = "SELECT new Map(uc.cropNumber AS cropNumber, c.name AS name, c.description AS description) "
+			+ "FROM userCrop AS uc LEFT JOIN crop c "
+			+ "ON uc.cropNumber = c.cropNumber "
+			+ "GROUP BY uc.cropNumber "
+			+ "ORDER BY COUNT(uc.cropNumber) DESC ")
+	public List<Object> findTopCrop(Pageable pageable);
 }
