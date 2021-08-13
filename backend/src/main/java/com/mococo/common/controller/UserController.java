@@ -50,6 +50,7 @@ public class UserController {
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
+	private static final String ERROR = "error";
 
 	@Autowired
 	public UserService userService;
@@ -193,7 +194,7 @@ public class UserController {
 
 		} catch (Exception e) {
 			System.out.println("id중복 검사 오류");
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -218,7 +219,7 @@ public class UserController {
 
 		} catch (Exception e) {
 			System.out.println("닉네임중복 검사 오류");
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -239,7 +240,7 @@ public class UserController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			System.out.println("핸드폰번호중복 검사 오류");
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -266,7 +267,7 @@ public class UserController {
 
 		} catch (Exception e) {
 			System.out.println("id찾기 오류");
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
@@ -342,7 +343,7 @@ public class UserController {
 
 		} catch (Exception e) {
 			System.out.println("인증번호 전송 오류");
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
@@ -377,7 +378,7 @@ public class UserController {
 
 		} catch (Exception e) {
 			System.out.println("비밀번호 변경 오류");
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
@@ -430,7 +431,7 @@ public class UserController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("회원 탈퇴 오류");
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -452,9 +453,29 @@ public class UserController {
 		} catch (Exception e) {
 			System.out.println("회원 수정 에러");
 			e.printStackTrace();
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+	
+	@RequestMapping(value = "/record/{userNumber}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "유저번호로 유저 활동정보 검색", notes = "유저번호를 받아 검색된 유저의 활동정보 반환.", response = User.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userNumber", value = "검색하고싶은 userNumber", required = true) })
+	public ResponseEntity<?> searchUserRecord(@PathVariable int userNumber) throws IOException {
+		logger.info("회원 활동정보 검색");
+
+		try {
+			Optional<UserRecord> userRecordOpt = userRecordService.findByUserNumber(userNumber);
+			
+			if(userRecordOpt.isPresent()) {
+				return new ResponseEntity<>(userRecordOpt, HttpStatus.OK);	
+			}
+			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);	
+		} catch (Exception e) {
+			
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 //	//이건 임시
