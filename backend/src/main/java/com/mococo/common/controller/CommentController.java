@@ -188,17 +188,20 @@ public class CommentController {
 			throws IOException {
 
 		try {
-			logger.info("댓글 추천 올리기");
 			int comment_number = Integer.parseInt(commentno);
-			boolean ret = commentService.recommendComment(comment_number, user_number);
-			if(ret) {
+			int ret = commentService.recommendComment(comment_number, user_number);
+			if(ret == 1) {
+				logger.info("댓글 추천 올리기");
 				userRecordService.addRecommendCount(user_number, 1);
-			} else {
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			} else if(ret == 0) {
 				logger.info("댓글 추천 내리기");
 				userRecordService.addRecommendCount(user_number, -1);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			} else {
+				logger.info("해당하는 댓글이 없음");
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
 			}
-			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.info("댓글 추천 오류");
 			// TODO Auto-generated catch block
