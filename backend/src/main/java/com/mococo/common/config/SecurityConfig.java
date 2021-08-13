@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 				.and().authorizeRequests().antMatchers("/user/authenticate")
 				.permitAll().antMatchers("/user/signup").permitAll().antMatchers("/user/pass/**").permitAll()
-				.antMatchers("/phone/**").permitAll()
+				.antMatchers("/phone/**").permitAll().antMatchers("/user/crop/top/**").permitAll()
 				// .anyRequest().authenticated() -> 나머지 요청들은 모두 인증되어야 한다는 뜻
 				.anyRequest().authenticated()
 

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mococo.common.model.Crop;
 import com.mococo.common.model.UserCrop;
 import com.mococo.common.model.UserCropDetailResponse;
 import com.mococo.common.model.UserCropRecord;
@@ -480,9 +481,17 @@ public class UserCropController {
 		}
 	}
 	
-	
-	
-	
-	
-	
+	@RequestMapping(value = "/top", method = RequestMethod.GET)
+	@ApiOperation(value = "인기 작물 리스트 반환")
+	public ResponseEntity<?> searchTopCrop(@RequestParam int size) throws IOException {
+		logger.info("인기 작물 리스트 반환");
+
+		try {
+			List<Object> cropList = userCropService.findTopCrop(size);
+			return new ResponseEntity<>(cropList, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
