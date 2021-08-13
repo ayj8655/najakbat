@@ -194,5 +194,54 @@ public class PostService {
 
         return p;
 	}
+
+	public Post updatePost(Post post, MultipartFile[] files, List<Integer> dlist) throws IllegalStateException, IOException{
+		
+		// 삭제할 이미지 리스트들 삭제.
+		for(Integer photono : dlist) {
+			postphotoDAO.deleteById(photono);
+		}
+		
+		
+		Post p = postDAO.save(post);
+		
+        if(files == null){
+            // TODO : 파일이 없을 땐 어떻게 해야할까.. 고민을 해보아야 할 것
+        }
+        // 파일에 대해 DB에 저장하고 가지고 있을 것
+        else{
+			for(MultipartFile mfile : files) {
+				PostPhoto photo = new PostPhoto();
+				String originalFileName = mfile.getOriginalFilename();
+				if (!originalFileName.isEmpty()) {
+					String sourceFileName = mfile.getOriginalFilename();
+					String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
+					File destinationFile;
+					String destinationFileName;
+					String fileUrl = "C:\\SSAFY\\Mococo\\backend\\src\\main\\resources\\photos\\";
+					do {
+						destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
+						destinationFile = new File(fileUrl + destinationFileName);
+					} while (destinationFile.exists());
+	
+					destinationFile.getParentFile().mkdirs();
+					mfile.transferTo(destinationFile);
+	
+					photo.setSaveFile(destinationFileName);
+					photo.setOriginFile(sourceFileName);
+					photo.setSaveFolder(fileUrl);
+					
+					System.out.println("길이" + photo.getSaveFolder().length());
+					photo.setPost(post);
+					System.out.println(photo.getSaveFile());
+					postphotoDAO.save(photo);
+				}
+
+			}
+			
+        }
+
+        return p;
+	}
 	
 }

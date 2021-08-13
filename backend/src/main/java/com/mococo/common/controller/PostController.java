@@ -250,29 +250,73 @@ public class PostController {
 		}
 	}
 
-	@RequestMapping(value = "/{postno}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{postno}", method = RequestMethod.PUT, consumes = { "multipart/form-data" })
 	@ApiOperation(value = "게시글 수정")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	public ResponseEntity<String> updatePost(@RequestBody Post post) throws IOException {
+	public ResponseEntity<String> updatePost(
+			@PathVariable(value = "postno") String postno,
+			@RequestParam(value = "type") String type,
+			@RequestParam(value = "content") String content, @RequestParam(value = "title") String title,
+			@RequestParam(value = "keyword", required = false) String keyword,
+			@RequestParam(value = "user_nickname") String user_nickname,
+			@RequestParam(value = "user_number") int user_number,
+			@RequestParam(value = "insertimage", required = false) MultipartFile[] files,
+			@RequestParam(value = "deleteimage", required = false) List<Integer> dlist
+			) throws IOException {
+		Optional<Post> p = postService.findPostByPostNumber(Integer.parseInt(postno));
+		Post post = p.get();
+		
+		post.setContent(content);
+		int postType = 0;
+		if (type.equals("자유")) {
+			postType = 1;
+		} else if (type.equals("정보")) {
+			postType = 2;
+		} else if (type.equals("질문")) {
+			postType = 3;
+		} else if (type.equals("나눔")) {
+			postType = 4;
+		}
+
+		if (keyword != null) {
+			post.setKeyword(keyword);
+		}
+
+		post.setPostType(postType);
+		post.setTitle(title);
+		post.setUserNickname(user_nickname);
+		post.setUserNumber(user_number);
+		Date time = new Date();
+		post.setDate(time);
 
 		try {
 			logger.info("게시글 수정");
-			boolean ret = postService.updatePost(post);
-			if (ret == false) {
 
+
+			Post ret = postService.updatePost(post, files, dlist);
+
+
+			if (ret == null) {
 				logger.info("게시글 수정 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
+			
+			// 게시글 수 증가
+			userRecordService.addPostCount(user_number);
 
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			logger.info("게시글 수정 오류");
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}
 
+	}
+	
+	
+	
+	
 	// 사용자가 게시글 추천을 누르면 게시글의 좋아요가 하나 늘어나고, 몇번 유저가 몇번 게시글에 좋아요를 눌렀는지 post_recommend
 	// table에 추가한다.
 	@RequestMapping(value = "/recommend/{postno}", method = RequestMethod.PUT)
@@ -328,5 +372,9 @@ public class PostController {
 			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	
+	
+	
 
 }
