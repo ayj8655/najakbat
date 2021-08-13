@@ -111,12 +111,12 @@ public class PostService {
 		return true;
 	}
 	
-	public boolean recommendPost(int postno, int userno) {
+	public int recommendPost(int postno, int userno) {
 		Optional<Post> ret = postDAO.findPostByPostNumber(postno);
 
 		// 추천할 post가 없는 경우 - 잘못된 접근
 		if(!ret.isPresent()) {
-			return false;
+			return -1;
 		}
 		
 		boolean isRecommend= false;
@@ -136,7 +136,7 @@ public class PostService {
 			// POST RECOMMNED 테이블에 이번에 누른 정보를 insert
 			PostRecommend pr = new PostRecommend(postno,userno);
 			postrecommendDAO.save(pr);
-			return true;
+			return 1;
 		}
 		
 		// 이번 요청으로 추천을 취소 하는 경우
@@ -147,7 +147,7 @@ public class PostService {
 			
 			// POST RECOMMNED 테이블에 이번에 누른 정보를 delete
 			postrecommendDAO.deleteByPostNumberAndUserNumber(postno, userno);
-			return false;
+			return 0;
 		}
 
 		

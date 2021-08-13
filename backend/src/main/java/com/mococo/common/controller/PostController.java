@@ -282,18 +282,20 @@ public class PostController {
 			@RequestParam("user_number") int user_number) throws IOException {
 
 		try {
-			logger.info("게시글 추천 올리기");
 			int post_number = Integer.parseInt(postno);
-			boolean ret = postService.recommendPost(post_number, user_number);
-			if(ret) {
+			int ret = postService.recommendPost(post_number, user_number);
+			if(ret == 1) {
+				logger.info("게시글 추천 올리기");
 				userRecordService.addRecommendCount(user_number, 1);
-			} else {
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			} else if(ret == 0){
 				logger.info("게시글 추천 내리기");
 				userRecordService.addRecommendCount(user_number, -1);
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			} else {
+				logger.info("해당하는 게시글이 없음");
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
 			}
-
-			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.info("게시글 추천 올리기 오류");
