@@ -30,6 +30,6 @@ export default {
 
 <style scoped>
   #foot {
-  height: 18%;
+  height: 100px;
   }
 </style>
