@@ -4,7 +4,10 @@
   <router-view></router-view>
   <h3 class="mb-3 mt-5 fw-bold">알림</h3>
   <button type="button" class="btn btn-warning mb-2" v-if="isdeleteactivated" @click="Activatedelete">삭제 취소</button>
-  <button type="button" class="btn btn-secondary mb-2" v-else @click="Activatedelete">알림 삭제</button>
+  <div v-else>
+  <button type="button" class="btn btn-secondary mb-2" @click="Activatedelete">알림 삭제</button>
+  <button type="button" class="btn btn-warning mb-2" @click="deleteAllNotices">전체 삭제</button>
+  </div>
   <div v-for="(searchNotice, index) in searchNotices" :key="index">
     <div class="container px-0">
       <div v-if="searchNotice.isRead" class="isRead-false border border-end-0 border-start-0 bg-white" @click="Reading ([searchNotice, index])">
@@ -61,7 +64,7 @@
       </div>
     </div>
   </div>
-  <button type="button" class="btn btn-danger mt-3" v-show="isdeleteactivated" @click="deleteallNotices">선택 삭제</button>
+  <button type="button" class="btn btn-danger mt-3" v-show="isdeleteactivated" @click="deleteNotices">선택 삭제</button>
   <div id="foot"></div>
   <menubar id="menubar"></menubar>
 </div>
@@ -80,6 +83,7 @@ export default {
   name: 'Myalerts',
   created() {
     this.$store.dispatch('getSearchNotice')
+    // console.log(this.$store.noticeUnread)
   },
   data () {
     return {
@@ -126,8 +130,16 @@ export default {
         else {
           this.checkedList.push(mynotice.noticeNumber)
         }
-        // console.log(this.checkedList)
-      }
+        console.log(this.checkedList)
+    },
+    deleteAllNotices () {
+      this.$store.dispatch('deleteAllNotices')
+      this.$router.go(0)
+    },
+    deleteNotices () {
+      this.$store.dispatch('deleteNotices', this.checkedList)
+      this.$router.go(0)
+    }
 
     },
   computed: {

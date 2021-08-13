@@ -29,10 +29,12 @@ export default new Vuex.Store({
     nightmode_notice: false,
     noticeTime: '',
     receiver: '',
+    
 
 
     // Alerts 변수
     searchNotices: [],
+    noticeUnread: [],
 
     // Message 변수
     receivedMessages: [],
@@ -72,10 +74,10 @@ export default new Vuex.Store({
 
     GET_SEARCH_NOTICE(state, searchNotice) {
       state.searchNotices = searchNotice
-      // for (let key in searchNotice) {
-      //   const value = searchNotice[key]
-      //   state.noticeIsreads.push(value.isRead)
-      // }
+      for (let notice in searchNotice) {
+        if (!notice.isRead)
+        state.noticeUnread.push(notice.isRead)
+      }
     },
 
     // Message mutations
@@ -147,7 +149,7 @@ export default new Vuex.Store({
     // Alerts actions
 
     getSearchNotice(context) {
-      axios.get(`user/notice/1`)
+      axios.get(`user/notice/${localStorage.getItem('userNumber')}`)
       .then(res => {
         context.commit('GET_SEARCH_NOTICE', res.data)
       })
@@ -158,7 +160,7 @@ export default new Vuex.Store({
 
     // Settings actions
     getNoticeSettings(context) {
-      axios.get(`user/setting/notice/1`)        
+      axios.get(`user/setting/notice/${localStorage.getItem('userNumber')}`)        
       .then(res => {
         context.commit('GET_NOTICE_SETTINGS', res.data)
         // console.log(this.state)
@@ -230,7 +232,7 @@ export default new Vuex.Store({
           commentNotice: settingsStatus[2],
           messageNotice: settingsStatus[3],
           darkMode: settingsStatus[4],
-          userNumber: 1,
+          userNumber: localStorage.getItem('userNumber'),
         }
       })
         .then(res => {
@@ -251,7 +253,7 @@ export default new Vuex.Store({
         url: `user/notice/${mynoticeStatus[1]}`,
         data: {
           isRead: mynoticeStatus[0],
-          userNumber: 1,
+          userNumber: localStorage.getItem('userNumber'),
         }
       })
         .then(res => {
@@ -353,18 +355,39 @@ export default new Vuex.Store({
         console.log(url)
       })
     },
+    
+    deleteNotices (context, noticeNumberList) {
+      var noticeurl = "";
+      for (var item of noticeNumberList) {
+        noticeurl += "noticeno=" + item + "&";
+      }
+      noticeurl = noticeurl.slice(0, -1);
+      console.log(noticeurl)
+      axios({
+        method: 'delete',
+        url: `user/notice/list?` + noticeurl,
+      })
+      .then(res => {
+        // console.log('success')
+        console.log(res.data)
+        // console.log(url)
+      })
+      .catch(err => {
+        console.error(err)
+        // console.log(url)
+      })
+    },
 
-
-    deleteallNotices() {
+    deleteAllNotices(context) {
       axios({
         method: 'delete',
         url: `user/notice`,
-        data: {
-          userNumber: 1,
+        params: {
+          userNumber: localStorage.getItem('userNumber'),
         }
       })
         .then(res => {
-          this.state.searchNotices = [];
+          // this.state.searchNotices = [];
           console.log(res)
         })
         .catch(err => {
@@ -372,22 +395,6 @@ export default new Vuex.Store({
         })
     },
     
-    deleteNotice (context, noticeNumber) {
-      axios({
-        method: 'delete',
-        url: `user/notice/${noticeNumber}`,
-        data: {
-          userNumber: 1,
-        }
-      })
-        .then(res => {
-          console.log('success')
-          console.log(res)
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
     // Logout actions
 
     logout({ commit }) {
