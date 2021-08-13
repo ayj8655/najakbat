@@ -68,8 +68,12 @@ public class NoticeService {
 	}
 
 	public int deleteAllByIdIn(List<Integer> noticeno) {
-		// TODO Auto-generated method stub
+
 		return noticeDAO.deleteAllByNoticeNumberIn(noticeno);
+	}
+	public void deleteAllByUserNumber(int userNumber) {
+
+		noticeDAO.deleteAllByUserNumber(userNumber);
 	}
 
 }
