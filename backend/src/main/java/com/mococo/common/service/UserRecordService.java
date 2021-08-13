@@ -23,6 +23,11 @@ public class UserRecordService {
 		return true;
 	}
 	
+	// 유저 기록 정보 생성
+	public Optional<UserRecord> findByUserNumber(int userNumber) {
+		return userRecordDAO.findByUserNumber(userNumber);
+	}
+	
 	// 사용자 추정 이득 추가
 	public boolean addGold(int userNumber, int gold) {
 		Optional<UserRecord> recordOpt = userRecordDAO.findByUserNumber(userNumber);
