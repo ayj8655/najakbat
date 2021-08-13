@@ -366,6 +366,12 @@ public class UserCropController {
 			// 1: user crop number로 조회해오기. - usercrop, usercropresponse
 			Optional<UserCrop> uc = userCropService.findByUserCropNumber(userCropNumber);
 			
+			urdr.setUserNumber(uc.get().getUserNumber());
+			
+			urdr.setCropNumber(uc.get().getCropNumber());
+			
+			urdr.setUserCropNumber(uc.get().getUserCropNumber());
+			
 			urdr.setCropNickname(uc.get().getCropNickname()); // 별명 set
 			
 			urdr.setDescription(uc.get().getDescription()); // 설명 set
