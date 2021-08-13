@@ -12,8 +12,16 @@
         </div>
         <hr />
       </div>
-      <div class="mt-5 mb-5" id="post-body">
+      <div class="m-2" id="post-body">
         <div v-html="enterToBr(this.post.content)"></div>
+      </div>
+      <div class="mt-2 mb-3" id="post-photos" v-if="this.post.photos">
+        <div id="row">
+          <div class="items" v-for="(p, index) in photos" :key="index">
+            <img :src="p" />
+            <!-- <p>{{p.originFile}}</p> -->
+          </div>
+        </div>
       </div>
       <div id="post-foot">
         <span><img src="@/assets/leaf_lightgreen.png" width="15px" />{{this.post.recommend}}</span>
@@ -64,6 +72,7 @@ export default {
       no: this.$route.params.no,
       post: Object,
       typeimg: null,
+      photos: [],
       comments: [],
       recoComments: [],
       isModifyShow: false,
@@ -87,7 +96,10 @@ export default {
           this.typeimg = require("@/assets/category_share.png");
           break;
       }
-      return this.typeimg;
+      console.log(this.post);
+      this.post.photos.forEach((p, index) => {
+        this.photos[index] = require("@/assets/post/"+p.saveFile);
+      });
     });
     axios.get(`comment/${this.no}`).then(({ data }) => {
       this.comments = data;
@@ -155,6 +167,24 @@ export default {
 }
 #right img {
   margin: 5px;
+}
+#row {
+  white-space: nowrap; /* 가로스크롤시 중요한 속성 */
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px 10px 5px;
+  /* background: #efefef; */
+  width: auto;
+}
+#row .items {
+  display: inline-block;
+  /* margin-left: 10px; */
+  width: 160px;
+}
+#row .items img {
+  width: 150px;
+  border-radius: 5px;
+  border: solid 1px #efefef;
 }
 #post-foot span {
   margin-right: 10px;

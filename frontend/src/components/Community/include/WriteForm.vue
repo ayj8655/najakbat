@@ -1,7 +1,7 @@
 <template>
   <div id="writeform" class="mt-5 mb-5">
-    <div class="form-group" align="left">
-      <label for="sel1">게시글 분류</label>
+    <div class="form-group mt-3" align="left">
+      <label for="sel1">게시글 분류 <span class="text-danger">*</span></label>
       <select class="form-control" id="sel1" v-model="postType">
         <option value="0">게시글 분류를 선택하세요.</option>
         <option value="자유">자유</option>
@@ -10,8 +10,8 @@
         <option value="나눔">나눔</option>
       </select>
     </div>
-    <div class="form-group" align="left">
-      <label for="title">제목:</label>
+    <div class="form-group mt-3" align="left">
+      <label for="title">제목 <span class="text-danger">*</span></label>
       <input
         type="text"
         class="form-control"
@@ -21,8 +21,8 @@
         placeholder="제목을 입력하세요."
       />
     </div>
-    <div class="form-group" align="left">
-      <label for="content">내용:</label>
+    <div class="form-group mt-3" align="left">
+      <label for="content">내용 <span class="text-danger">*</span></label>
       <textarea
         class="form-control"
         rows="15"
@@ -32,22 +32,32 @@
         placeholder="내용을 입력하세요."
       ></textarea>
     </div>
-    <form>
-      <div class="mb-3">
-        <label for="formFileMultiple" class="form-label"
-          >사진 첨부: </label
-        >
-        <input
-          class="form-control"
-          type="file"
-          id="formFileMultiple"
-          ref="files"
-          v-on:change="fileSlc"
-          multiple
-        />
+    <div class="mt-3" id="files-area">
+      <form>
+        <div class="mb-3" align="left">
+          <label for="formFileMultiple" class="form-label"
+            >사진 첨부</label
+          >
+          <div class="text-success">최대 다섯 장까지 첨부 가능합니다. :)</div>
+          <input
+            class="form-control"
+            type="file"
+            id="files"
+            ref="files"
+            v-on:change="fileSlc"
+            multiple
+          />
+        </div>
+      </form>
+      <div v-if="files.length" align="left">
+        <div v-for="(file, index) in files" :key="index">
+          <span id="file-name" v-if="file.originFile">{{file.originFile}}</span>
+          <span id="file-name" else>{{file.name}}</span>
+          <span id="file-delete" @click="removeFile(file)">-</span>
+        </div>
       </div>
-    </form>
-    <div class="form-group" align="left">
+    </div>
+    <div class="form-group mt-3" align="left">
       <label for="sel1">농작물 태그</label>
       <select class="form-control" id="sel1" v-model="keyword">
         <option v-for="(crop, index) in crops" :key="index" :value="crop.cropNumber">
@@ -88,7 +98,10 @@ export default {
       postType: 0,
       title: null,
       content: null,
+      deletedFiles: [],
+      updatedFiles: [],
       files: [],
+      alertFlag: false,
       keyword: null,
       crops: [],
     };
@@ -99,7 +112,7 @@ export default {
     });
     if (this.type === "modify") {
       axios.get(`post/${this.postNumber}`).then(({ data }) => {
-        console.log(data);
+        // console.log(data);
         switch (data.postType) {
           case 1:
             this.postType = "자유";
@@ -117,11 +130,18 @@ export default {
         this.title = data.title;
         this.content = data.content;
         this.keyword = data.keyword;
-        this.files = data.photos;
+        this.files = (data.photos.length)? data.photos:[];
       });
     }
   },
   methods: {
+    removeFile(item) {
+      this.deletedFiles[this.deletedFiles.length] = item.photoNumber;
+      let index = this.files.indexOf(item);
+      this.files.splice(index, 1);
+      // console.log(this.files);
+      // console.log(this.deletedFiles);
+    },
     checkValid() {
       let err = true;
       let msg = "";
@@ -133,7 +153,7 @@ export default {
       else this.type == "create" ? this.writePost() : this.modifyPost();
     },
     writePost() {
-      console.log(this.files);
+      // console.log(this.files);
       const formData = new FormData();
       formData.append("type", this.postType);
       formData.append("title", this.title);
@@ -153,23 +173,49 @@ export default {
         });
     },
     modifyPost() {
+      const formData = new FormData();
+      formData.append("type", this.postType);
+      formData.append("title", this.title);
+      formData.append("content", this.content);
+      formData.append("keyword", this.keyword);
+      formData.append("user_nickname", this.userNickname);
+      formData.append("user_number", this.userNumber);
+      if(this.updatedFiles.length) {
+        this.updatedFiles.forEach((u, i) => {
+          formData.append("insertimage", this.updatedFiles[i]);
+        });
+      }
+      if(this.deletedFiles.length) {
+        this.deletedFiles.forEach((d, i) => {
+          formData.append("deleteimage", this.deletedFiles[i]);
+        });
+      }
       axios
-        .put(`post/${this.postNumber}`, {
-          postNumber: this.postNumber,
-          userNumber: this.userNumber,
-          userNickname: this.userNickname,
-          title: this.title,
-          content: this.content,
-          keyword: this.keyword,
+        .put(`post/${this.postNumber}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
         })
         .then(() => {
           this.$router.push(`/community/detail/${this.postNumber}`);
         });
     },
     fileSlc() {
-      this.files = this.$refs.files.files;
-      // console.log(this.$refs);
-      // console.log(this.files);
+      if (this.type === "create") {
+        this.files = this.$refs.files.files;
+        if(this.files.length > 5) {
+          this.alertFlag = true;
+          this.files = [];
+        } else {
+          this.alertFlag = false;
+        }
+      } else {
+        this.updatedFiles = this.$refs.files.files;
+          if(this.files.length+this.updatedFiles.length > 5) {
+            this.alertFlag = true;
+            this.updatedFiles = [];
+          } else {
+            this.alertFlag = false;
+          }
+      }
     },
   },
 };
