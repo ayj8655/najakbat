@@ -4,6 +4,15 @@
   </div>
 </template>
 
+<script>
+export default({
+  created() {
+    if(!this.$store.state.userNumber) this.$router.push("/login")
+  },
+})
+</script>
+
+
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

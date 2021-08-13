@@ -147,7 +147,7 @@ public class PostService {
 			
 			// POST RECOMMNED 테이블에 이번에 누른 정보를 delete
 			postrecommendDAO.deleteByPostNumberAndUserNumber(postno, userno);
-			return true;
+			return false;
 		}
 
 		

@@ -2,6 +2,7 @@
     <div>
         <header-nav></header-nav>
         <router-view></router-view>
+        <div id="foot"></div>
         <menubar id="menubar"></menubar>
     </div>
 </template>
@@ -27,6 +28,8 @@ export default {
 </script>
 
 
-<style>
-
+<style scoped>
+  #foot {
+  height: 18%;
+  }
 </style>

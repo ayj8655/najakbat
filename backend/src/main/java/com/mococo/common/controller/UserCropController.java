@@ -1,8 +1,6 @@
 package com.mococo.common.controller;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,8 +52,7 @@ public class UserCropController {
 	WaterRecordService waterRecordService;
 	
 	@Autowired
-	UserRecordService userrecordService;
-	
+	UserRecordService userRecordService;
 
 	private static final Logger logger = LoggerFactory.getLogger(UserCropController.class);
 	private static final String SUCCESS = "success";
@@ -110,6 +107,7 @@ public class UserCropController {
 			userCrop.setWaterCycle(waterPeriod);
 
 			boolean result = userCropService.insertCrop(userCrop);
+			userRecordService.addCropCount(user_number);
 
 			if (result) {
 				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
@@ -282,22 +280,16 @@ public class UserCropController {
 			WaterRecord waterRecord = new WaterRecord(userCropNumber, new Date());
 
 			Optional<UserCrop> usercrop = userCropService.findByUserCropNumber(userCropNumber);
+			
 			usercrop.get().setWater(true);
-			
-			
-			//물주기 버튼 누르면 WATER CYCLE만클 더해서 업데이트 해준다.
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(usercrop.get().getNeedDate());
-
-			cal.add(Calendar.DATE, usercrop.get().getWaterCycle());
-			usercrop.get().setNeedDate(cal.getTime());
 			userCropService.updateCrop(usercrop.get());
 			
-			
-			
 			boolean result = waterRecordService.insertWaterRecord(waterRecord);
-
+			userRecordService.addWaterCount(usercrop.get().getUserNumber());
+			
 			if (result) {
+				
+				
 				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
@@ -418,7 +410,7 @@ public class UserCropController {
 			
 			uc.get().setFinish(true); 		  // 수확 완료
 			uc.get().setRealDate(new Date()); // 현재 날로 실제 수확날짜 적기
-			userrecordService.addCropFinishCount(uc.get().getUserNumber()); // 유저 기록에 반영
+			userRecordService.addCropFinishCount(uc.get().getUserNumber()); // 유저 기록에 반영
 
 			  							      // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
 			return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
@@ -464,7 +456,7 @@ public class UserCropController {
 			uc.get().setNeedDate(cal.getTime());  // 물주기날 crop db에서 저장된 물 주기로 가져다가 계산해서 넣기 
 
 	
-			userrecordService.addCropFinishCount(uc.get().getUserNumber());			      // 유저기록에 반영
+			userRecordService.addCropFinishCount(uc.get().getUserNumber());			      // 유저기록에 반영
 													
 
 		      									  // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
