@@ -82,6 +82,8 @@ public class UserNoticeController {
 	}
 
 	@RequestMapping(value = "/notice", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "해당사용자 알림 전체를 삭제한다.", response = String.class)
 	public ResponseEntity<String> deleteAllNotice(@RequestParam int userNumber) throws IOException {
 		logger.info("알림 전체 삭제");
 		try {
@@ -98,6 +100,8 @@ public class UserNoticeController {
 	}
 
 	@RequestMapping(value = "/notice/{no}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "선택한 알림들을 삭제한다.", response = String.class)
 	public ResponseEntity<String> deleteNotice(@RequestParam List<Integer> noticeno) throws IOException {
 		logger.info("선택 알림 전체 삭제");
 		try {
