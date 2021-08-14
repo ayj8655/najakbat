@@ -99,7 +99,7 @@ public class UserNoticeController {
 
 	}
 
-	@RequestMapping(value = "/notice/{no}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/notice/list", method = RequestMethod.DELETE)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "선택한 알림들을 삭제한다.", response = String.class)
 	public ResponseEntity<String> deleteNotice(@RequestParam List<Integer> noticeno) throws IOException {
