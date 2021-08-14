@@ -74,10 +74,10 @@ export default new Vuex.Store({
 
     GET_SEARCH_NOTICE(state, searchNotice) {
       state.searchNotices = searchNotice
-      for (let notice in searchNotice) {
-        if (!notice.isRead)
-        state.noticeUnread.push(notice.isRead)
-      }
+      // for (let notice in searchNotice) {
+      //   if (!notice.isRead)
+      //   state.noticeUnread.push(notice.isRead)
+      // }
     },
 
     // Message mutations
@@ -157,6 +157,7 @@ export default new Vuex.Store({
         console.error(err)
       })
     },
+
 
     // Settings actions
     getNoticeSettings(context) {
