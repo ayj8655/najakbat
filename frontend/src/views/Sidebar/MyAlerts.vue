@@ -83,6 +83,7 @@ export default {
   name: 'Myalerts',
   created() {
     this.$store.dispatch('getSearchNotice')
+    // console.log(this.$store.searchNotices)
     // console.log(this.$store.noticeUnread)
   },
   data () {
