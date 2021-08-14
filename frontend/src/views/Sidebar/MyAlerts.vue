@@ -1,6 +1,7 @@
 <template>
 <div>
   <header-nav></header-nav>
+  <Sidebar id="side-bar" />
   <router-view></router-view>
   <h3 class="mb-3 mt-5 fw-bold">알림</h3>
   <button type="button" class="btn btn-warning mb-2" v-if="isdeleteactivated" @click="Activatedelete">삭제 취소</button>
@@ -65,8 +66,10 @@
     </div>
   </div>
   <button type="button" class="btn btn-danger mt-3" v-show="isdeleteactivated" @click="deleteNotices">선택 삭제</button>
-  <div id="foot"></div>
-  <menubar id="menubar"></menubar>
+  <div v-show="this.$store.state.sidebar == false">
+    <div id="foot"></div>
+    <menubar id="menubar"></menubar>
+  </div>
 </div>
 </template>
 
@@ -76,6 +79,7 @@ import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
 import HeaderNav from '@/components/Menu/HeaderNav.vue';
 import Menubar from '@/components/Menu/Menubar.vue';
+import Sidebar from "@/components/Sidebar/Sidebar.vue";
 import vueMoment from 'vue-moment'
 Vue.use(vueMoment)
 
@@ -152,11 +156,18 @@ export default {
   components: { 
     HeaderNav,
     Menubar,
+    Sidebar
+
   }
 }
 </script>
 
 <style>
+
+#side-bar {
+  z-index: 1;
+  position: fixed;
+}
 #foot {
   height: 150px;
 }
