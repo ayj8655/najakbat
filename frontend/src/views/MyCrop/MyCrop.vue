@@ -1,10 +1,10 @@
 <template>
-    <div>
-        <header-nav></header-nav>
-        <router-view></router-view>
-        <div id="foot"></div>
-        <menubar id="menubar"></menubar>
-    </div>
+  <div>
+    <header-nav></header-nav>
+    <router-view></router-view>
+    <div :class="{ 'foot-bg': pathFlag }" id="foot"></div>
+    <menubar id="menubar"></menubar>
+  </div>
 </template>
 
 <script>
@@ -14,22 +14,33 @@ import Menubar from "@/components/Menu/Menubar.vue";
 //import { mapState } from 'vuex'
 
 export default {
-  components: { 
+  components: {
     HeaderNav,
     Menubar,
-  }, 
+  },
   data() {
     return {
       id: null,
-      componentNum: 0
+      componentNum: 0,
+      pathFlag: false,
     };
+  },
+  watch: {
+    $route(to, from) { 
+      if (to.path != from.path) {
+        if(to.path.includes("detail")) this.pathFlag = true;
+        else this.pathFlag = false;
+      } 
+    },
   },
 }
 </script>
 
-
 <style scoped>
-  #foot {
+#foot {
   height: 100px;
-  }
+}
+.foot-bg {
+  background-color: #446631;
+}
 </style>
