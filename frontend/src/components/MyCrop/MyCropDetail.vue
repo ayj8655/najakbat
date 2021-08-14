@@ -63,8 +63,11 @@
         <div>{{ this.targetDate }}</div>
       </div>
     </div>
-    <div>
+    <div id="content-area">
       <h4>날씨</h4>
+      <div id="content">
+        <div></div>
+      </div>
     </div>
     <div id="contents-area">
       <h4>상태달력</h4>
@@ -275,6 +278,7 @@ export default {
       record: [],
       water: [],
       crop: {},
+      weather: {},
       harvestCropNo: "",
       value: "",
       hideHeader: true,
@@ -335,6 +339,13 @@ export default {
           console.log(err);
         });
     });
+    axios.get("user/my").then((res)=>{
+      axios.get(`weather/${res.data.address}`).then((data) => {
+        console.log(data);
+        this.weather = data.data;
+        console.log(this.weather);
+      })
+    }); 
   },
   methods: {
     moveBack() {
@@ -345,7 +356,9 @@ export default {
     },
     harvestCrop() {},
     deleteCrop() {
-      // axios.
+      // axios.delete(`user/crop/${this.ucropno}`).then((data)=>{
+      //   if(data.data=="success") this.$router.push("/mycrop");
+      // });
     },
     changeDate(str) {
       if (str) return str.substring(0, 10) + " " + str.substring(11, 19);
