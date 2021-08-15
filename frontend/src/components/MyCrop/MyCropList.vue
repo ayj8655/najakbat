@@ -29,12 +29,12 @@
           :key="index"
         >
           <div class="row">
-            <div class="col-4" @click="movePage(ucrop.cropNumber)">
+            <div class="col-4" @click="movePage(ucrop.userCropNumber)">
               <img id="thumbnail" :src="findCropImg(ucrop)" />
             </div>
             <div class="col-8">
-              <strong @click="movePage(ucrop.cropNumber)">{{ ucrop.cropNickname }}</strong>
-              <p class="mb-1" @click="movePage(ucrop.cropNumber)">수확까지 <strong>{{ ucrop.remainDate }}일</strong> 남았습니다</p>
+              <strong @click="movePage(ucrop.userCropNumber)">{{ ucrop.cropNickname }}</strong>
+              <p class="mb-1" @click="movePage(ucrop.userCropNumber)">수확까지 <strong>{{ ucrop.remainDate }}일</strong> 남았습니다</p>
               <div v-if="ucrop.water">
                 <font-awesome-icon :icon="['fas', 'tint']" size="lg" class="water-color" />
                 <span v-if="ucrop.waterDate != 0" class="ms-3">D-{{ ucrop.waterDate }}</span>
@@ -149,7 +149,7 @@ export default {
         axios
           .get(`user/crop/list?userNumber=${this.pickCrop.userNumber}`)
           .then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             this.usercrops = res.data;
           })
           .catch((err) => {

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mococo.common.model.Crop;
 import com.mococo.common.model.UserCrop;
 import com.mococo.common.model.UserCropDetailResponse;
 import com.mococo.common.model.UserCropRecord;
@@ -366,6 +367,12 @@ public class UserCropController {
 			// 1: user crop number로 조회해오기. - usercrop, usercropresponse
 			Optional<UserCrop> uc = userCropService.findByUserCropNumber(userCropNumber);
 			
+			urdr.setUserNumber(uc.get().getUserNumber());
+			
+			urdr.setCropNumber(uc.get().getCropNumber());
+			
+			urdr.setUserCropNumber(uc.get().getUserCropNumber());
+			
 			urdr.setCropNickname(uc.get().getCropNickname()); // 별명 set
 			
 			urdr.setDescription(uc.get().getDescription()); // 설명 set
@@ -402,7 +409,7 @@ public class UserCropController {
 	@RequestMapping(value = "/fullharvest", method = RequestMethod.PUT)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "완전 수확")
-	public ResponseEntity<String> fullHarvestCrop(@RequestParam int userCropNumber) throws IOException {
+	public ResponseEntity<String> fullHarvestCrop(@RequestParam int userCropNumber, @RequestParam String price) throws IOException {
 		logger.info("완전 수확 - 작물 리스트에서 뺀다");
 
 		try {
@@ -411,8 +418,8 @@ public class UserCropController {
 			uc.get().setFinish(true); 		  // 수확 완료
 			uc.get().setRealDate(new Date()); // 현재 날로 실제 수확날짜 적기
 			userRecordService.addCropFinishCount(uc.get().getUserNumber()); // 유저 기록에 반영
-
-			  							      // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
+			int gold = Integer.parseInt(price);
+			userRecordService.addGold(uc.get().getUserNumber(), gold);  							      // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
 			return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
 			
 		
@@ -425,7 +432,7 @@ public class UserCropController {
 	@RequestMapping(value = "/tempharvest", method = RequestMethod.PUT)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "임시 수확 - 작물 그대로 유지")
-	public ResponseEntity<String> tempHarvestCrop(@RequestParam int userCropNumber) throws IOException {
+	public ResponseEntity<String> tempHarvestCrop(@RequestParam int userCropNumber, @RequestParam String price) throws IOException {
 		logger.info("임시 수확 - 작물 그대로 유지");
 
 		try {
@@ -459,7 +466,8 @@ public class UserCropController {
 			userRecordService.addCropFinishCount(uc.get().getUserNumber());			      // 유저기록에 반영
 													
 
-		      									  // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
+			int gold = Integer.parseInt(price);
+			userRecordService.addGold(uc.get().getUserNumber(), gold);  	  			// 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
 			
 			boolean result = userCropService.updateCrop(uc.get());
 
@@ -474,9 +482,17 @@ public class UserCropController {
 		}
 	}
 	
-	
-	
-	
-	
-	
+	@RequestMapping(value = "/top", method = RequestMethod.GET)
+	@ApiOperation(value = "인기 작물 리스트 반환")
+	public ResponseEntity<?> searchTopCrop(@RequestParam int size) throws IOException {
+		logger.info("인기 작물 리스트 반환");
+
+		try {
+			List<Object> cropList = userCropService.findTopCrop(size);
+			return new ResponseEntity<>(cropList, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

@@ -5,10 +5,12 @@
         ><img src="@/assets/modal_back.png" width="25px" @click="moveBack"
       /></span>
       <span id="right">
-        <button class="btn btn-success"
+        <button
+          class="btn btn-success"
           data-bs-toggle="modal"
           data-bs-target="#harvModal"
-          @click="getDelModal(ucrop.userCropNumeber)">
+          @click="getDelModal(ucrop.userCropNumeber)"
+        >
           수확
         </button>
         <button
@@ -36,17 +38,18 @@
         :icon="['fas', 'tint']"
         size="lg"
         class="no-water-color"
-        @click.prevent="commitWater(this.ucrop.userCropNumber)"
+        @click.prevent="commitWater(ucrop.userCropNumber)"
       />
     </div>
-    <div id="gray-box">
-      <div>{{ crop.name }}</div>
+    <div class="row m-2" id="gray-box">
+      <div id="data-black">{{ crop.name }}</div>
       <div>
         <h3>{{ ucrop.cropNickname }}</h3>
       </div>
+      <hr/>
       <div>{{ ucrop.description }}</div>
     </div>
-    <div class="row" id="gray-box">
+    <div class="row m-2" id="gray-box">
       <div>
         <h3>D - {{ ucrop.remainDate }}</h3>
       </div>
@@ -60,8 +63,11 @@
         <div>{{ this.targetDate }}</div>
       </div>
     </div>
-    <div>
+    <div id="content-area">
       <h4>날씨</h4>
+      <div id="content">
+        <div></div>
+      </div>
     </div>
     <div id="contents-area">
       <h4>상태달력</h4>
@@ -75,56 +81,68 @@
         ></b-calendar>
       </div>
     </div>
-    <div class="row">
+    <div class="row m-2">
       <h4>기록</h4>
       <div class="col-6" v-if="this.water.length">
         <div id="more"><span>more ></span></div>
         <div id="water-content">
-          <span>
-            <img src="@/assets/water_on.png" width="30px" />
-            물 주기
-            <div>{{ this.water[0].recordDate }}</div>
-          </span>
-          <span>
-            <img src="@/assets/water_on.png" width="30px" />
-            물 주기
-            <div>{{ this.water[1].recordDate }}</div>
-          </span>
-          <span>
-            <img src="@/assets/water_on.png" width="30px" />
-            물 주기
-            <div>{{ this.water[2].recordDate }}</div>
-          </span>
+          <div id="water-content-item" v-if="this.record.length > 0">
+            <span>
+              <img src="@/assets/water_on.png" width="30px" />
+              물 주기
+            </span>
+            <div id="date">{{this.water[0].recordDate}}</div>
+          </div>
+          <div id="water-content-item" v-if="this.record.length > 1">
+            <span>
+              <img src="@/assets/water_on.png" width="30px" />
+              물 주기
+            </span>
+            <div id="date">{{this.water[1].recordDate}}</div>
+          </div>
+          <div id="water-content-item" v-if="this.record.length > 2">
+            <span>
+              <img src="@/assets/water_on.png" width="30px" />
+              물 주기
+            </span>
+            <div id="date">{{this.water[0].recordDate}}</div>
+          </div>
         </div>
       </div>
-      <div class="col-6" v-else>
-        <div>물을 준 기록이 없습니다 :(</div>
+      <div class="col-6" id="gray-box-2" v-else>
+        <div id="data-null">물을 준 기록이 없습니다 :(</div>
       </div>
       <div class="col-6" v-if="this.record.length">
         <div id="more"><span>more ></span></div>
         <div id="record-content">
-          <span>
-            <img width="30px" />
-            상태기록
-            <div>{{ this.record[0].state }}</div>
-            <div>{{ this.record[0].recordDate }}</div>
-          </span>
-          <span>
-            <img width="30px" />
-            상태기록
-            <div>{{ this.record[1].state }}</div>
-            <div>{{ this.record[1].recordDate }}</div>
-          </span>
-          <span>
-            <img width="30px" />
-            상태기록
-            <div>{{ this.record[2].state }}</div>
-            <div>{{ this.record[2].recordDate }}</div>
-          </span>
+          <div id="record-content-item" v-if="this.record.length > 0">
+            <span>
+              <img width="30px" />
+              상태기록
+              <div>{{ this.record[0].state }}</div>
+            </span>
+            <div id="date">{{this.record[0].recordDate}}</div>
+          </div>
+          <div id="record-content-item" v-if="this.record.length > 1">
+            <span>
+              <img width="30px" />
+              상태기록
+              <div>{{ this.record[1].state }}</div>
+            </span>
+            <div id="date">{{this.record[1].recordDate}}</div>
+          </div>
+          <div id="record-content-item" v-if="this.record.length > 2">
+            <span>
+              <img width="30px" />
+              상태기록
+              <div>{{ this.record[2].state }}</div>
+            </span>
+            <div id="date">{{this.record[2].recordDate}}</div>
+          </div>
         </div>
       </div>
-      <div class="col-6" v-else>
-        <div>등록한 상태기록이 없습니다 :(</div>
+      <div class="col-6" id="gray-box-2" v-else>
+        <div id="data-null">등록한 상태기록이 없습니다 :(</div>
       </div>
     </div>
     <div>
@@ -135,7 +153,7 @@
     </div>
     <div>
       <h4>작물 도감</h4>
-      <div class="m-4" id="contents-area">
+      <div class="m-2" id="contents-area">
         <div id="content">
           <div class="mt-5 mb-5">
             <p><strong>햇빛 선호도</strong></p>
@@ -168,94 +186,84 @@
       <h4>커뮤니티</h4>
     </div>
     <div id="foot"></div>
-    
-      <!-- Modal -->
-      <div
-        class="modal fade"
-        id="harvModal"
-        tabindex="-1"
-        aria-labelledby="harvModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="harvModalLabel">수확하기</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              해당 작물 재배를 계속하시겠습니까? :)
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-success"
-                @click="harvestCrop()"
-              >
-                재배 계속하기
-              </button>
-              <button
-                type="button"
-                class="btn btn-danger"
-                @click="deleteCrop()"
-              >
-                재배 그만두기
-              </button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                취소
-              </button>
-            </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="harvModal"
+      tabindex="-1"
+      aria-labelledby="harvModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="harvModalLabel">수확하기</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">해당 작물 재배를 계속하시겠습니까? :)</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-success"
+              @click="harvestCrop()"
+            >
+              재배 계속하기
+            </button>
+            <button type="button" class="btn btn-danger" @click="deleteCrop()">
+              재배 그만두기
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              취소
+            </button>
           </div>
         </div>
       </div>
-      <!-- Modal -->
-      <div
-        class="modal fade"
-        id="delModal"
-        tabindex="-1"
-        aria-labelledby="delModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="delModalLabel">내 농작물 삭제하기</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">해당 농작물의 삭제를 진행하시겠습니까?</div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-danger"
-                @click="deleteCrop()"
-              >
-                삭제
-              </button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                취소
-              </button>
-            </div>
+    </div>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="delModal"
+      tabindex="-1"
+      aria-labelledby="delModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="delModalLabel">내 농작물 삭제하기</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">해당 농작물의 삭제를 진행하시겠습니까?</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" @click="deleteCrop()">
+              삭제
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              취소
+            </button>
           </div>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -270,6 +278,7 @@ export default {
       record: [],
       water: [],
       crop: {},
+      weather: {},
       harvestCropNo: "",
       value: "",
       hideHeader: true,
@@ -283,52 +292,60 @@ export default {
     };
   },
   created() {
-    axios
-      .get(`user/crop/all?userNumber=${this.$store.state.userNumber}`)
-      .then((data) => {
-        data.data.forEach((c) => {
-          if (this.ucropno == c.cropNumber) {
-            this.ucrop = c;
-            // break;
-          }
+    axios.get(`user/crop/detail?userCropNumber=${this.ucropno}`).then((res) => {
+      this.ucrop = res.data;
+      this.plantedDate = this.ucrop.plantedDate.substring(0, 10);
+      this.targetDate = this.ucrop.targetDate.substring(0, 10);
+      axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
+        // console.log(this.crop);
+        this.crop = data.data;
+        this.lowTemp = this.crop.temperature.split("~")[0] + "℃";
+        this.highTemp = this.crop.temperature.split("~")[1] + "℃";
+        this.suns.forEach((s, index) => {
+          this.suns[index] =
+            index < this.crop.sun
+              ? require("@/assets/sun.png")
+              : require("@/assets/sun_off.png");
         });
-        this.plantedDate = this.ucrop.plantedDate.substring(0, 10);
-        this.targetDate = this.ucrop.targetDate.substring(0, 10);
-        console.log(this.ucrop);
-        axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
-          this.crop = data.data;
-          this.lowTemp = this.crop.temperature.split("~")[0] + "℃";
-          this.highTemp = this.crop.temperature.split("~")[1] + "℃";
-          this.suns.forEach((s, index) => {
-            this.suns[index] =
-              index < this.crop.sun
-                ? require("@/assets/sun.png")
-                : require("@/assets/sun_off.png");
-          });
-          this.waters.forEach((w, index) => {
-            this.waters[index] =
-              index < this.crop.water
-                ? require("@/assets/water_on.png")
-                : require("@/assets/water_off.png");
-          });
+        this.waters.forEach((w, index) => {
+          this.waters[index] =
+            index < this.crop.water
+              ? require("@/assets/water_on.png")
+              : require("@/assets/water_off.png");
         });
-        axios
-          .get(`user/crop/record?userCropNumber=${this.ucropno}`)
-          .then((data) => {
-            this.record = data.data;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        axios
-          .get(`user/crop/water?userCropNumber=${this.ucropno}`)
-          .then((data) => {
-            this.water = data.data;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
       });
+      axios
+        .get(`user/crop/record?userCropNumber=${this.ucropno}`)
+        .then((data) => {
+          this.record = data.data;
+          // console.log(this.record);
+          this.record.forEach(r => {
+            r.recordDate = this.changeDate(r.recordDate);
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      axios
+        .get(`user/crop/water?userCropNumber=${this.ucropno}`)
+        .then((data) => {
+          this.water = data.data;
+          // console.log(this.water);
+          this.water.forEach(w => {
+            w.recordDate = this.changeDate(w.recordDate);
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+    axios.get("user/my").then((res)=>{
+      axios.get(`weather/${res.data.address}`).then((data) => {
+        console.log(data);
+        this.weather = data.data;
+        console.log(this.weather);
+      })
+    }); 
   },
   methods: {
     moveBack() {
@@ -339,18 +356,19 @@ export default {
     },
     harvestCrop() {},
     deleteCrop() {
-      // axios.
+      // axios.delete(`user/crop/${this.ucropno}`).then((data)=>{
+      //   if(data.data=="success") this.$router.push("/mycrop");
+      // });
+    },
+    changeDate(str) {
+      if (str) return str.substring(0, 10) + " " + str.substring(11, 19);
     },
     commitWater(event) {
       axios
         .post(`user/crop/water?userCropNumber=${event}`)
         .then((res) => {
           if (res.data === "success") {
-            for (var i = 0; i < this.usercrops.length; i++) {
-              if (this.usercrops[i].userCropNumber == event) {
-                this.usercrops[i].water = true;
-              }
-            }
+            this.ucrop.water = true;
           }
         })
         .catch((err) => {
@@ -397,12 +415,24 @@ export default {
 #gray-box {
   /* border: 2px solid #446631; */
   color: #ffffff;
-  box-sizing: border-box;
   background-color: #aaaaaa;
   border-radius: 5px;
   min-height: 100px;
   padding: 20px;
-  margin: 15px;
+}
+#gray-box-2 > div {
+  /* border: 2px solid #446631; */
+  color: #ffffff;
+  background-color: #aaaaaa;
+  border-radius: 5px;
+  min-height: 50px;
+  padding: 10px;
+}
+#data-black {
+  color: #2D2D2D;
+}
+#data-null {
+  font-size: 12px;
 }
 h4 {
   text-align: left;
@@ -413,12 +443,14 @@ h4 {
   color: #ffffff;
   text-align: right;
 }
-#water-content,
-#record-content {
+#date {
+  font-size: 12px;
+}
+#water-content-item, #record-content-item {
   min-height: 60px;
   background-color: #ffffff;
   border-radius: 5px;
-  margin: 5px;
+  margin: 5px 0;
 }
 #contents-area > div {
   /* border: 2px solid #446631; */

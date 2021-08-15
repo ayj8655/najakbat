@@ -82,31 +82,30 @@ public class UserNoticeController {
 	}
 
 	@RequestMapping(value = "/notice", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteAllNotice(@RequestParam List<Integer> noticeno) throws IOException {
-		logger.info("읽은 알림 전체 삭제");
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "해당사용자 알림 전체를 삭제한다.", response = String.class)
+	public ResponseEntity<String> deleteAllNotice(@RequestParam int userNumber) throws IOException {
+		logger.info("알림 전체 삭제");
 		try {
-			int ret = 0;
-
-
-			ret = noticeService.deleteAllByIdIn(noticeno);
-			System.out.println(ret);
-			System.out.println("읽은 알림 전체 삭제 성공");
+			noticeService.deleteAllByUserNumber(userNumber);
+			System.out.println("알림 전체 삭제 성공");
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 
 		} catch (Exception e) {
-			System.out.println("읽은 알림 전체 삭제 에러");
+			System.out.println("알림 전체 삭제 에러");
 			e.printStackTrace();
 			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 
-	@RequestMapping(value = "/notice/{no}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/notice/list", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "선택한 알림들을 삭제한다.", response = String.class)
 	public ResponseEntity<String> deleteNotice(@RequestParam List<Integer> noticeno) throws IOException {
 		logger.info("선택 알림 전체 삭제");
 		try {
 			int ret = 0;
-		
 
 			ret = noticeService.deleteAllByIdIn(noticeno);
 			System.out.println(ret);

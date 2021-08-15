@@ -22,6 +22,9 @@ public interface NoticeDAO extends JpaRepository<Notice, Integer>{
 	
 	@Transactional
 	public int deleteAllByNoticeNumberIn(List<Integer> noticeno);
+	
+	@Transactional
+	public void deleteAllByUserNumber(int userNumber);
 
 	
 	
