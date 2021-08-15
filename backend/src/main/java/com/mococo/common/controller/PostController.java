@@ -83,7 +83,6 @@ public class PostController {
 	// 게시물 n개씩 조회해서 보내주는 것
 	@RequestMapping(value = "/infinite", method = RequestMethod.GET)
 	@ApiOperation(value = "게시글 전체 조회 인피니티 스크롤")
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<?> searchInfinitePost(@RequestParam("limit") int limit) throws IOException {
 		try {
 
@@ -101,7 +100,6 @@ public class PostController {
 
 	@RequestMapping(value = "/type/{type}", method = RequestMethod.GET)
 	@ApiOperation(value = "게시물 타입별 조회")
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<?> searchPostType(@PathVariable String type) throws IOException {
 		logger.info("게시물 분류 조회");
 		int postType = 0;
