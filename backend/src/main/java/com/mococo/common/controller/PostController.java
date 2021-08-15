@@ -373,8 +373,17 @@ public class PostController {
 		}
 	}
 	
-	
-	
-	
+	@RequestMapping(value = "/top", method = RequestMethod.GET)
+	@ApiOperation(value = "인기 게시글 리스트 반환")
+	public ResponseEntity<?> searchTopCrop(@RequestParam int size) throws IOException {
+		logger.info("인기 게시글 리스트 반환");
 
+		try {
+			List<Object> postList = postService.findTopPost(size);
+			return new ResponseEntity<>(postList, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
