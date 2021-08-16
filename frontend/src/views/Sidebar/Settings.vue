@@ -1,72 +1,104 @@
 <template>
 <div>
-    <div class="container">
-    <div class="d-flex flex-column bd-highlight mb-3">
+  <header-nav></header-nav>
+  <Sidebar id="side-bar" />
+    <div class="container2 px-4 me-1 ms-1">
+    <div class="row">
+
+    <div class="bd-highlight mb-3">
     <div class="p-2 bd-highlight">
      설정
     </div>
-    <div class="p-2 d-flex bd-highlight">
+    <div class="container p-2 bd-highlight">
     <!-- <toggle-button @change="onChangeEventHandler"/> -->
-    <h2>물 주기 알림</h2>
-    <toggle-button :value="water_notice"
-               color="#82C7EB"
-               :sync="true"
-               :labels="true"
-               @change="changeWaterNotice ()"/>
+    <div class="row">
+    <div class="col-8">물 주기 알림</div>
+<toggle-button :value="water_notice"
+              @change="changeWaterNotice ()"/>
+
     </div>
-    <div class="p-2 d-flex bd-highlight">
-    <h2>추천 정보 알림</h2>
+    </div>
+
+    <div class="container p-2 bd-highlight">
+      <div class="row">
+    <div class="col">추천 정보 알림</div>
     <!-- <toggle-button v-model="myDataVariable"/> -->
     <toggle-button :value="recommendedinfo_notice"
+               class="togglebtn col"    
                color="#82C7EB"
                :sync="true"
                :labels="true"
                @change="changeRecommendedinfoNotice ()"/>  
     </div>
-    <div class="p-2 d-flex bd-highlight">
-    <h3>커뮤니티 새 댓글 알림</h3>
+      </div>
+
+    <div class="container p-2 bd-highlight">
+      <div class="row">
+    <div class="col">커뮤니티 새 댓글 알림</div>
     <toggle-button :value="newcomments_notice"
+               class="togglebtn col"
                color="#82C7EB"
                :sync="true"
                :labels="true"
                @change="changeNewcommentsNotice ()"/>
     </div>
-    <div class="p-2 d-flex bd-highlight">
-    <h2>새 쪽지 알림</h2>
+      </div>
+
+    <div class="container p-2 bd-highlight">
+    <div class="row">
+    <div class="col">새 쪽지 알림</div>
     <toggle-button :value="newtwits_notice"
                color="#82C7EB"
                :sync="true"
+               class="togglebtn col"               
                :labels="true"
                @change="changeNewtwitsNotice ()"/>  
     </div>
-    <div class="p-2 d-flex bd-highlight">
-    <h2>나이트모드</h2>
+    </div>
+
+    <div class="container p-2 bd-highlight">
+    <div class="row">
+    <div class="col">나이트모드</div>
     <toggle-button :value="nightmode_notice"
                color="#82C7EB"
+               class="togglebtn col"               
                :sync="true"
                :labels="true"
                @change="changeNightmode ()"/>
     </div>
-    <div class="p-2 d-flex bd-highlight">
-    <h2>알림시간</h2>
-    <h3>
+    </div>
+
+    <div class="p-2 bd-highlight container">
+    <div class="row">
+
+    <div class="col">알림시간</div>
+    <h3 class="col">
       {{ noticeTime }}
     </h3>
+    </div>
     </div>
     <button type="button" class="btn btn-success mb-2" v-if="changes" @click="settingsUpdate">저장</button>
     <!-- <button type="button" class="btn btn-success mb-2" v-if="changes" @click="updateNotice ([this.water_notice, this.recommendedinfo_notice, this.newcomments_notice, this.newtwits_notice, this.nightmode_notice])">저장</button> -->
     <button type="button" class="btn btn-success" v-else disabled>저장</button>
+    </div>
   </div>  
 
 
 
     </div>
+  <div v-show="this.$store.state.sidebar == false">
+    <div id="foot"></div>
+    <menubar id="menubar"></menubar>
+  </div>
 </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
+import HeaderNav from "@/components/Menu/HeaderNav.vue";
+import Menubar from "@/components/Menu/Menubar.vue";
+import Sidebar from "@/components/Sidebar/Sidebar.vue";
 
 export default {
   name: 'AlertsSettings',
@@ -76,6 +108,7 @@ export default {
       changes: false,
     }
   },
+  components: { Menubar, HeaderNav, Sidebar },
   methods: {
     ...mapActions ([
       'updateNotice',
@@ -165,11 +198,21 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  position: relative;
-  width: 375px;
-  height: 812px;
+.togglebtn col {
+  z-index: 0;
+  right: 0px;
+}
 
-  background: #FFFFFF;
+#side-bar {
+  z-index: 1;
+  position: fixed;
+}
+#foot {
+  height: 150px;
+}
+#menubar {
+  position: fixed;
+  background-color: #b6c790;
+  bottom: 0;
 }
 </style>

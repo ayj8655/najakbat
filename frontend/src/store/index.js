@@ -402,6 +402,7 @@ export default new Vuex.Store({
       commit('DELETE_TOKEN');
       localStorage.removeItem('access_token');
       localStorage.clear();
+      router.go(0)
     },
 
     //Modify actions

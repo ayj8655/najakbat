@@ -10,7 +10,7 @@
   <button type="button" class="btn btn-warning mb-2" @click="deleteAllNotices">전체 삭제</button>
   </div>
   <div v-for="(searchNotice, index) in searchNotices" :key="index">
-    <div class="container px-0">
+    <div class="container px-4">
       <div v-if="searchNotice.isRead" class="isRead-false border border-end-0 border-start-0 bg-white" @click="Reading ([searchNotice, index])">
         <div class="container notice mt-2">
           <div class="row">
