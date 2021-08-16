@@ -1,6 +1,7 @@
 package com.mococo.common.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -8,11 +9,15 @@ import java.util.Optional;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.mococo.common.dao.PostDAO;
 import com.mococo.common.dao.PostPhotoDAO;
 import com.mococo.common.dao.PostRecommendDAO;
@@ -32,6 +37,12 @@ public class PostService {
 	
 	@Autowired
 	PostPhotoDAO postphotoDAO;
+	
+	@Autowired
+	AmazonS3 amazonS3;
+	
+	@Value("${aws.s3.bucket}")
+	private String s3bucket;
 	
 	// 게시글 번호로 해당 Post 리턴
 	public Optional<Post> findPostByPostNumber(int no){
@@ -150,9 +161,10 @@ public class PostService {
 
 	public Post insertPost(Post post, MultipartFile[] files) throws IllegalStateException, IOException {
 		Post p = postDAO.save(post);
-		
+		System.out.println(files.length);
         if(files == null){
             // TODO : 파일이 없을 땐 어떻게 해야할까.. 고민을 해보아야 할 것
+        	System.out.println("텅비었어....");
         }
         // 파일에 대해 DB에 저장하고 가지고 있을 것
         else{
@@ -180,7 +192,15 @@ public class PostService {
 					System.out.println("길이" + photo.getSaveFolder().length());
 					photo.setPost(post);
 					System.out.println(photo.getSaveFile());
+					
+					// S3 Bucket에 저장
+					File file = convertMultiPartFileToFile(mfile);
+					System.out.println(s3bucket);
+					amazonS3.putObject(new PutObjectRequest(s3bucket, "post/"+originalFileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+					System.out.println(2);
+					
 					postphotoDAO.save(photo);
+					System.out.println("넣었는디 이상하네");
 				}
 
 			}
@@ -242,4 +262,19 @@ public class PostService {
 	public List<Object> findTopPost(int size) {
 		return postDAO.findTopPost(PageRequest.of(0, size));
 	}
+	
+	
+	// multipart file -> file
+	private File convertMultiPartFileToFile(MultipartFile multipartFile) {
+		final File file = new File(multipartFile.getOriginalFilename());
+        try {
+            FileOutputStream outputStream = new FileOutputStream(file) ;
+            outputStream.write(multipartFile.getBytes());
+        } catch (final IOException ex) {
+        	System.out.println("Error converting the multi-part file to file= "+ex.getMessage());
+        }
+        return file;
+	}
+	
+	
 }
