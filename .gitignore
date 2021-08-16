@@ -25,3 +25,13 @@ pnpm-debug.log*
 Servers
 .metadata
 /.recommenders/
+
+
+# JPEG
+*.jpg
+*.jpeg
+*.jpe
+*.jif
+*.jfif
+*.jfi
+*.png
