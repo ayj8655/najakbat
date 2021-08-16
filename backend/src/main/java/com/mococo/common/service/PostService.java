@@ -161,7 +161,6 @@ public class PostService {
 
 	public Post insertPost(Post post, MultipartFile[] files) throws IllegalStateException, IOException {
 		Post p = postDAO.save(post);
-		System.out.println(files.length);
         if(files == null){
             // TODO : 파일이 없을 땐 어떻게 해야할까.. 고민을 해보아야 할 것
         	System.out.println("텅비었어....");
@@ -174,33 +173,22 @@ public class PostService {
 				if (!originalFileName.isEmpty()) {
 					String sourceFileName = mfile.getOriginalFilename();
 					String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
-					File destinationFile;
+
 					String destinationFileName;
-					String fileUrl = "C:\\SSAFY\\Mococo\\backend\\src\\main\\resources\\photos\\";
-					do {
-						destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
-						destinationFile = new File(fileUrl + destinationFileName);
-					} while (destinationFile.exists());
+					destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
 	
-					destinationFile.getParentFile().mkdirs();
-					mfile.transferTo(destinationFile);
 	
-					photo.setSaveFile(destinationFileName);
-					photo.setOriginFile(sourceFileName);
-					photo.setSaveFolder(fileUrl);
-					
-					System.out.println("길이" + photo.getSaveFolder().length());
-					photo.setPost(post);
-					System.out.println(photo.getSaveFile());
-					
 					// S3 Bucket에 저장
 					File file = convertMultiPartFileToFile(mfile);
-					System.out.println(s3bucket);
-					amazonS3.putObject(new PutObjectRequest(s3bucket, "post/"+originalFileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
-					System.out.println(2);
 					
+					amazonS3.putObject(new PutObjectRequest(s3bucket, "post/"+destinationFileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+					
+					photo.setPost(post);
+					photo.setOriginFile(originalFileName);
+					photo.setSaveFile(destinationFileName);
+					photo.setSaveFolder("post");
 					postphotoDAO.save(photo);
-					System.out.println("넣었는디 이상하네");
+					file.delete();
 				}
 
 			}
@@ -266,10 +254,11 @@ public class PostService {
 	
 	// multipart file -> file
 	private File convertMultiPartFileToFile(MultipartFile multipartFile) {
-		final File file = new File(multipartFile.getOriginalFilename());
+		File file = new File(multipartFile.getOriginalFilename());
         try {
             FileOutputStream outputStream = new FileOutputStream(file) ;
             outputStream.write(multipartFile.getBytes());
+            outputStream.close();
         } catch (final IOException ex) {
         	System.out.println("Error converting the multi-part file to file= "+ex.getMessage());
         }
