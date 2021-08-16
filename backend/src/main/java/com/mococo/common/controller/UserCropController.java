@@ -124,7 +124,7 @@ public class UserCropController {
 	@RequestMapping(value = "/", method = RequestMethod.DELETE)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 삭제")
-	public ResponseEntity<String> deleteCrop(@RequestBody int userCropNumber) throws IOException {
+	public ResponseEntity<String> deleteCrop(@RequestParam int userCropNumber) throws IOException {
 		logger.info("작물 삭제");
 
 		try {
