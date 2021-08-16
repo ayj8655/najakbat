@@ -44,6 +44,8 @@ export default new Vuex.Store({
     messageReceiverNickname: '',
     alluserInfo: '',
     messageNumber: '',
+    SenderNumber: '',
+    ReceiverNumber: '',
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',

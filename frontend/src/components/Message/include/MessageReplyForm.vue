@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 import { mapActions } from 'vuex'
 // import Dropdown from 'vue-simple-search-dropdown'
 
@@ -59,20 +59,6 @@ export default {
       // receiver: '',
     }
   },
-  created() {
-    this.$store.dispatch('getUserinfoAll')
-
-    // console.log(this.$store.state.messageSenderNickname)
-    // console.log(this.$store.state.alluserInfo)
-  },
-  computed: {
-    ...mapState([
-      'alluserInfo',
-      // 'messageSenderNickname',
-
-      // 'receiver'
-    ])
-  },
   
   methods: {
     ...mapActions([
@@ -80,15 +66,10 @@ export default {
       'messageDelete'
     ]),
     postingMessage() {
-      console.log(this.nickname)
-      for (const userinfo of this.alluserInfo) {
-        if (userinfo.nickname === this.nickname) {
-          this.$store.state.receiver = userinfo.userNumber
-        }
-      }
+
       // console.log(this.$store.state.receiver)
       // console.log(this.$store.state.messageSenderNickname)
-      this.$store.dispatch('messagePost', [this.content, this.$store.state.receiver])
+      this.$store.dispatch('messagePost', [this.content, this.$store.state.SenderNumber])
     },
   },
 
