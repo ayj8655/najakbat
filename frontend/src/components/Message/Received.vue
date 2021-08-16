@@ -193,6 +193,8 @@ export default {
         this.$store.state.messageTime = message.time
         this.$store.state.messageSenderNickname = message.senderNickname
         this.$store.state.messageNumber = message.messageNumber
+        this.$store.state.SenderNumber = message.senderNumber
+        this.$store.state.ReceiverNumber = message.receiverNumber
         console.log(this.$store.state.messageSenderNickname)
       }
     },
