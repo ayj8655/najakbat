@@ -62,7 +62,7 @@ public class UserCropController {
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 등록")
-	public ResponseEntity<String> insertCrop(@RequestParam String cropno, @RequestParam String userno, @RequestParam String cropnickname, @RequestParam String cropdesc, @ApiParam(value = "growingPeriod (crop number가 0일때만 사용)", required = false) @RequestParam int growingPeriod, @ApiParam(value = "waterPeriod (crop number가 0일때만 사용)", required = false) @RequestParam int waterPeriod)
+	public ResponseEntity<String> insertCrop(@RequestParam String cropno, @RequestParam String userno, @RequestParam String cropnickname, @RequestParam String cropdesc, @ApiParam(value = "growingPeriodData (crop number가 0일때만 사용)", required = false) @RequestParam(required = false) Integer growingPeriodData, @ApiParam(value = "waterPeriodData (crop number가 0일때만 사용)", required = false) @RequestParam(required = false) Integer waterPeriodData)
 			throws IOException {
 		logger.info("작물 등록");
 
@@ -81,6 +81,9 @@ public class UserCropController {
 			userCrop.setCropNickname(cropnickname);
 			userCrop.setDescription(cropdesc);
 			
+			int growingPeriod = 0;
+			int waterPeriod = 0;
+			
 			// db에 있는 작물일 경우
 			if (crop_number != 0) {
 				// target date, need_date: 물줘야하는날짜, finish=false, water_cycle, 다음 물 줘야하는날
@@ -88,6 +91,9 @@ public class UserCropController {
 				JSONObject jsonDayInfo = new JSONObject((Map) dayInfo.get());
 				growingPeriod = (int) jsonDayInfo.get("growingPeriod");
 				waterPeriod = (int) jsonDayInfo.get("waterPeriod");
+			} else {
+				growingPeriod = growingPeriodData == null ? 0 : growingPeriodData;
+				waterPeriod = waterPeriodData == null ? 0 : waterPeriodData;
 			}
 
 			cal.setTime(now_time);
