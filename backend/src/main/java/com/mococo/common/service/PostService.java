@@ -2,18 +2,14 @@ package com.mococo.common.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import javax.transaction.Transactional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +19,6 @@ import com.mococo.common.dao.PostRecommendDAO;
 import com.mococo.common.model.Post;
 import com.mococo.common.model.PostPhoto;
 import com.mococo.common.model.PostRecommend;
-import com.mococo.common.model.PostRecommendPK;
 import com.mococo.common.model.User;
 
 @Service
@@ -244,4 +239,7 @@ public class PostService {
         return p;
 	}
 	
+	public List<Object> findTopPost(int size) {
+		return postDAO.findTopPost(PageRequest.of(0, size));
+	}
 }
