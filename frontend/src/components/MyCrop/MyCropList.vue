@@ -90,17 +90,44 @@
             </div>
             <div>
               <hr>
-              <div class="d-flex justify-content-start mt-2">
-                <h5 class="mb-0">나만의 작물 소개를 적어보세요😊</h5>
-                <p class="text-success ms-auto">(선택 사항)</p>
+              <div v-if="cropNoSelected === 0">
+                <div class="d-flex justify-content-start mt-2">
+                  <h5 class="mb-2">나만의 작물을 만들어보세요😊</h5>
+                </div>
+                <p class="text-danger d-flex justify-content-start">(필수 사항)</p>
+                <div class="form-floating">
+                  <textarea class="form-control my-3" placeholder="Leave a comment here" id="floatingTextarea" v-model="etc.cropNick"></textarea>
+                  <label for="floatingInputValue">작물 이름을 등록해주세요!</label>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <div class="form-floating">
+                    <textarea class="form-control mb-3" placeholder="Leave a comment here" id="floatingTextarea" v-model="etc.waterDate"></textarea>
+                    <label for="floatingInputValue">물 주기(day)</label>
+                  </div>
+                  <div class="form-floating">
+                    <textarea class="form-control mb-3" placeholder="Leave a comment here" id="floatingTextarea" v-model="etc.remainDate"></textarea>
+                    <label for="floatingInputValue">남은 수확일(day)</label>
+                  </div>
+                </div>
+                <p class="text-success d-flex justify-content-start">(선택 사항)</p>
+                <div class="form-floating">
+                  <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" v-model="etc.cropDesc"></textarea>
+                  <label for="floatingInputValue">작물 소개를 작성해주세요!</label>
+                </div>
               </div>
-              <div class="form-floating">
-                <textarea class="form-control my-3" placeholder="Leave a comment here" id="floatingTextarea" v-model="cropNick"></textarea>
-                <label for="floatingInputValue">작물 이름을 지어주세요!</label>
-              </div>
-              <div class="form-floating">
-                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" v-model="cropDesc"></textarea>
-                <label for="floatingInputValue">작물 소개를 작성해주세요!</label>
+              <div v-else>
+                <div class="d-flex justify-content-start mt-2">
+                  <h5 class="mb-0">나만의 작물 소개를 적어보세요😊</h5>
+                  <p class="text-success ms-auto">(선택 사항)</p>
+                </div>
+                <div class="form-floating">
+                  <textarea class="form-control my-3" placeholder="Leave a comment here" id="floatingTextarea" v-model="cropNick"></textarea>
+                  <label for="floatingInputValue">작물 이름을 지어주세요!</label>
+                </div>
+                <div class="form-floating">
+                  <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" v-model="cropDesc"></textarea>
+                  <label for="floatingInputValue">작물 소개를 작성해주세요!</label>
+                </div>
               </div>
             </div>
           </div>
@@ -109,10 +136,20 @@
               type="button"
               class="btn btn-success"
               data-bs-dismiss="modal"
+              :disabled="!this.etc.cropNick || isNaN(this.etc.waterDate) || isNaN(this.etc.remainDate) || !this.etc.waterDate || !this.etc.remainDate"
+              @click="saveMyCrop"
+              v-if="cropNoSelected === 0"
+            >
+              등록
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              data-bs-dismiss="modal"
               :disabled="!this.cropNoSelected"
               @click="saveCrop"
+              v-else
             >
-              <!-- :disabled="!this.userSelectCrop === ''" -->
               등록
             </button>
           </div>
@@ -139,6 +176,12 @@ export default {
       pickCrop: {
         userNumber: null,
       },
+      etc: {
+        cropNick: null,
+        cropDesc: null,
+        waterDate: null,
+        remainDate: null
+      }
     };
   },
   created() {
@@ -149,7 +192,7 @@ export default {
         axios
           .get(`user/crop/list?userNumber=${this.pickCrop.userNumber}`)
           .then((res) => {
-            // console.log(res.data);
+            console.log(res.data);
             this.usercrops = res.data;
           })
           .catch((err) => {
@@ -162,6 +205,7 @@ export default {
 
     axios.get("guide/plant/summary").then((data) => {
       this.crops = data.data;
+      this.crops.push({cropNumber: 0, image: "기타.jpg", name: "기타"})
       // console.log(this.crops);
       this.crops.forEach((c, index) => {
         this.cropImg[index] = this.crops[index].image
@@ -186,6 +230,35 @@ export default {
     // selectCrop(event) {
     //   this.userSelectCrop = event;
     // },
+
+    saveMyCrop() {
+      if(!this.etc.cropDesc) {
+        this.etc.cropDesc = '작물소개를 작성해보세요!'
+      }
+      axios({
+        method: 'post',
+        url: 'user/crop/',
+        params: {
+          cropdesc: this.etc.cropDesc,
+          cropnickname: this.etc.cropNick,
+          cropno: this.cropNoSelected,
+          userno: this.pickCrop.userNumber,
+          growingPeriodData: Number(this.etc.remainDate),
+          waterPeriodData : Number(this.etc.waterDate)
+        }
+      })
+      .then((res) => {
+        if (res.data == "success") window.location.reload();
+        this.etc.cropNick = null
+        this.etc.cropDesc = null
+        this.etc.remainDate = null
+        this.etc.waterDate = null
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    },
+
     saveCrop() {
       if (!this.cropNick) {
         for (var i = 0; i < this.crops.length; i++) {
@@ -196,7 +269,7 @@ export default {
       }
 
       if (!this.cropDesc) {
-        this.cropDesc = '작물소개를 작성해주세요!'
+        this.cropDesc = '작물소개를 작성해보세요!'
       }
 
       axios({
