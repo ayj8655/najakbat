@@ -3,6 +3,8 @@
     <div class="m-2" id="post-head">
       <span id="left1">
         <img :src="this.typeimg" width="35px" />
+        <img src="@/assets/complate.png" width="35px" class="ms-1" v-if="post.isFinish" />
+        <img src="@/assets/complate.png" width="35px" class="ms-1" v-if="post.finish" />
         {{ post.title }}
       </span>
       <span id="right1">
