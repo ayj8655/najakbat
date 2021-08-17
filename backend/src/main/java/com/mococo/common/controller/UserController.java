@@ -57,7 +57,7 @@ public class UserController {
 
 	@Autowired
 	UserSettingService userSettingService;// 회원가입시 유저세팅을 저장해야하기 때문에 서비스 가져왔음
-	
+
 	@Autowired
 	UserRecordService userRecordService;
 
@@ -115,7 +115,7 @@ public class UserController {
 		Optional<User> tempuser = userService.findById(userDto.getId());
 		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0, 6); // 유저 설정 디폴트값 초기에 6시로 알림 세팅
 		userSettingService.save(us);
-		
+
 		// 유저 로그를 기록할 데이터 추가
 		UserRecord ur = new UserRecord();
 		ur.setUserNumber(tempuser.get().getUserNumber());
@@ -272,6 +272,34 @@ public class UserController {
 
 	}
 
+	// 핸드폰번호 받고 받은 폰 번호로 아이디 찾고 찾은 아이디 전송 (핸드폰번호만 받으면됨)
+	@RequestMapping(value = "/search/{nickName}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('USER')") // 두가지 권한 모두 호출가능
+	@ApiOperation(value = "닉네임으로 유저번호 찾기", notes = "닉네임으로 유저번호를 찾아서 리턴 있으면 유저번호 없으면 Fail", response = String.class)
+	public ResponseEntity<String> searchUserNumberByNickName(@PathVariable String nickName) throws IOException {
+		logger.info("닉네임으로유저번호찾기");
+
+		System.out.println(userService);
+
+		try {
+			Optional<User> user = userService.findByNickname(nickName);
+
+			if (!user.isPresent()) {
+				logger.info("닉네임으로유저번호찾기 실패");
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+			}
+
+			Integer num = user.get().getUserNumber();
+			System.out.println("닉네임으로유저번호찾기 성공 " + num);
+			return new ResponseEntity<String>(Integer.toString(num), HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println("닉네임으로유저번호찾기 오류");
+			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
 	// 핸드폰번호 받음 -> 랜덤숫자만듦 -> 메시지 보냄 -> 숫자 프론트에 보냄
 //	@RequestMapping(value = "/pass/phone", method = RequestMethod.POST)
 //	@ApiOperation(value = "헨드폰인증", notes = "번호입력받으면 인증번호 생성 후 핸드폰에 메시지를 보내고 인증번호를 프론트로 전송한다", response = String.class)
@@ -348,23 +376,20 @@ public class UserController {
 
 	}
 
-	
 	@RequestMapping(value = "/pass/pwFind", method = RequestMethod.POST)
 	@ApiOperation(value = "비밀번호변경", notes = "아이디와변경할 비밀번호를 입력하면 성공 실패 반환", response = String.class)
 	public ResponseEntity<String> pwFind(@RequestBody User user) throws IOException {
 		logger.info("비밀번호변경");
 
-		
-		//아이디랑 핸드폰이 일치하는지 확인
-		
+		// 아이디랑 핸드폰이 일치하는지 확인
+
 		boolean temp = userService.findByIdAndPhone(user.getId(), user.getPhone());
-		
-		if(!temp) {
+
+		if (!temp) {
 			System.out.println("일치하는사용자가없어용");
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 		}
-		
-		
+
 		try {
 			boolean ret = userService.updateById(user);
 

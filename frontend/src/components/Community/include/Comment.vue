@@ -34,6 +34,7 @@
             !comment.isdeleted
           "
         >
+          <label @click="writeChildChange">답글달기</label> |
           <label @click="modifyCommentView">수정</label> |
           <label @click="deleteComment">삭제</label>
         </span>
@@ -88,7 +89,7 @@
           ></textarea>
         </div>
         <div align="right">
-          <button class="btn btn-success btn-sm m-2" @click="writeChildComment">
+          <button class="btn btn-success btn-sm m-2" :disabled="this.writeComment.content.length == 0" @click="writeChildComment">
             등록
           </button>
           <button
@@ -113,10 +114,10 @@ export default {
   props: {
     comment: Object,
     recoFlag: Boolean,
+    col: Number,
   },
   data() {
     return {
-      col: this.comment.commentNumber == 0 || !this.comment.parent ? 12 : 11,
       userNumber: this.$store.state.userNumber,
       userNickname: this.$store.state.userNickname,
       isShow: true,
@@ -162,7 +163,10 @@ export default {
       axios
         .put(`comment/${this.modifyComment.commentNumber}`, this.modifyComment)
         .then((data) => {
-          if (data.data == "success") console.log("댓글 수정 성공");
+          if(data.data=="success") {
+            this.modifyComment = null;
+            this.$emit("reload-comment");
+          }
           this.updateCommentCancel();
         })
         .catch((err) => {
@@ -177,15 +181,21 @@ export default {
       this.writeComment.userNumber = this.userNumber;
       this.writeComment.userNickname = this.userNickname;
       this.writeComment.postno = this.comment.postNumber;
-      this.writeComment.parent = this.comment.commentNumber;
+      this.writeComment.parent = this.comment.parent;
     },
     writeChildComment() {
-      console.log(this.writeComment);
-      axios.post(`comment/?user_number=${this.userNumber}&postno=${this.comment.postNumber}&parent=${this.comment.commentNumber}`, this.writeComment).then((data) => {
-        if (data.data == "success") window.location.reload();
-      }).catch((err) => {
-        console.log(err);
-      });
+      if(this.writeComment.content.length>0) {
+        // console.log(this.writeComment);
+        axios.post(`comment/?user_number=${this.userNumber}&postno=${this.comment.postNumber}&parent=${(this.comment.parent)? this.comment.parent:this.comment.commentNumber}`, this.writeComment).then((data) => {
+          if(data.data=="success") {
+            this.writeChildChange();
+            this.writeComment = null;
+            this.$emit("reload-comment");
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
     },
   },
 };
