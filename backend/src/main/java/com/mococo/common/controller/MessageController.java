@@ -74,7 +74,6 @@ public class MessageController {
 			if (result) {
 				///////////////////////////////// 알림 부분 등록- message 보내기 성공시만 알림에 추가.
 				// 받는 사람에 대한 그 사용자에게 notice 보내줌, content에 post title도 넣어준다.
-
 				Optional<User> user = userService.findByUserNumber(sender);
 				String title = "쪽지 알림";
 				String noticeContent = "";
