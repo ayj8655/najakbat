@@ -6,7 +6,8 @@ import router from "../router"
 
 
 Vue.use(Vuex);
-axios.defaults.baseURL = 'http://i5b203.p.ssafy.io:8080/'
+axios.defaults.baseURL = 'http://3.38.38.20:8080/'
+// axios.defaults.baseURL = 'http://i5b203.p.ssafy.io:8080/'
 // axios.defaults.baseURL = 'http://localhost:8080/'
 
 axios.interceptors.request.use(config => {
