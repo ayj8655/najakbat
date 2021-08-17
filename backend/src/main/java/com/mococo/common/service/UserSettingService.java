@@ -41,6 +41,7 @@ public class UserSettingService {
 			selectUser.setMessageNotice(us.getMessageNotice());
 			selectUser.setRecommendNotice(us.getRecommendNotice());
 			selectUser.setWaterNotice(us.getWaterNotice());
+			selectUser.setNoticeTime(us.getNoticeTime());
 			
 			userSettingDAO.save(selectUser);
 		});
