@@ -334,6 +334,28 @@ export default new Vuex.Store({
           })
         context
       },
+
+    //  qna 작성
+    qnaPost(context, [qnatype, question, type, usernickname, userno]) {
+      axios({
+        method: 'post',
+        url: `qna/`,
+        params: {
+          quatype: qnatype,
+          question: question,
+          type: type,
+          usernickname: usernickname,
+          userno: userno
+        }
+      })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    },
+
     messageDelete(context, [messageNum]) {
       axios({
         method: 'delete',
@@ -416,6 +438,9 @@ export default new Vuex.Store({
         })
     },
     
+    // QNA actions
+    
+
     // Logout actions
 
     logout({ commit }) {
