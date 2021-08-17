@@ -57,7 +57,7 @@
       
       </div>
       <div class="modal-body pt-2">
-        <div class="mycontainer text-start">{{ this.qnaQuestion }}</div>
+        <div class="mycontainer text-start p-1">{{ this.qnaQuestion }}</div>
       </div>
       <div class="">
         <div v-if="this.qnaAnswer">

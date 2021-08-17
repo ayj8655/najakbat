@@ -14,7 +14,7 @@
           ><img src="@/assets/profile_sample.png" alt="프로필"
         /></router-link>
       </div>
-      <router-link v-if="notiImg" to="/myalerts"><img src="@/assets/noti_green.png" /></router-link>
+      <router-link v-if="notiImg" to="/myalerts"><img src="@/assets/noti_new.png" /></router-link>
       <router-link v-else to="/myalerts"><img src="@/assets/noti.png" /></router-link>
     </div>
   </div>
