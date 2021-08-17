@@ -7,7 +7,7 @@
         <div class="container infos w-100 px-0 mt-5">
           <div class="container row d-flex mx-4">
             <router-link :to="'/profile/' + profileNumber" class="col-1 p-0 ps-2">
-            <img src="@/assets/profile_sample.png" class="profile">
+            <img src="@/assets/profile_sample.png" class="profile" @click="sidebarOff">
             </router-link>
             <div class="container col-5 d-flex flex-column mx-5 mt-2 pe-1">
               <div class="nickname">닉네임</div>
@@ -20,27 +20,10 @@
           <router-link  to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
           <div class="p-3 text-design bd-highlight">
             <!-- Button trigger modal -->
-            <div type="button" class="" data-bs-toggle="modal" data-bs-target="#logout" @click="logout">
+            <div type="button" class="" @click="logout">
               로그아웃
             </div>
 
-  <div class="modal fade" id="logout" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel2">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          로그아웃
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>    
 
             <!-- Modal -->
 
@@ -51,7 +34,7 @@
 
           <div class="text-design p-3 bd-highlight">
             <!-- Button trigger modal -->
-            <div type="button" class="" data-bs-toggle="modal" data-bs-target="#exit">
+            <div type="button" class="" >
               탈퇴하기
             </div>
             <!-- <l/> -->
