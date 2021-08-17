@@ -28,4 +28,7 @@ public class UserRecord {
 	private int cropFinishCount;
 	private int cropCount;
 	private int waterCount;
+	private int requestCount;
+	private int answerCount;
+	private int shareCount;
 }

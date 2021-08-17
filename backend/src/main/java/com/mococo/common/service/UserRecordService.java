@@ -90,4 +90,31 @@ public class UserRecordService {
 		userRecordDAO.AddWaterCount(userNumber);
 		return true;
 	}
+	
+	// 사용자의 request count 증가
+	public boolean addRequestCount(int userNumber) {
+		Optional<UserRecord> recordOpt = userRecordDAO.findByUserNumber(userNumber);
+		if(!recordOpt.isPresent()) return false;
+		
+		userRecordDAO.AddRequestCount(userNumber);
+		return true;
+	}
+	
+	// 사용자의 answer count 증가
+	public boolean addAnswerCount(int userNumber) {
+		Optional<UserRecord> recordOpt = userRecordDAO.findByUserNumber(userNumber);
+		if(!recordOpt.isPresent()) return false;
+		
+		userRecordDAO.AddAnswerCount(userNumber);
+		return true;
+	}
+	
+	// 사용자의 share count 증가
+	public boolean addShareCount(int userNumber) {
+		Optional<UserRecord> recordOpt = userRecordDAO.findByUserNumber(userNumber);
+		if(!recordOpt.isPresent()) return false;
+		
+		userRecordDAO.AddShareCount(userNumber);
+		return true;
+	}
 }

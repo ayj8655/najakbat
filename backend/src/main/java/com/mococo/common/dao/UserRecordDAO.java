@@ -51,4 +51,18 @@ public interface UserRecordDAO extends JpaRepository<UserRecord, Integer> {
 	@Query("UPDATE userRecord AS r SET r.waterCount = r.waterCount + 1 WHERE r.userNumber = :userNumber")
 	public int AddWaterCount(int userNumber);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE userRecord AS r SET r.requestCount = r.requestCount + 1 WHERE r.userNumber = :userNumber")
+	public int AddRequestCount(int userNumber);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE userRecord AS r SET r.answerCount = r.answerCount + 1 WHERE r.userNumber = :userNumber")
+	public int AddAnswerCount(int userNumber);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE userRecord AS r SET r.shareCount = r.shareCount + 1 WHERE r.userNumber = :userNumber")
+	public int AddShareCount(int userNumber);	
 }

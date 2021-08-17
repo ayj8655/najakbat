@@ -123,6 +123,11 @@ public class CommentController {
 			
 			// 댓글 카운트
 			userRecordService.addCommentCount(user_number);
+			
+			// 질문글에 답변 시 답변 카운트
+			if(post.get().getPostType() == 3 && post.get().getUserNumber() != user_number) {
+				userRecordService.addAnswerCount(user_number);
+			}
 
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
