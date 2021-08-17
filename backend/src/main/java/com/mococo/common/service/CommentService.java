@@ -33,7 +33,14 @@ public class CommentService {
 		
 		return comments;
 	}
-
+	
+	public List<Object> findAllByUserNumber(int postno, int userno) {
+		List<Object> comments = commentrecommendDAO.findAllByUserNumber(postno, userno);
+		
+		return comments;
+	}
+	
+	
 	public boolean insertComment(Comment comment) {
 		Optional<Comment> ret = commentDAO.findCommentByCommentNumber(comment.getCommentNumber());
 		if(ret.isPresent()) {
@@ -92,12 +99,12 @@ public class CommentService {
 		return true;
 	}
 
-	public boolean recommendComment(int commentno, int userno) {
+	public int recommendComment(int commentno, int userno) {
 		Optional<Comment> ret = commentDAO.findCommentByCommentNumber(commentno);
 
 		// 추천할 comment가 없는 경우 - 잘못된 접근
 		if(!ret.isPresent()) {
-			return false;
+			return -1;
 		}
 		
 		boolean isRecommend= false;
@@ -117,7 +124,7 @@ public class CommentService {
 			// COMMENT RECOMMNED 테이블에 이번에 누른 정보를 insert
 			CommentRecommend pr = new CommentRecommend(commentno,userno);
 			commentrecommendDAO.save(pr);
-			return true;
+			return 1;
 		}
 		
 		// 이번 요청으로 추천을 취소 하는 경우
@@ -128,7 +135,7 @@ public class CommentService {
 			
 			// POST RECOMMNED 테이블에 이번에 누른 정보를 delete
 			commentrecommendDAO.deleteByCommentNumberAndUserNumber(commentno, userno);
-			return true;
+			return 0;
 		}
 
 	}

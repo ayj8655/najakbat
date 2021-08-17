@@ -6,8 +6,10 @@
         <hr />
         <ul>
           <li><router-link to="/admin/users">회원 관리</router-link></li>
+          <li><router-link to="/admin/crops">농작물 관리</router-link></li>
           <li><router-link to="/admin/posts">커뮤니티 관리</router-link></li>
           <li><router-link to="/admin/qna">문의사항 관리</router-link></li>
+          <li><router-link to="/admin/message">전체 알림 메세지</router-link></li>
         </ul>
       </div>
     </div>
@@ -26,13 +28,19 @@ export default {};
   #admin {
     font-family: Noto Sans KR;
     font-style: normal;
+    height: 100%;
   }
   #side-menu {
+    left: 0;
+    position: fixed;
     width: 20%;
-    float: left;
-    min-height: 800px;
+    height: 100%;
+    color: #ffffff;
     background: #b6c790;
-    color: #446631;
+    display: inline-block;
+  }
+  ul li {
+    text-decoration: none;
   }
   .container {
     width: 80%;

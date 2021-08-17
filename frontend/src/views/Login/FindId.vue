@@ -1,15 +1,19 @@
 <template>
   <div class="container">
-    <div class="mycontainer py-4">
+    <div class="py-4">
       <h2 class="mb-5">아이디 찾기</h2>
       <form action="">
         <div class="mb-3 container w-75">
+          <div class="mb-3">
+            <label class="form-label d-flex align-items-start">이름</label>
+            <input type="text" class="form-control" placeholder="이름을 입력하세요" v-model="name">
+          </div>
           <label class="form-label d-flex align-items-start">휴대폰 번호</label>
           <input type="text" class="form-control" v-validate="'digits:11'" name="digits_field" placeholder="휴대폰 번호를 입력하세요" v-model="phone">
           <div class="d-flex justify-content-end my-3" v-if="errors.first('digits_field') || !this.phone">
             <button class="btn btn-success" :disabled=true>인증번호 받기</button>
           </div>
-          <FindIdPhoneCertified :phoneNum="phone" v-else @phonecertified="phonecertified" />
+          <FindIdPhoneCertified :phoneNum="phone" :userName="name" v-else @phonecertified="phonecertified" />
         </div>
         <button class="btn btn-success" :disabled="!checkPhone" @click.prevent="findMyId(phone)">아이디 찾기</button>
       </form>
@@ -20,6 +24,7 @@
 <script>
 import FindIdPhoneCertified from '@/components/Login/FindIdPhoneCertified.vue'
 import { mapActions } from 'vuex'
+import router from "@/router"
 
 export default {
   name: 'FindId',
@@ -29,7 +34,8 @@ export default {
   data() {
     return {
       checkPhone: false,
-      phone: null
+      phone: null,
+      name: null
     }
   },
   methods: {
@@ -39,6 +45,12 @@ export default {
     phonecertified() {
       this.checkPhone = true
     },
+  },
+
+  created() {
+    if(this.$store.state.accessToken) {
+      router.push({name: 'Main'})
+    }
   }
 }
 </script>

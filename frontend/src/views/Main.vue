@@ -10,94 +10,65 @@
           id="carouselExampleIndicators"
           class="carousel slide"
           data-bs-ride="carousel"
+          data-bs-touch="true"
+          v-if="tops.length>0"
         >
           <div class="carousel-indicators">
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to="0"
-              class="active"
-              aria-current="true"
-              aria-label="Slide 1"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to="1"
-              aria-label="Slide 2"
-            ></button>
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to="2"
-              aria-label="Slide 3"
-            ></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
           </div>
           <div class="carousel-inner">
-            <div class="carousel-item active">
+            <div :class="[{'carousel-item active':(index==0)},{'carousel-item':(index>0)}]" v-for="(t, index) in tops" :key="index" @click="movePage(t.cropNumber)">
               <img
-                src="@/assets/bg_tomato.png"
-                class="d-block w-100"
+                :src="t.image"
+                class="d-block"
                 alt="..."
+                style="width:100%; height:250px; filter: brightness(50%);"
               />
               <div class="carousel-caption">
-                <h5>방울토마토</h5>
-                <p>cherry tomato</p>
+                <h5>{{ t.name }}</h5>
+                <p>{{ t.description }}...</p>
               </div>
             </div>
-            <div class="carousel-item">
-              <img
-                src="@/assets/bg_tomato.png"
-                class="d-block w-100"
-                alt="..."
-              />
-            </div>
-            <div class="carousel-item">
-              <img
-                src="@/assets/bg_tomato.png"
-                class="d-block w-100"
-                alt="..."
-              />
-            </div>
           </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
         </div>
       </div>
       <div class="mb-5">
-        <h3>{{this.month}}월에 키우기 좋은 작물</h3>
+        <h3>{{ this.month }}월에 키우기 좋은 작물</h3>
         <p>제철 농작물을 추천 받고 키워 보세요!</p>
         <div id="row">
-          <div class="items" v-for="(crop, index) in cropInThisMonth" :key="index" @click="movePage(crop.cropNumber)">
+          <div
+            class="items m-2"
+            v-for="(crop, index) in cropInThisMonth"
+            :key="index"
+            @click="movePage(crop.cropNumber)"
+          >
             <img :src="getCropImg(crop)" />
-            <p>{{crop.name}}</p>
+            <p>{{ crop.name }}</p>
           </div>
         </div>
       </div>
       <div class="mb-5">
         <h3>커뮤니티 인기 게시글</h3>
         <p>인기 있는 게시글을 추천 받아 보세요!</p>
-        <div></div>
+        <div>
+          <vueper-slides id="post-slide" fixed-height="250px" autoplay>
+            <vueper-slide v-for="(post, index) in posts" :key="index" style="background-color: #b6c790;">
+              <template v-slot:content>
+                <div id="post-box" class="m-5">
+                  <list-row :post="post"></list-row>
+                </div>
+              </template>
+            </vueper-slide>
+          </vueper-slides>
+        </div>
       </div>
     </div>
-    <div id="foot"></div>
-    <menubar id="menubar"></menubar>
+    <div v-show="this.$store.state.sidebar == false">
+      <div id="foot"></div>
+      <menubar id="menubar"></menubar>
+    </div>
   </div>
 </template>
 
@@ -106,20 +77,39 @@ import axios from "axios";
 import HeaderNav from "../components/Menu/HeaderNav.vue";
 import Menubar from "../components/Menu/Menubar.vue";
 import Sidebar from "../components/Sidebar/Sidebar.vue";
+import ListRow from "../components/Community/include/ListRow.vue";
+import { VueperSlides, VueperSlide } from 'vueperslides'
+import 'vueperslides/dist/vueperslides.css'
+
 export default {
-  components: { Menubar, HeaderNav, Sidebar },
+  name: "Main",
+  components: { Menubar, HeaderNav, Sidebar, ListRow, VueperSlides, VueperSlide },
   data() {
     return {
       id: null,
       month: 0,
+      tops: [],
       crops: [],
+      posts: [],
     };
   },
   created() {
-    this.month = (new Date().getMonth() + 1);
+    this.month = new Date().getMonth() + 1;
+    axios.get("user/crop/top?size=3").then((data) => {
+      this.tops = data.data;
+      this.tops.forEach((t, index) => {
+        this.tops[index].image = require("@/assets/crop/" + t.image);
+        this.tops[index].description = t.description.substring(0, 41);
+      });
+      // console.log(this.tops);
+    });
     axios.get("guide/plant/").then((data) => {
       this.crops = data.data;
       // console.log(this.cropInThisMonth);
+    });
+    axios.get("post/top?size=10").then((data)=> {
+      this.posts = data.data;
+      // console.log(this.posts);
     });
   },
   methods: {
@@ -127,19 +117,25 @@ export default {
       this.$router.push(`/dict/detail/${cropNumber}`);
     },
     getCropImg(crop) {
-      return (crop.image)? require("@/assets/crop/"+crop.image):require("@/assets/thumbnail.png");
-    }
+      return crop.image
+        ? require("@/assets/crop/" + crop.image)
+        : require("@/assets/thumbnail.png");
+    },
+      movePage2(postno) {
+        console.log("hihi");
+        this.$router.push(`/community/detail/${postno}`);
+      },
   },
   computed: {
     cropInThisMonth() {
       var list = [];
       this.crops.forEach((c, index) => {
-        if((c.growthDuration).substring(this.month-1, this.month)=="1")
+        if (c.growthDuration.substring(this.month - 1, this.month) == "1")
           list[list.length] = this.crops[index];
       });
       return list;
     },
-  }
+  },
 };
 </script>
 
@@ -148,9 +144,9 @@ export default {
   z-index: 1;
 }
 .carousel {
-  z-index: -1;
+  z-index: 0;
 }
-#main-body{
+#main-body {
   font-family: Noto Sans KR;
   font-style: normal;
 }
@@ -186,5 +182,16 @@ h3 {
   height: 75px;
   border-radius: 5px;
   border: solid 1px #efefef;
+}
+
+#post-slide {
+  z-index: 0;
+}
+
+#post-box {
+  min-height: 150px;
+  border: 5px solid #b6c790;
+  border-radius: 15px;
+  background: #ffffff;
 }
 </style>

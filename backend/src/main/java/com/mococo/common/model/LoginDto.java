@@ -21,4 +21,6 @@ public class LoginDto {
 	@ApiModelProperty(example = "admin")
 	private String password;
 
+	private String token;
+
 }

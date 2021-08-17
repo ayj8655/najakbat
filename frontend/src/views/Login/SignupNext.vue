@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="mycontainer py-4">
+    <div class="py-4">
       <h2 class="mb-5">회원가입 완료</h2>
       <form action="">
         <div class="mb-3 container w-75 text-center">
@@ -54,6 +54,7 @@
 <script>
 import axios from "axios"
 import PutAddress from "@/components/Login/PutAddress.vue"
+import router from "@/router"
 
 export default {
     name: "SignupNext",
@@ -89,12 +90,13 @@ export default {
         }
     },
     created() {
-        axios.get('http://localhost:8080/user/my')
+        axios.get('user/my')
         .then(res => {
             this.nickname = res.data.nickname
         })
         .catch(err => {
             console.error(err);
+            router.push({name: 'Login'})
         })
     }
 }

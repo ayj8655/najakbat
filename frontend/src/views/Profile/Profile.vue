@@ -1,6 +1,7 @@
 <template>
   <div>
     <header-nav></header-nav>
+    <Sidebar id="side-bar" />
     <div v-if="getNickname" class="container">
       <div class="d-flex justify-content-start w-75 container">
         <img src="@/assets/profile_sample.png" class="profile-size" alt="...">
@@ -10,7 +11,9 @@
             <router-link to="/user/modify"><font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" /></router-link>
           </div>
           <div class="d-flex align-items-start ms-3 mt-1">
+            <router-link to="/message">
             <font-awesome-icon :icon="['fas', 'envelope']" size="lg" class="message-color"/>
+            </router-link>
             <span class="message-style ms-2">쪽지함</span>
           </div>
         </div>
@@ -33,8 +36,10 @@
       <h1>존재하지 않는 페이지입니다</h1>
     </div>
     
+  <div v-show="this.$store.state.sidebar == false">
     <div id="foot"></div>
     <menubar id="menubar"></menubar>
+  </div>
   </div>
 </template>
 
@@ -45,6 +50,7 @@ import Menubar from "@/components/Menu/Menubar.vue";
 import MyCommunityList from "@/components/Profile/MyCommunityList.vue"
 import LikeCommunity from "@/components/Profile/LikeCommunity.vue"
 import UserActivity from "@/components/Profile/UserActivity.vue"
+import Sidebar from "@/components/Sidebar/Sidebar.vue";
 import { mapState } from 'vuex'
 
 export default {
@@ -53,11 +59,13 @@ export default {
     HeaderNav,
     MyCommunityList,
     UserActivity,
-    LikeCommunity
+    LikeCommunity,
+    Sidebar
   },
   data() {
     return {
       id: null,
+      userProfile: null,
       componentNum: 0
     };
   },
@@ -89,6 +97,10 @@ export default {
 </script>
 
 <style scoped>
+#side-bar {
+  z-index: 1;
+  position: fixed;
+}
 #foot {
   height: 150px;
 }

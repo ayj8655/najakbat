@@ -38,9 +38,10 @@ public class User {
 	@Temporal(TemporalType.TIMESTAMP)	//이거 써야 자동으로 시간 넣어줌
 	private Date joinDate;
 	private String address;
-	private Integer gold;
 	private Boolean activated;
-
+	private String token;
+	private String userName;
+	
 	// 유저와 post recommend는 N:M관계
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
@@ -65,7 +66,7 @@ public class User {
 	      name = "user_authority",
 	      joinColumns = {@JoinColumn(name = "user_number", referencedColumnName = "user_number")},
 	      inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
-	   private Set<Authority> authorities;
+	private Set<Authority> authorities;
 	
 	
 

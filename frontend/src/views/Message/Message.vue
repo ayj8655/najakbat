@@ -1,9 +1,10 @@
 <template>
 <div>
   <header-nav></header-nav>
+  <Sidebar id="side-bar" />
   <router-view></router-view>
-  <h3 class="mb-3 mt-5 fw-bold">알림</h3>
-  <div class="container w-75 d-flex justify-content-evenly my-3 mb-5">
+  <h3 class="mb-3 mt-5 fw-bold">메세지</h3>
+  <div class="container w-75 d-flex justify-content-evenly my-3 mb-2">
     <span @click="changeComponent(0)" v-bind:class="[componentNum === 0 ? 'select-font' : 'select-font-none']">받은쪽지</span>
     <span class="select-font-none"> | </span>
     <span @click="changeComponent(1)" v-bind:class="[componentNum === 1 ? 'select-font' : 'select-font-none']">보낸쪽지</span>
@@ -13,18 +14,21 @@
     <Received v-if="componentNum === 0"/>
     <Sent v-else/>
   </div>
-  <Messageform/>
-  <div id="foot"></div>
-  <menubar id="menubar"></menubar>
+  <!-- <Messageform/> -->
+  <div v-show="this.$store.state.sidebar == false">
+    <div id="foot"></div>
+    <menubar id="menubar"></menubar>
+  </div>
 </div>
 </template>
 
 <script>
 import HeaderNav from '@/components/Menu/HeaderNav.vue';
 import Menubar from '@/components/Menu/Menubar.vue';
+import Sidebar from "@/components/Sidebar/Sidebar.vue";
 import Received from '../../components/Message/Received.vue';
 import Sent from '../../components/Message/Sent.vue';
-import Messageform from '../../components/Message/Messageform.vue';
+// import Messageform from '../../components/Message/Messageform.vue';
 
 
 export default {
@@ -33,7 +37,9 @@ export default {
     Menubar,
     Received,
     Sent,
-    Messageform,
+    Sidebar
+    
+    // Messageform,
     // Sent,
     // Received,
   },
@@ -51,6 +57,10 @@ export default {
 </script>
 
 <style>
+#side-bar {
+  z-index: 1;
+  position: fixed;
+}
 #foot {
   height: 150px;
 }

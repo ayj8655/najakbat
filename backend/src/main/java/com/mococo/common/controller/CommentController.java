@@ -3,6 +3,7 @@ package com.mococo.common.controller;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.Comment;
+import com.mococo.common.model.Post;
 import com.mococo.common.service.CommentService;
+import com.mococo.common.service.NoticeService;
+import com.mococo.common.service.PostService;
+import com.mococo.common.service.UserRecordService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -38,7 +43,16 @@ public class CommentController {
 
 	@Autowired
 	CommentService commentService;
-
+	
+	@Autowired
+	NoticeService noticeService;
+	
+	@Autowired
+	PostService postService;
+	
+	@Autowired
+	UserRecordService userRecordService;
+	
 	@RequestMapping(value = "/{postno}", method = RequestMethod.GET)
 	@ApiOperation(value = "하나의 게시물 안에 있는 댓글들 조회")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
@@ -48,7 +62,26 @@ public class CommentController {
 		return new ResponseEntity<List<Comment>>(commentService.findAllByPostNumber(post_number), HttpStatus.OK);
 
 	}
+	
+	
+	@RequestMapping(value = {"/{postno}/{userno}"}, method = RequestMethod.GET)
+	@ApiOperation(value = "해당 게시물 안에 해당 유저가 좋아요 누른 댓글 리스트 조회")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<?> searchComment(@PathVariable("postno") String postno, @PathVariable("userno") String userno) throws IOException {
+		logger.info("좋아요한 댓글 조회");
+		int post_number = Integer.parseInt(postno);
+		int user_number = Integer.parseInt(userno);
+		return new ResponseEntity<List<Object>>(commentService.findAllByUserNumber(post_number,user_number), HttpStatus.OK);
 
+	}
+	 
+	
+	
+	
+	
+	
+
+	// 댓글을 쓰면 게시글 작성자에게 알림이 가야함.
 	// request param 은 댓글이 게시글의 댓글인지 댓글의 대댓글인지 구분. 게시글의 댓글: parent=0, 댓글의 대댓글:
 	// parent = 댓글의 comment_number
 	@RequestMapping(value = "/", method = RequestMethod.POST)
@@ -67,11 +100,33 @@ public class CommentController {
 			comment.setUserNumber(user_number);
 			comment.setPostNumber(postno);
 			comment.setParent(parent);
-
 			boolean ret = commentService.insertComment(comment);
+			
+
+			
 			if (ret == false) {
 				logger.info("댓글 등록 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+			}
+			
+			///////////////////////////////// 알림 부분 등록- insertComment 성공시만 알림에 추가.
+			//post number로 게시글 작성자 찾고 그 사용자에게 notice 보내줌, content에 post title도 넣어준다.
+			
+			Optional<Post> post = postService.findPostByPostNumber(postno);
+			String title ="커뮤니티 알림";
+			String content ="";
+			
+			
+			content = post.get().getTitle() + "에 댓글이 달렸습니다.";
+			noticeService.insertNotice(post.get().getUserNumber(),postno, title, content);
+			/////////////////////////////////
+			
+			// 댓글 카운트
+			userRecordService.addCommentCount(user_number);
+			
+			// 질문글에 답변 시 답변 카운트
+			if(post.get().getPostType() == 3 && post.get().getUserNumber() != user_number) {
+				userRecordService.addAnswerCount(user_number);
 			}
 
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -138,14 +193,20 @@ public class CommentController {
 			throws IOException {
 
 		try {
-			logger.info("댓글 추천 올리기");
 			int comment_number = Integer.parseInt(commentno);
-			boolean ret = commentService.recommendComment(comment_number, user_number);
-			if (ret == false) {
+			int ret = commentService.recommendComment(comment_number, user_number);
+			if(ret == 1) {
+				logger.info("댓글 추천 올리기");
+				userRecordService.addRecommendCount(user_number, 1);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			} else if(ret == 0) {
 				logger.info("댓글 추천 내리기");
+				userRecordService.addRecommendCount(user_number, -1);
+				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+			} else {
+				logger.info("해당하는 댓글이 없음");
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.NO_CONTENT);
 			}
-			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.info("댓글 추천 오류");
 			// TODO Auto-generated catch block
