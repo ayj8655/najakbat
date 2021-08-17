@@ -205,7 +205,6 @@ export default {
           axios
             .get(`user/crop/list?userNumber=${this.pickCrop.userNumber}`)
             .then((res) => {
-              console.log(res.data);
               this.usercrops = res.data;
             })
             .catch((err) => {
@@ -303,7 +302,16 @@ export default {
         }
       })
       .then((res) => {
-        if (res.data == "success") window.location.reload();
+        if (res.data == "success") {
+          axios
+            .get(`user/crop/list?userNumber=${this.pickCrop.userNumber}`)
+            .then((res) => {
+              this.usercrops = res.data;
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }
       })
       .catch((err) => {
         console.error(err);
