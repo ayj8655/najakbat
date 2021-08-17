@@ -31,11 +31,3 @@ Servers
 /.recommenders/
 
 
-# JPEG
-*.jpg
-*.jpeg
-*.jpe
-*.jif
-*.jfif
-*.jfi
-*.png
