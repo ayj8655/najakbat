@@ -4,7 +4,7 @@
       <router-link to="/"><img src="@/assets/mococo.png" /></router-link>
     </div>
     <div id="right">
-      <div v-if="!myProfileNumber">
+      <div v-if="!isLogin">
         <router-link to="/login"
           ><img src="@/assets/login.png" alt="로그인"
         /></router-link>
@@ -31,32 +31,37 @@ export default {
       path: this.$route.path,
       notiImg: null,
       myProfileNumber: null,
+      isLogin: this.$store.state.accessToken
     };
   },
   created() {
     this.notiImg = this.path.includes("myalerts")
       // ? require("@/assets/noti_green.png")
       // : require("@/assets/noti.png");
-    axios
-      .get("user/my")
-      .then((res) => {
-        this.myProfileNumber = res.data["userNumber"];
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-    ,
-    // console.log(this.notiImg)
-    this.$store.dispatch('getSearchNotice')
-    for (var item of this.$store.state.searchNotices) {
-      if (!item.isRead) {
-        this.notiImg = true
-        break;
-      }
-      else {
-        this.notiImg = false
+    
+    if (this.$store.state.accessToken) {
+      axios
+        .get("user/my")
+        .then((res) => {
+          this.myProfileNumber = res.data["userNumber"];
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+
+      // console.log(this.notiImg)
+      this.$store.dispatch('getSearchNotice')
+      for (var item of this.$store.state.searchNotices) {
+        if (!item.isRead) {
+          this.notiImg = true
+          break;
+        }
+        else {
+          this.notiImg = false
+        }
       }
     }
+
   },
   computed: {
     flag() {

@@ -115,11 +115,15 @@ export default new Vuex.Store({
     },
 
     // Get User
-    UPDATE_LOGIN_USER(state, payload) {
+    UPDATE_LOGIN_USER1(state, payload) {
       state.accessToken = payload.token
+    },
+
+    UPDATE_LOGIN_USER2(state, payload) {
       state.userNumber = payload.userNumber
       state.userNickname = payload.nickname
       state.userId = payload.id
+      console.log(state);
     },
 
     // user certificate
@@ -514,12 +518,13 @@ export default new Vuex.Store({
         })
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
-          commit('UPDATE_LOGIN_USER', res.data)
+          commit('UPDATE_LOGIN_USER1', res.data)
           axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
             localStorage.setItem('userNickname', res.data.nickname)
+            commit('UPDATE_LOGIN_USER2', res.data)
             commit('LOGIN_CERTIFICATE', true)
 
             router.push({ name: 'Main' })
@@ -540,12 +545,13 @@ export default new Vuex.Store({
         })
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
-          commit('UPDATE_LOGIN_USER', res.data)
+          commit('UPDATE_LOGIN_USER1', res.data)
           axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
             localStorage.setItem('userNickname', res.data.nickname)
+            commit('UPDATE_LOGIN_USER2', res.data)
             commit('LOGIN_CERTIFICATE', true)
             router.push({ name: 'Main' })
           })
