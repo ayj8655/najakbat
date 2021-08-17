@@ -126,6 +126,12 @@ export default {
           this.photos[index] = require("@/assets/post/"+p.saveFile);
         });
       });
+      axios.get(`post/like?user_number=${this.$store.state.userNumber}`).then((data) => {
+        console.log(data.data);
+        data.data.forEach(d => {
+          if(d.postNumber==this.no) this.recoPostFlag = true;
+        });
+      });
       axios.get(`comment/${this.no}`).then(({ data }) => {
         this.comments = data;
       });
@@ -154,8 +160,9 @@ export default {
       if (str) return str.replace(/(?:\r\n|\r|\n)/g, "<br />");
     },
     recommendPost() {
-      axios.put(`recommend/${this.no}?user_number=${this.$store.state.userNumber}`).then((data)=>{
-        console.log(data.data);
+      axios.put(`post/recommend/${this.no}?user_number=${this.$store.state.userNumber}`).then((data)=>{
+        // console.log(data.data);
+        if(data.data=="success") this.recoPostFlag = true;
       });
     },
     modifyPost() {
