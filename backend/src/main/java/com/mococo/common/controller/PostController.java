@@ -398,4 +398,20 @@ public class PostController {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@RequestMapping(value = "/like", method = RequestMethod.GET)
+	@ApiOperation(value = "사용자 별 좋아요한 게시글번호 리스트")
+	public ResponseEntity<?> searchLikePost(@RequestParam int user_number) throws IOException {
+		logger.info("인기 게시글 리스트 반환");
+
+		try {
+			
+			return new ResponseEntity<List<Object>>(postService.findLikePostById(user_number), HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
 }

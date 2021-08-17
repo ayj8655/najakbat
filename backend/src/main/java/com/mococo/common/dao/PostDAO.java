@@ -40,4 +40,7 @@ public interface PostDAO extends JpaRepository<Post, Integer>{
 			+ "FROM post AS p "
 			+ "ORDER BY p.recommend DESC ")
 	public List<Object> findTopPost(Pageable pageable);
+	
+	
+
 }
