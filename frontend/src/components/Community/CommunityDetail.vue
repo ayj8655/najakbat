@@ -29,7 +29,11 @@
           <Picture :images="post.photos" />
         </div>
         <div id="post-foot">
-          <span><img src="@/assets/leaf_lightgreen.png" width="15px" />{{this.post.recommend}}</span>
+          <span>
+            <img src="@/assets/leaf_lightgreen.png" width="15px" v-if="this.recoPostFlag" @click="recommendPost()" />
+            <img src="@/assets/leaf_gray.png" width="15px" v-else @click="recommendPost()" />
+            {{this.post.recommend}}
+          </span>
           <span>
             <img src="@/assets/comment_green.png" width="15px" />{{this.post.commentCount}}
           </span>
@@ -46,15 +50,18 @@
           v-for="(comment, index) in comments"
           :key="index"
           :comment="comment"
+          :col="(!comment.parent)? 12 : 11"
           :recoFlag="wasRecommended(comment.commentNumber)"
           @modify-comment="onModifyComment"
+          @reload-comment="reloadComment"
         ></comment>
         <comment-write
           v-if="isModifyShow && this.modifyComment != null"
           :modifyComment="this.modifyComment"
           @modify-comment-cancel="onModifyCommentCancel"
+          @reload-comment="reloadComment"
         />
-        <comment-write :no="this.no"></comment-write>
+        <comment-write :no="this.no" @reload-comment="reloadComment"></comment-write>
       </div>
     </div>
   </div>
@@ -83,6 +90,7 @@ export default {
       post: Object,
       typeimg: null,
       photos: [],
+      recoPostFlag: false,
       comments: [],
       recoComments: [],
       isModifyShow: false,
@@ -110,16 +118,20 @@ export default {
             break;
         }
       });
+      axios.get(`post/like?user_number=${this.$store.state.userNumber}`).then((data) => {
+        console.log(data.data);
+        data.data.forEach(d => {
+          if(d.postNumber==this.no) this.recoPostFlag = true;
+        });
+      });
       axios.get(`comment/${this.no}`).then(({ data }) => {
         this.comments = data;
       });
       axios.get(`comment/${this.no}/${this.$store.state.userNumber}`)
       .then(({ data }) => {
-        // console.log(this.$store.state.userNumber);
         this.recoComments = data;
       })
       .catch(err => {
-        // console.log(this.$store.state.userNumber);
         err
       })
     }
@@ -136,6 +148,12 @@ export default {
     },
     enterToBr(str) {
       if (str) return str.replace(/(?:\r\n|\r|\n)/g, "<br />");
+    },
+    recommendPost() {
+      axios.put(`post/recommend/${this.no}?user_number=${this.$store.state.userNumber}`).then((data)=>{
+        // console.log(data.data);
+        if(data.data=="success") this.recoPostFlag = true;
+      });
     },
     modifyPost() {
       this.$router.push(`/community/modify/${this.post.postNumber}`);
@@ -171,7 +189,13 @@ export default {
       .catch(err => {
         console.error(err);
       })
-    }
+    },
+    reloadComment() {
+      this.comments = [];
+      axios.get(`comment/${this.no}`).then(({ data }) => {
+        this.comments = data;
+      });
+    },
   },
   computed: {},
 };

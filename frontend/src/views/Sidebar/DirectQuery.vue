@@ -5,7 +5,7 @@
 
 
 <div class="container">
-  <h3 class="mb-3 mt-5 fw-bold">메세지</h3>
+  <h3 class="mb-3 mt-5 fw-bold">문의하기</h3>
   <div class="container">
   <Qna/>
   </div>

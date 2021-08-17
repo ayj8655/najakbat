@@ -178,6 +178,7 @@ export default {
       const settingsStatus = [this.water_notice, this.recommendedinfo_notice, this.newcomments_notice, this.newtwits_notice, this.nightmode_notice, timenum]
       // console.log(settingsStatus)
       this.$store.dispatch('updateNotice', settingsStatus)
+      console.log(timenum)
       this.changes = false
       this.$router.go(0)
     },

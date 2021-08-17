@@ -6,7 +6,7 @@ import router from "../router"
 
 
 Vue.use(Vuex);
-axios.defaults.baseURL = 'http://i5b203.p.ssafy.io:8080/'
+axios.defaults.baseURL = 'http://3.38.38.20:8080/'
 
 axios.interceptors.request.use(config => {
   const accessToken = localStorage.getItem('access_token')
@@ -333,6 +333,28 @@ export default new Vuex.Store({
           })
         context
       },
+
+    //  qna 작성
+    qnaPost(context, [qnatype, question, type, usernickname, userno]) {
+      axios({
+        method: 'post',
+        url: `qna/`,
+        params: {
+          quatype: qnatype,
+          question: question,
+          type: type,
+          usernickname: usernickname,
+          userno: userno
+        }
+      })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    },
+
     messageDelete(context, [messageNum]) {
       axios({
         method: 'delete',
@@ -415,6 +437,9 @@ export default new Vuex.Store({
         })
     },
     
+    // QNA actions
+    
+
     // Logout actions
 
     logout({ commit }) {

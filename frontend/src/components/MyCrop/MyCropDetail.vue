@@ -41,12 +41,42 @@
       />
     </div>
     <div class="row m-2" id="gray-box">
-      <div id="data-black">{{ crop.name }}</div>
-      <div>
-        <h3>{{ ucrop.cropNickname }}</h3>
+      <div id="data-black"><strong>{{ crop.name }}</strong></div>
+      <div id="inline" v-if="this.nameEdit">
+        <input
+          type="text"
+          class="form-control"
+          id="nameForEdit"
+          name="nameForEdit"
+          v-model="nameForEdit"
+          placeholder="작물 이름을 작성해주세요"
+        />
+        <button class="btn btn-outline-success" :disabled="this.nameForEdit.length==0 || this.nameForEdit == this.ucrop.cropNickname" @click="editCropNickname">저장</button>
+        <button class="btn btn-outline-secondary" @click="editName(false)">취소</button>
+      </div>
+      <div id="inline" v-else>
+          <font-awesome-icon :icon="['fas', 'pencil-alt']" size="lg" class="pen-color-none" />
+            <h3>{{ ucrop.cropNickname }}</h3>
+          <font-awesome-icon :icon="['fas', 'pencil-alt']" size="lg" @click="editName(true)" class="pen-color" />
       </div>
       <hr />
-      <div>{{ ucrop.description }}</div>
+      <div id="inline" v-if="this.descEdit">
+        <input
+          type="text"
+          class="form-control"
+          id="descForEdit"
+          name="descForEdit"
+          v-model="descForEdit"
+          placeholder="작물 소개를 작성해주세요"
+        />
+        <button class="btn btn-outline-success" :disabled="this.descForEdit.length==0 || this.descForEdit==this.ucrop.description" @click="editCropDescription">저장</button>
+        <button class="btn btn-outline-secondary" @click="editDesc(false)">취소</button>
+      </div>
+      <div id="inline" v-else>
+          <font-awesome-icon :icon="['fas', 'pencil-alt']" size="sm" class="pen-color-none" />
+          <p>{{ ucrop.description }}</p>
+          <font-awesome-icon :icon="['fas', 'pencil-alt']" size="sm" @click="editDesc(true)" class="pen-color" />
+      </div>
     </div>
     <div class="row m-2" id="gray-box">
       <div>
@@ -54,22 +84,28 @@
       </div>
       <hr class="m-2" />
       <div class="col-6">
-        <div>등록일</div>
+        <div><strong>등록일</strong></div>
         <div>{{ this.plantedDate }}</div>
       </div>
       <div class="col-6">
-        <div>수확목표일</div>
+        <div><strong>수확목표일</strong></div>
         <div>{{ this.targetDate }}</div>
       </div>
     </div>
     <div class="m-2" id="contents-area">
       <h4>날씨</h4>
-      <div id="content">
-        <img src="@/assets/sun.png" width="45px" class="m-2" />
+      <div id="content" v-if="this.weather">
+        <img :src="weatherImg" width="45px" class="m-2" />
         <p>{{ this.weather.city }} {{ this.weather.gugun }}</p>
         <p>{{ this.weather.weather }}</p>
         <p>온도: {{ this.weather.temperature }}℃</p>
         <p>습도: {{ this.weather.humidity }}%</p>
+      </div>
+      <div id="content" v-else>
+        <h3 class="mt-3 mb-3">:(</h3>
+        <p>날씨 정보를 불러오려면</p>
+        <p>회원정보 수정페이지에서 주소를 등록해주세요.</p>
+        <button class="btn btn-secondary m-2" @click="movePage">설정하러 가기</button>
       </div>
     </div>
     <div class="m-2" id="contents-area">
@@ -282,7 +318,7 @@
           </div>
           <div class="modal-body">해당 농작물의 삭제를 진행하시겠습니까?</div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" @click="deleteCrop()">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteCrop()">
               삭제
             </button>
             <button
@@ -314,6 +350,7 @@ export default {
       water: [],
       crop: {},
       weather: {},
+      weatherImg: require("@/assets/sun.png"),
       value: "",
       hideHeader: true,
       disabled: true,
@@ -325,11 +362,17 @@ export default {
       highTemp: "",
       price: "",
       waterFlag: false,
+      nameEdit: false,
+      descEdit: false,
+      nameForEdit: "",
+      descForEdit: "",
     };
   },
   created() {
     axios.get(`user/crop/detail?userCropNumber=${this.ucropno}`).then((res) => {
       this.ucrop = res.data;
+      this.nameForEdit = this.ucrop.cropNickname;
+      this.descForEdit = this.ucrop.description;
       this.plantedDate = this.ucrop.plantedDate.substring(0, 10);
       this.targetDate = this.ucrop.targetDate.substring(0, 10);
       axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
@@ -377,16 +420,44 @@ export default {
         });
     });
     axios.get("user/my").then((res) => {
-      axios.get(`weather/${res.data.address}`).then((data) => {
-        // console.log(data);
-        this.weather = data.data;
-        // console.log(this.weather);
-      });
+      if(res.data.address) {
+        axios.get(`weather/${res.data.address}`).then((data) => {
+          // console.log(data);
+          this.weather = data.data;
+          switch (this.weather.weather) {
+            case "흐림":
+              this.weatherImg = require("@/assets/cloud.png");
+              break;
+            case "구름많음":
+              this.weatherImg = require("@/assets/cloud-2.png");
+              break;
+            case "비":
+              this.weatherImg = require("@/assets/rain.png");
+              break;
+            case "비/눈":
+              this.weatherImg = require("@/assets/rain-snow.png");
+              break;
+            case "눈":
+              this.weatherImg = require("@/assets/snow.png");
+              break;
+            case "소나기":
+              this.weatherImg = require("@/assets/shower.png");
+              break;
+            default:
+              break;
+          }
+        });
+      } else {
+        this.weather = null;
+      }
     });
   },
   methods: {
     moveBack() {
       this.$router.push("/mycrop");
+    },
+    movePage() {
+      this.$router.push("/user/modify");
     },
     harvestCrop(flag) {
       if (flag) {
@@ -410,9 +481,9 @@ export default {
       }
     },
     deleteCrop() {
-      // axios.delete(`user/crop/${this.ucropno}`).then((data)=>{
-      //   if(data.data=="success") this.$router.push("/mycrop");
-      // });
+      axios.delete(`user/crop/?userCropNumber=${this.ucropno}`).then((data)=>{
+        if(data.data=="success") this.$router.push("/mycrop");
+      });
     },
     changeDate(str) {
       if (str) return str.substring(0, 10) + " " + str.substring(11, 19);
@@ -434,6 +505,28 @@ export default {
     },
     waterModalOff() {
       this.waterFlag = false;
+    },
+    editName(flag) {
+      this.nameEdit = flag;
+    },
+    editDesc(flag) {
+      this.descEdit = flag;
+    },
+    editCropNickname() {
+      axios.put(`user/crop/?userCropNumber=${this.ucropno}&userCropNickname=${this.nameForEdit}&description=${this.ucrop.description}`).then((data) => {
+        if(data.data=="success") {
+          this.ucrop.cropNickname = this.nameForEdit;
+          this.editName(false);
+        }
+      });
+    },
+    editCropDescription() {
+      axios.put(`user/crop/?userCropNumber=${this.ucropno}&userCropNickname=${this.ucrop.cropNickname}&description=${this.descForEdit}`).then((data) => {
+        if(data.data=="success") {
+          this.ucrop.description = this.descForEdit;
+          this.editDesc(false);
+        }
+      });
     },
     dateClass(ymd, date) {
       const day = date.getDate();
@@ -545,5 +638,15 @@ h4 {
   top: 50%;
   left: 50%;
   transform:translate(-50%, -50%);
+}
+.pen-color-none {
+  color: #aaaaaa;;
+}
+.pen-color {
+  color: #ffffff;
+}
+#inline > * {
+  display: inline-block;
+  margin: 5px;
 }
 </style>
