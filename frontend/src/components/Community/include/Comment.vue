@@ -21,7 +21,7 @@
       <div class="foot">
         <span class="recc">
           <span>
-            <img v-if="this.recoFlag" src="@/assets/leaf_lightgreen.png" width="15px" />
+            <img v-if="this.recoValue" src="@/assets/leaf_lightgreen.png" width="15px" />
             <img v-else src="@/assets/leaf_gray.png" width="15px" />
             {{comment.recommend}}
           </span>
@@ -45,7 +45,7 @@
             !comment.isdeleted
           "
         >
-          <span v-if="this.recoFlag"><label @click="recommendComment">좋아요 취소</label> | </span>
+          <span v-if="this.recoValue"><label @click="recommendComment">좋아요 취소</label> | </span>
           <span v-else><label @click="recommendComment">좋아요</label> | </span>
           <label @click="writeChildChange">답글달기</label>
         </span>
@@ -124,8 +124,17 @@ export default {
       childWrite: false,
       modifyComment: {},
       writeComment: {userNumber: null, userNickname: "", parent: "", postno: null, content: ""},
+      recoValue: this.recoFlag,
+      pickComment: this.comment
     };
   },
+  // computed: {
+  //   recoValue() {
+  //     if(this.$props.recoFlag) {
+
+  //     }
+  //   }
+  // },
   methods: {
     movePage() {
       this.$router.push(`/profile/${this.comment.userNumber}`);
@@ -155,8 +164,15 @@ export default {
           `comment/recommend/${this.comment.commentNumber}?user_number=${this.userNumber}`
         )
         .then((data) => {
-          console.log(data);
-          if (data.data == "success") window.location.reload();
+          if (data.data == "success") {
+            this.recoValue = !this.recoValue
+            if(this.recoValue) {
+              this.pickComment.recommend++
+            }
+            else {
+              this.pickComment.recommend--
+            }
+          }
         });
     },
     updateComment() {

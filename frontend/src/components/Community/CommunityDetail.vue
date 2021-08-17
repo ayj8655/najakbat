@@ -35,7 +35,7 @@
             {{this.post.recommend}}
           </span>
           <span>
-            <img src="@/assets/comment_green.png" width="15px" />{{this.post.commentCount}}
+            <img src="@/assets/comment_green.png" width="15px" />{{this.comments.length}}
           </span>
           <div id="right" v-if="this.$store.state.userNumber == this.post.userNumber">
             <span class="modifyBtn m-0" @click="modifyPost">수정</span> |
@@ -102,7 +102,7 @@ export default {
     if (this.$store.state.accessToken) {
       axios.get(`post/${this.no}`).then(({ data }) => {
         this.post = data;
-        // console.log(this.post);
+        console.log(this.post);
         switch (this.post.postType) {
           case 1:
             this.typeimg = require("@/assets/category_free.png");
@@ -152,7 +152,15 @@ export default {
     recommendPost() {
       axios.put(`post/recommend/${this.no}?user_number=${this.$store.state.userNumber}`).then((data)=>{
         // console.log(data.data);
-        if(data.data=="success") this.recoPostFlag = true;
+        if(data.data=="success") {
+          this.recoPostFlag = !this.recoPostFlag
+          if (this.recoPostFlag) {
+            this.post.recommend++
+          }
+          else {
+            this.post.recommend--
+          }
+        }
       });
     },
     modifyPost() {

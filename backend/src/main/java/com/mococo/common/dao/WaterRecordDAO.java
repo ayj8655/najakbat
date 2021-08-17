@@ -12,11 +12,12 @@ import com.mococo.common.model.WaterRecord;
 
 @Repository
 public interface WaterRecordDAO extends JpaRepository<WaterRecord, Integer> {
-	
+	@Query(value = "select wr.* from water_record wr where wr.user_crop_number = :userCropNumber order by record_date desc", nativeQuery=true)
 	public List<WaterRecord> findAllByUserCropNumber(int userCropNumber);
+	
 	public Optional<WaterRecord> findByUserCropNumberAndRecordDate(int userCropNumber, Date recordDate);
 	
 
-	@Query(value = "select wr.* from water_record wr where wr.user_crop_number = :userCropNumber and SUBSTRING(wr.record_date,6,2) = :month", nativeQuery=true)
+	@Query(value = "select wr.* from water_record wr where wr.user_crop_number = :userCropNumber and SUBSTRING(wr.record_date,6,2) = :month order by record_date desc", nativeQuery=true)
 	public List<WaterRecord> findAllByUserCropNumberAndDate(int userCropNumber, String month);
 }
