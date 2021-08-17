@@ -155,7 +155,10 @@
     <div class="m-2 mt-3" id="contents-area">
       <h4>상태달력</h4>
       <div>
-        <calendar :plantedDate="plantedDate" v-if="this.plantedDate.length"></calendar>
+        <calendar
+          :plantedDate="plantedDate"
+          v-if="this.plantedDate.length"
+        ></calendar>
         <!-- <b-calendar
           v-model="value"
           :date-info-fn="dateClass"
@@ -167,58 +170,79 @@
     <div class="row m-2 mt-3">
       <h4>기록</h4>
       <div class="col-6" v-if="this.water.length">
-        <div id="more"
-          data-bs-toggle="modal"
-          data-bs-target="#waterModal"><span>more ></span></div>
+        <div id="more" data-bs-toggle="modal" data-bs-target="#waterModal">
+          <span>more ></span>
+        </div>
         <div id="water-content">
           <div id="water-content-item" v-if="this.water.length > 0">
             <div class="m-2" align="left">
-              <img src="@/assets/water_on.png" width="15px" margin-right="10px" /> 물 주기
+              <img
+                src="@/assets/water_on.png"
+                width="15px"
+                margin-right="10px"
+              />
+              물 주기
             </div>
             <div id="date">{{ this.water[0].recordDate }}</div>
           </div>
           <div id="water-content-item" v-if="this.water.length > 1">
             <div class="m-2" align="left">
-              <img src="@/assets/water_on.png" width="15px" margin-right="10px" /> 물 주기
+              <img
+                src="@/assets/water_on.png"
+                width="15px"
+                margin-right="10px"
+              />
+              물 주기
             </div>
             <div id="date">{{ this.water[1].recordDate }}</div>
           </div>
           <div id="water-content-item" v-if="this.water.length > 2">
             <div class="m-2" align="left">
-              <img src="@/assets/water_on.png" width="15px" margin-right="10px" /> 물 주기
+              <img
+                src="@/assets/water_on.png"
+                width="15px"
+                margin-right="10px"
+              />
+              물 주기
             </div>
             <div id="date">{{ this.water[2].recordDate }}</div>
           </div>
         </div>
       </div>
       <div class="col-6" v-else>
-        <div id="more"
-          data-bs-toggle="modal"
-          data-bs-target="#waterModal"><span>more ></span></div>
+        <div id="more" data-bs-toggle="modal" data-bs-target="#waterModal">
+          <span>more ></span>
+        </div>
         <div id="gray-box-2">물을 준 기록이 없어요 :(</div>
       </div>
       <div class="col-6" v-if="this.record.length">
-        <div id="more"
-          data-bs-toggle="modal"
-          data-bs-target="#recordModal"><span>more ></span></div>
+        <div id="more" data-bs-toggle="modal" data-bs-target="#recordModal">
+          <span>more ></span>
+        </div>
         <div id="record-content">
           <div id="record-content-item" v-if="this.record.length > 0">
             <span>
-              <div :class="['color-'+this.record[0].state, {circle: true}]" />
+              <div
+                :class="['color-' + this.record[0].state, { circle: true }]"
+              />
               <div v-text="changeState(record[0].state)"></div>
             </span>
             <div id="date">{{ this.record[0].recordDate }}</div>
           </div>
           <div id="record-content-item" v-if="this.record.length > 1">
             <span>
-              <div :class="['color-'+this.record[1].state, {circle: true}]" />
+              <div
+                :class="['color-' + this.record[1].state, { circle: true }]"
+              />
               <div v-text="changeState(record[1].state)"></div>
             </span>
             <div id="date">{{ this.record[1].recordDate }}</div>
           </div>
           <div id="record-content-item" v-if="this.record.length > 2">
             <span>
-              <div :class="['color-'+this.record[2].state, {circle: true}]" />
+              <div
+                :class="['color-' + this.record[2].state, { circle: true }]"
+              />
               <div v-text="changeState(record[2].state)"></div>
             </span>
             <div id="date">{{ this.record[2].recordDate }}</div>
@@ -226,21 +250,50 @@
         </div>
       </div>
       <div class="col-6" v-else>
-        <div id="more"
-          data-bs-toggle="modal"
-          data-bs-target="#recordModal"><span>more ></span></div>
+        <div id="more" data-bs-toggle="modal" data-bs-target="#recordModal">
+          <span>more ></span>
+        </div>
         <div id="gray-box-2">등록한 상태기록이 없어요 :(</div>
       </div>
     </div>
     <div class="m-2 mt-3">
       <h4>통계</h4>
     </div>
-    <div class="m-2 mt-3">
+    <div class="m-2 mt-3" v-if="this.prices.length">
       <h4>가격정보</h4>
+      <div class="m-2" id="contents-area">
+        <div
+          id="content"
+          class="text-lg-center pa-5"
+          style="width: 100%"
+          v-if="chartLoading"
+        >
+          <v-progress-circular
+            width="7"
+            size="70"
+            indeterminate
+            color="green"
+          ></v-progress-circular>
+        </div>
+        <div
+          id="content"
+          class="text-lg-center pa-5"
+          style="width: 100%"
+          v-else
+        >
+          <line-chart class="mt-3" :chartData="chartData" />
+          <div class="mt-3 mb-3">
+            <p>1개월 이내 평균 시세: 100g당 {{this.avgPrice}}원</p>
+            <h3>{{this.$store.state.userNickname}}님의 추정이득은<br>{{this.avgPrice}}원이에요!</h3>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="m-2 mt-3">
       <h4>작물 도감</h4>
-      <div id="more"><span @click="movePage2(ucrop.cropNumber)">more ></span></div>
+      <div id="more">
+        <span @click="movePage2(ucrop.cropNumber)">more ></span>
+      </div>
       <div class="m-2" id="contents-area">
         <div id="content">
           <div class="mt-5 mb-5">
@@ -403,18 +456,28 @@
             ></button>
           </div>
           <div class="modal-body mb-5" height="500px">
-            <div id="water-content" v-if="this.water.length>0">
-              <div class="m-2" id="water-content-item" v-for="(w, index) in water" :key="index" style="border: 2px solid #aaaaaa; border-radius: 5px;">
+            <div id="water-content" v-if="this.water.length > 0">
+              <div
+                class="m-2"
+                id="water-content-item"
+                v-for="(w, index) in water"
+                :key="index"
+                style="border: 2px solid #aaaaaa; border-radius: 5px"
+              >
                 <div class="m-2" align="left">
-                  <img src="@/assets/water_on.png" width="15px" margin-right="10px" />
+                  <img
+                    src="@/assets/water_on.png"
+                    width="15px"
+                    margin-right="10px"
+                  />
                   물 주기
                 </div>
-                <div class="m-2" id="date" align="right">{{ w.recordDate }}</div>
+                <div class="m-2" id="date" align="right">
+                  {{ w.recordDate }}
+                </div>
               </div>
             </div>
-            <div v-else>
-              물주기 기록 내역이 없습니다 :(
-            </div>
+            <div v-else>물주기 기록 내역이 없습니다 :(</div>
           </div>
         </div>
       </div>
@@ -439,13 +502,23 @@
             ></button>
           </div>
           <div class="modal-body mb-5" max-height="500px">
-            <div id="record-content" v-if="this.record.length>0">
-              <div class="m-2" id="record-content-item" v-for="(r, index) in record" :key="index" style="border: 2px solid #aaaaaa; border-radius: 5px;">
-                <div class="m-2" align="left" display='inline'>
-                  <span><div :class="['color-'+r.state, {circle: true}]" /></span>
+            <div id="record-content" v-if="this.record.length > 0">
+              <div
+                class="m-2"
+                id="record-content-item"
+                v-for="(r, index) in record"
+                :key="index"
+                style="border: 2px solid #aaaaaa; border-radius: 5px"
+              >
+                <div class="m-2" align="left" display="inline">
+                  <span
+                    ><div :class="['color-' + r.state, { circle: true }]"
+                  /></span>
                   <span v-text="changeState(r.state)"></span>
                 </div>
-                <div class="m-2" id="date" align="right">{{ r.recordDate }}</div>
+                <div class="m-2" id="date" align="right">
+                  {{ r.recordDate }}
+                </div>
               </div>
             </div>
             <div v-else>
@@ -453,9 +526,16 @@
             </div>
           </div>
           <div class="modal-footer">
-              <div>
-                <button class="btn btn-success" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#recordUpdateModal">상태기록 등록하기</button>
-              </div>
+            <div>
+              <button
+                class="btn btn-success"
+                data-bs-dismiss="modal"
+                data-bs-toggle="modal"
+                data-bs-target="#recordUpdateModal"
+              >
+                상태기록 등록하기
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -471,7 +551,9 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="recordUpdateModalLabel"><strong>상태 등록하기</strong></h5>
+            <h5 class="modal-title" id="recordUpdateModalLabel">
+              <strong>상태 등록하기</strong>
+            </h5>
             <button
               type="button"
               class="btn-close"
@@ -483,13 +565,19 @@
             <div class="m-2">
               <div>
                 <p class="mb-0">
-                  농작물 상태에 문제가 생겼나요? <br>
-                  어떤 문제가 생겼는지 기록해보세요. <br>
+                  농작물 상태에 문제가 생겼나요? <br />
+                  어떤 문제가 생겼는지 기록해보세요. <br />
                 </p>
-                <p class="text-secondary">(상태 등록 없을 시 ‘좋음’으로 등록됩니다.)</p>
+                <p class="text-secondary">
+                  (상태 등록 없을 시 ‘좋음’으로 등록됩니다.)
+                </p>
               </div>
               <div>
-                <select class="form-select" aria-label="Default select example" v-model="state">
+                <select
+                  class="form-select"
+                  aria-label="Default select example"
+                  v-model="state"
+                >
                   <option value="0">상태 선택</option>
                   <option value="1">이파리가 시들었어요.</option>
                   <option value="2">이파리 색이 이상해요.</option>
@@ -498,16 +586,14 @@
                   <option value="5">기타</option>
                 </select>
               </div>
-              <div class="form-floating" v-if="state==5">
+              <div class="form-floating" v-if="state == 5">
                 <textarea
                   class="form-control my-3"
                   placeholder="Leave a comment here"
                   id="floatingTextarea"
                   v-model="state_detail"
                 ></textarea>
-                <label for="floatingInputValue"
-                  >농작물 상태 상세 입력</label
-                >
+                <label for="floatingInputValue">농작물 상태 상세 입력</label>
               </div>
             </div>
           </div>
@@ -518,7 +604,7 @@
               class="btn btn-success"
               @click="updateState"
               data-bs-dismiss="modal"
-              :disabled="this.state==0"
+              :disabled="this.state == 0"
             >
               등록
             </button>
@@ -539,9 +625,10 @@
 <script>
 import axios from "axios";
 import Calendar from "./include/Calendar.vue";
+import LineChart from './include/LineChart'
 
 export default {
-  components: { Calendar },
+  components: { Calendar, LineChart },
   data() {
     return {
       ucropno: this.$route.params.no,
@@ -569,7 +656,14 @@ export default {
       daysForCalendar: [],
       state: 0,
       state_detail: "",
+      prices: [],
+      avgPrice: 0,
+      chartLoading: true, // 데이터를 불러오기 전까지는 progress circle을 사용 
+      chartData: {label:[], data: []}
     };
+  },
+  mounted() {
+    this.init();
   },
   created() {
     axios.get(`user/crop/detail?userCropNumber=${this.ucropno}`).then((res) => {
@@ -597,7 +691,7 @@ export default {
               : require("@/assets/water_off.png");
         });
       });
-      axios
+      // axios
       // .get(`user/crop/record/month?userCropNumber=${this.$route.params.no}`)
       // .then((data) => {
       //   this.daysForCalendar = data.data;
@@ -625,6 +719,20 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+        });
+      axios
+        .get(`guide/plant/price/thirty?cropNumber=${this.ucrop.cropNumber}`)
+        .then((response) => {
+          this.prices = response.data;
+          // console.log(this.prices);
+          this.prices.forEach((p, index) => {
+            this.chartData.label[index] = p.date.substring(0, 10);
+            this.chartData.data[index] = p.price;
+            this.avgPrice += p.price;
+          });
+          this.avgPrice /= this.prices.length;
+          // console.log(this.avgPrice);
+          this.chartLoading = false;
         });
     });
     axios.get("user/my").then((res) => {
@@ -661,6 +769,10 @@ export default {
     });
   },
   methods: {
+    init() {
+      // if(this.prices.length>0) {
+      // }
+    },
     moveBack() {
       this.$router.push("/mycrop");
     },
@@ -668,7 +780,7 @@ export default {
       this.$router.push("/user/modify");
     },
     movePage2(cropno) {
-      this.$router.push("/dict/detail/"+cropno);
+      this.$router.push("/dict/detail/" + cropno);
     },
     harvestCrop(flag) {
       if (flag) {
@@ -769,30 +881,34 @@ export default {
       return statestr;
     },
     updateState() {
-      axios.post(`user/crop/record?userCropNumber=${this.ucropno}&state=${this.state}&detail=${this.state_detail}`).then((data) => {
-        if(data.data=="success") {
-          this.record = [];
-          axios
-            .get(`user/crop/record?userCropNumber=${this.ucropno}`)
-            .then((data) => {
-              this.record = data.data;
-              this.record.forEach((r) => {
-                r.recordDate = this.changeDate(r.recordDate);
+      axios
+        .post(
+          `user/crop/record?userCropNumber=${this.ucropno}&state=${this.state}&detail=${this.state_detail}`
+        )
+        .then((data) => {
+          if (data.data == "success") {
+            this.record = [];
+            axios
+              .get(`user/crop/record?userCropNumber=${this.ucropno}`)
+              .then((data) => {
+                this.record = data.data;
+                this.record.forEach((r) => {
+                  r.recordDate = this.changeDate(r.recordDate);
+                });
+                // console.log(this.record);
+              })
+              .catch((err) => {
+                console.log(err);
               });
-              // console.log(this.record);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-          this.daysForCalendar = [];
-          axios
-            .get(`user/crop/record/month?userCropNumber=${this.ucropno}`)
-            .then((data) => {
-              this.daysForCalendar = data.data;
-              console.log(data.data);
-            });
-        }
-      });
+            this.daysForCalendar = [];
+            axios
+              .get(`user/crop/record/month?userCropNumber=${this.ucropno}`)
+              .then((data) => {
+                this.daysForCalendar = data.data;
+                console.log(data.data);
+              });
+          }
+        });
     },
     dateClass(ymd, date) {
       const day = date.getDate();
@@ -923,16 +1039,16 @@ h4 {
 }
 
 .color-1 {
-  background-color: #71873F;
+  background-color: #71873f;
 }
 .color-2 {
-  background-color: #B6C790;
+  background-color: #b6c790;
 }
 .color-3 {
-  background-color: #EDDE8E;
+  background-color: #edde8e;
 }
 .color-4 {
-  background-color: #EBB856;
+  background-color: #ebb856;
 }
 .color-5 {
   background-color: #999999;
