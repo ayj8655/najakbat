@@ -6,9 +6,7 @@
 
 <script>
 export default({
-  created() {
-    if(!this.$store.state.userNumber) this.$router.push("/login")
-  },
+  
 })
 </script>
 
