@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mococo.common.jwt.JwtFilter;
 import com.mococo.common.jwt.TokenProvider;
@@ -482,7 +484,7 @@ public class UserController {
 		}
 
 	}
-	
+
 	@RequestMapping(value = "/record/{userNumber}", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "유저번호로 유저 활동정보 검색", notes = "유저번호를 받아 검색된 유저의 활동정보 반환.", response = User.class)
@@ -492,13 +494,74 @@ public class UserController {
 
 		try {
 			Optional<UserRecord> userRecordOpt = userRecordService.findByUserNumber(userNumber);
-			
-			if(userRecordOpt.isPresent()) {
-				return new ResponseEntity<>(userRecordOpt, HttpStatus.OK);	
+
+			if (userRecordOpt.isPresent()) {
+				return new ResponseEntity<>(userRecordOpt, HttpStatus.OK);
 			}
-			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);	
+			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
-			
+
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/photo/insert", method = RequestMethod.POST, consumes = { "multipart/form-data" })
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "프로필 사진 등록", notes = "유저번호를 받아 등록잘되었는지 user 리턴. 실패시 FAIL", response = User.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userNumber", value = "등록하고싶은 userNumber", required = true) })
+	public ResponseEntity<?> insertProfilePhoto(@RequestParam(value = "userNumber") int userNumber,
+													@RequestParam(value = "image", required = false) MultipartFile file) throws IOException {
+		logger.info("프로필 사진 등록");
+
+		try {
+			Optional<User> user = userService.insertProfilePhoto(userNumber,file);
+
+			if (user.isPresent()) {
+				return new ResponseEntity<>(user, HttpStatus.OK);
+			}
+			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/photo/update", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "프로필 사진 수정", notes = "유저번호를 받아 수정잘되었는지 success 리턴.", response = User.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userNumber", value = "수정하고싶은 userNumber", required = true) })
+	public ResponseEntity<?> updateProfilePhoto(@RequestParam(value = "userNumber") int userNumber) throws IOException {
+		logger.info("프로필 사진 수정");
+
+		try {
+			Optional<UserRecord> userRecordOpt = userRecordService.findByUserNumber(userNumber);
+
+			if (userRecordOpt.isPresent()) {
+				return new ResponseEntity<>(userRecordOpt, HttpStatus.OK);
+			}
+			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/photo/delete", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "프로필 사진 삭제", notes = "유저번호를 받아 삭제잘되었는지 success 리턴.", response = User.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userNumber", value = "삭제하고싶은 userNumber", required = true) })
+	public ResponseEntity<?> deleteProfilePhoto(@RequestParam(value = "userNumber") int userNumber) throws IOException {
+		logger.info("프로필 사진 삭제");
+
+		try {
+			Optional<UserRecord> userRecordOpt = userRecordService.findByUserNumber(userNumber);
+
+			if (userRecordOpt.isPresent()) {
+				return new ResponseEntity<>(userRecordOpt, HttpStatus.OK);
+			}
+			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+
 			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

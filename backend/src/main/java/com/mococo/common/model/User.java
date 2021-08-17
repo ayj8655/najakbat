@@ -68,6 +68,8 @@ public class User {
 	      inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
 	private Set<Authority> authorities;
 	
-	
+	@OneToOne
+	@JoinColumn(name = "user_number", referencedColumnName = "user_number")
+	private ProfilePhoto profilePhoto;
 
 }
