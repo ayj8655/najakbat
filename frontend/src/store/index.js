@@ -6,7 +6,7 @@ import router from "../router"
 
 
 Vue.use(Vuex);
-axios.defaults.baseURL = 'http://3.38.38.20:8080/'
+axios.defaults.baseURL = 'http://i5b203.p.ssafy.io:8080/'
 
 axios.interceptors.request.use(config => {
   const accessToken = localStorage.getItem('access_token')
@@ -49,6 +49,11 @@ export default new Vuex.Store({
 
     // qna 변수
     qnas: [],
+    qnaQuestion: '',
+    qnaType: '',
+    qnaTime: '',
+    qnaAnswer: '',
+    
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
@@ -123,7 +128,6 @@ export default new Vuex.Store({
       state.userNumber = payload.userNumber
       state.userNickname = payload.nickname
       state.userId = payload.id
-      console.log(state);
     },
 
     // user certificate
@@ -336,24 +340,29 @@ export default new Vuex.Store({
       },
 
     //  qna 작성
-    qnaPost(context, [qnatype, question, type, usernickname, userno]) {
+    qnaPost(context, [qnatype, question]) {
+      console.log(localStorage.getItem('userNickname'))
+      console.log(localStorage.getItem('userNumber'))
       axios({
         method: 'post',
         url: `qna/`,
         params: {
-          quatype: qnatype,
+          qnatype: qnatype,
           question: question,
-          type: type,
-          usernickname: usernickname,
-          userno: userno
+          usernickname: localStorage.getItem('userNickname'),
+          userno: localStorage.getItem('userNumber')
         }
       })
       .then(res => {
+        
         console.log(res.data)
       })
       .catch(err => {
+        // console.log(usernickname)
+        // console.log(userno)
         console.error(err)
       })
+      context
     },
 
     messageDelete(context, [messageNum]) {
@@ -472,12 +481,13 @@ export default new Vuex.Store({
         })
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
-          commit
+          commit('UPDATE_LOGIN_USER1', res.data)
           axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
             localStorage.setItem('userNickname', res.data.nickname)
+            commit('UPDATE_LOGIN_USER2', res.data)
             router.push({ path: 'SignupNext' })
           })
           .catch(err => {

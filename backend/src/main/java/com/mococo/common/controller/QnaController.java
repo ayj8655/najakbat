@@ -3,6 +3,7 @@ package com.mococo.common.controller;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.Qna;
+import com.mococo.common.service.NoticeService;
 import com.mococo.common.service.QnaService;
 
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +37,9 @@ public class QnaController {
 	
 	@Autowired
 	QnaService qnaService;
+	
+	@Autowired
+	NoticeService noticeService;
 	
 	// Qna등록
 	@RequestMapping(value = "/", method = RequestMethod.POST)
@@ -103,13 +108,19 @@ public class QnaController {
 											@RequestParam(value= "answer") String answer) throws IOException {
 
 		try {
-			logger.info("답변달기 수정");
+			logger.info("답변달기");
 			boolean ret = qnaService.answerQna(qnano,answer);
 			if (ret == false) {
 
 				logger.info("답변달기  실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
+			
+			///////////////답변 달리기 성공하면 질문 한 사람에게 알림
+			Optional<Qna> qna = qnaService.findById(Integer.parseInt(qnano));
+			
+			noticeService.insertNotice(qna.get().getUserNumber(), Integer.parseInt(qnano), "답변 알림", qna.get().getQnaType()+"에 대한 답변이 등록되었습니다."); // 알림 받을 사람번호, qna번호, 알림종류 답변, 답변내용
+			///////////////
 
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
