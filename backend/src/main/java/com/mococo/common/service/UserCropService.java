@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.mococo.common.dao.UserCropDAO;
@@ -65,6 +66,10 @@ public class UserCropService {
 	public List<UserCrop> findByFinishFalse() {
 		
 		return userCropDAO.findByFinishFalse();
+	}
+	
+	public List<Object> findTopCrop(int size) {
+		return userCropDAO.findTopCrop(PageRequest.of(0, size));
 	}
 
 //	public Optional<UserCropDetailResponse> findDetail(int no) {

@@ -41,7 +41,6 @@ public class PlantGuideController {
 	private static final String ERROR = "error";
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "모든 작물 정보 검색")
 	public ResponseEntity<?> searchAllPlantGuide() throws IOException {
 		logger.info("모든 작물 정보 검색");
@@ -56,7 +55,6 @@ public class PlantGuideController {
 	}
 
 	@RequestMapping(value = "/summary", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "모든 작물 요약 정보 검색(cropNumber, name, image)")
 	public ResponseEntity<?> searchAllPlantSummary() throws IOException {
 		logger.info("모든 작물 요약 정보 검색");

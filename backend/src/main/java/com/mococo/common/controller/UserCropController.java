@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +32,7 @@ import com.mococo.common.service.UserRecordService;
 import com.mococo.common.service.WaterRecordService;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 //http://localhost:8080/swagger-ui.html/
 
@@ -62,14 +62,11 @@ public class UserCropController {
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 등록")
-	public ResponseEntity<String> insertCrop(@RequestParam String cropno, @RequestParam String userno, @RequestParam String cropnickname, @RequestParam String cropdesc)
+	public ResponseEntity<String> insertCrop(@RequestParam String cropno, @RequestParam String userno, @RequestParam String cropnickname, @RequestParam String cropdesc, @ApiParam(value = "growingPeriodData (crop number가 0일때만 사용)", required = false) @RequestParam(required = false) Integer growingPeriodData, @ApiParam(value = "waterPeriodData (crop number가 0일때만 사용)", required = false) @RequestParam(required = false) Integer waterPeriodData)
 			throws IOException {
 		logger.info("작물 등록");
 
 		try {
-			if (cropno == "1000") {
-				// db에 없는 기타 작물일 때 처리 방식 추후에 만들기
-			}
 			int crop_number = Integer.parseInt(cropno);
 			int user_number = Integer.parseInt(userno);
 			Date now_time = new Date();
@@ -84,11 +81,20 @@ public class UserCropController {
 			userCrop.setCropNickname(cropnickname);
 			userCrop.setDescription(cropdesc);
 			
-			// target date, need_date: 물줘야하는날짜, finish=false, water_cycle, 다음 물 줘야하는날
-			Optional<Object> dayInfo = userCropService.findGrowingPeriodAndWaterPeriod(crop_number);
-			JSONObject jsonDayInfo = new JSONObject((Map) dayInfo.get());
-			int growingPeriod = (int) jsonDayInfo.get("growingPeriod");
-			int waterPeriod = (int) jsonDayInfo.get("waterPeriod");
+			int growingPeriod = 0;
+			int waterPeriod = 0;
+			
+			// db에 있는 작물일 경우
+			if (crop_number != 0) {
+				// target date, need_date: 물줘야하는날짜, finish=false, water_cycle, 다음 물 줘야하는날
+				Optional<Object> dayInfo = userCropService.findGrowingPeriodAndWaterPeriod(crop_number);
+				JSONObject jsonDayInfo = new JSONObject((Map) dayInfo.get());
+				growingPeriod = (int) jsonDayInfo.get("growingPeriod");
+				waterPeriod = (int) jsonDayInfo.get("waterPeriod");
+			} else {
+				growingPeriod = growingPeriodData == null ? 0 : growingPeriodData;
+				waterPeriod = waterPeriodData == null ? 0 : waterPeriodData;
+			}
 
 			cal.setTime(now_time);
 
@@ -123,7 +129,7 @@ public class UserCropController {
 	@RequestMapping(value = "/", method = RequestMethod.DELETE)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 삭제")
-	public ResponseEntity<String> deleteCrop(@RequestBody int userCropNumber) throws IOException {
+	public ResponseEntity<String> deleteCrop(@RequestParam int userCropNumber) throws IOException {
 		logger.info("작물 삭제");
 
 		try {
@@ -366,6 +372,12 @@ public class UserCropController {
 			// 1: user crop number로 조회해오기. - usercrop, usercropresponse
 			Optional<UserCrop> uc = userCropService.findByUserCropNumber(userCropNumber);
 			
+			urdr.setUserNumber(uc.get().getUserNumber());
+			
+			urdr.setCropNumber(uc.get().getCropNumber());
+			
+			urdr.setUserCropNumber(uc.get().getUserCropNumber());
+			
 			urdr.setCropNickname(uc.get().getCropNickname()); // 별명 set
 			
 			urdr.setDescription(uc.get().getDescription()); // 설명 set
@@ -402,7 +414,7 @@ public class UserCropController {
 	@RequestMapping(value = "/fullharvest", method = RequestMethod.PUT)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "완전 수확")
-	public ResponseEntity<String> fullHarvestCrop(@RequestParam int userCropNumber) throws IOException {
+	public ResponseEntity<String> fullHarvestCrop(@RequestParam int userCropNumber, @RequestParam String price) throws IOException {
 		logger.info("완전 수확 - 작물 리스트에서 뺀다");
 
 		try {
@@ -411,8 +423,8 @@ public class UserCropController {
 			uc.get().setFinish(true); 		  // 수확 완료
 			uc.get().setRealDate(new Date()); // 현재 날로 실제 수확날짜 적기
 			userRecordService.addCropFinishCount(uc.get().getUserNumber()); // 유저 기록에 반영
-
-			  							      // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
+			int gold = Integer.parseInt(price);
+			userRecordService.addGold(uc.get().getUserNumber(), gold);  							      // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
 			return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
 			
 		
@@ -425,7 +437,7 @@ public class UserCropController {
 	@RequestMapping(value = "/tempharvest", method = RequestMethod.PUT)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "임시 수확 - 작물 그대로 유지")
-	public ResponseEntity<String> tempHarvestCrop(@RequestParam int userCropNumber) throws IOException {
+	public ResponseEntity<String> tempHarvestCrop(@RequestParam int userCropNumber, @RequestParam String price) throws IOException {
 		logger.info("임시 수확 - 작물 그대로 유지");
 
 		try {
@@ -459,7 +471,8 @@ public class UserCropController {
 			userRecordService.addCropFinishCount(uc.get().getUserNumber());			      // 유저기록에 반영
 													
 
-		      									  // 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
+			int gold = Integer.parseInt(price);
+			userRecordService.addGold(uc.get().getUserNumber(), gold);  	  			// 돈 계산하기 (수확할 때 사용자한테서 정보 더 가져와야할거같기도)
 			
 			boolean result = userCropService.updateCrop(uc.get());
 
@@ -474,9 +487,17 @@ public class UserCropController {
 		}
 	}
 	
-	
-	
-	
-	
-	
+	@RequestMapping(value = "/top", method = RequestMethod.GET)
+	@ApiOperation(value = "인기 작물 리스트 반환")
+	public ResponseEntity<?> searchTopCrop(@RequestParam int size) throws IOException {
+		logger.info("인기 작물 리스트 반환");
+
+		try {
+			List<Object> cropList = userCropService.findTopCrop(size);
+			return new ResponseEntity<>(cropList, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

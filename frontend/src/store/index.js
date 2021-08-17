@@ -29,10 +29,12 @@ export default new Vuex.Store({
     nightmode_notice: false,
     noticeTime: '',
     receiver: '',
+    
 
 
     // Alerts 변수
     searchNotices: [],
+    noticeUnread: [],
 
     // Message 변수
     receivedMessages: [],
@@ -42,6 +44,11 @@ export default new Vuex.Store({
     messageReceiverNickname: '',
     alluserInfo: '',
     messageNumber: '',
+    SenderNumber: '',
+    ReceiverNumber: '',
+
+    // qna 변수
+    qnas: [],
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
@@ -72,9 +79,9 @@ export default new Vuex.Store({
 
     GET_SEARCH_NOTICE(state, searchNotice) {
       state.searchNotices = searchNotice
-      // for (let key in searchNotice) {
-      //   const value = searchNotice[key]
-      //   state.noticeIsreads.push(value.isRead)
+      // for (let notice in searchNotice) {
+      //   if (!notice.isRead)
+      //   state.noticeUnread.push(notice.isRead)
       // }
     },
 
@@ -101,12 +108,22 @@ export default new Vuex.Store({
       state.userNickname = '';
     },
 
+    // Qna mutations
+
+    GET_QNA(state, qna) { 
+      state.qnas = qna
+    },
+
     // Get User
-    UPDATE_LOGIN_USER(state, payload) {
+    UPDATE_LOGIN_USER1(state, payload) {
       state.accessToken = payload.token
+    },
+
+    UPDATE_LOGIN_USER2(state, payload) {
       state.userNumber = payload.userNumber
       state.userNickname = payload.nickname
       state.userId = payload.id
+      console.log(state);
     },
 
     // user certificate
@@ -147,7 +164,7 @@ export default new Vuex.Store({
     // Alerts actions
 
     getSearchNotice(context) {
-      axios.get(`user/notice/1`)
+      axios.get(`user/notice/${localStorage.getItem('userNumber')}`)
       .then(res => {
         context.commit('GET_SEARCH_NOTICE', res.data)
       })
@@ -156,9 +173,10 @@ export default new Vuex.Store({
       })
     },
 
+
     // Settings actions
     getNoticeSettings(context) {
-      axios.get(`user/setting/notice/1`)        
+      axios.get(`user/setting/notice/${localStorage.getItem('userNumber')}`)        
       .then(res => {
         context.commit('GET_NOTICE_SETTINGS', res.data)
         // console.log(this.state)
@@ -202,11 +220,15 @@ export default new Vuex.Store({
         console.error(err)
       })
     },
-    getUserinfoAll (context){
-      axios.get(`user/all`)
+
+    // qna actions
+    getQnas (context) {
+      axios({
+        method: 'get',
+        url: `qna/all`
+      })
       .then(res => {
-        context.commit('GET_USERINFO_ALL', res.data)
-        // console.log(this.state.alluserInfo)
+        context.commit('GET_QNA', res.data)
       })
       .catch(err => {
         console.error(err)
@@ -230,7 +252,8 @@ export default new Vuex.Store({
           commentNotice: settingsStatus[2],
           messageNotice: settingsStatus[3],
           darkMode: settingsStatus[4],
-          userNumber: 1,
+          noticeTime: settingsStatus[5],
+          userNumber: localStorage.getItem('userNumber'),
         }
       })
         .then(res => {
@@ -251,7 +274,7 @@ export default new Vuex.Store({
         url: `user/notice/${mynoticeStatus[1]}`,
         data: {
           isRead: mynoticeStatus[0],
-          userNumber: 1,
+          userNumber: localStorage.getItem('userNumber'),
         }
       })
         .then(res => {
@@ -311,6 +334,28 @@ export default new Vuex.Store({
           })
         context
       },
+
+    //  qna 작성
+    qnaPost(context, [qnatype, question, type, usernickname, userno]) {
+      axios({
+        method: 'post',
+        url: `qna/`,
+        params: {
+          quatype: qnatype,
+          question: question,
+          type: type,
+          usernickname: usernickname,
+          userno: userno
+        }
+      })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    },
+
     messageDelete(context, [messageNum]) {
       axios({
         method: 'delete',
@@ -353,18 +398,39 @@ export default new Vuex.Store({
         console.log(url)
       })
     },
+    
+    deleteNotices (context, noticeNumberList) {
+      var noticeurl = "";
+      for (var item of noticeNumberList) {
+        noticeurl += "noticeno=" + item + "&";
+      }
+      noticeurl = noticeurl.slice(0, -1);
+      console.log(noticeurl)
+      axios({
+        method: 'delete',
+        url: `user/notice/list?` + noticeurl,
+      })
+      .then(res => {
+        // console.log('success')
+        console.log(res.data)
+        // console.log(url)
+      })
+      .catch(err => {
+        console.error(err)
+        // console.log(url)
+      })
+    },
 
-
-    deleteallNotices() {
+    deleteAllNotices(context) {
       axios({
         method: 'delete',
         url: `user/notice`,
-        data: {
-          userNumber: 1,
+        params: {
+          userNumber: localStorage.getItem('userNumber'),
         }
       })
         .then(res => {
-          this.state.searchNotices = [];
+          // this.state.searchNotices = [];
           console.log(res)
         })
         .catch(err => {
@@ -372,28 +438,16 @@ export default new Vuex.Store({
         })
     },
     
-    deleteNotice (context, noticeNumber) {
-      axios({
-        method: 'delete',
-        url: `user/notice/${noticeNumber}`,
-        data: {
-          userNumber: 1,
-        }
-      })
-        .then(res => {
-          console.log('success')
-          console.log(res)
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    },
+    // QNA actions
+    
+
     // Logout actions
 
     logout({ commit }) {
       commit('DELETE_TOKEN');
       localStorage.removeItem('access_token');
       localStorage.clear();
+      router.go(0)
     },
 
     //Modify actions
@@ -489,12 +543,13 @@ export default new Vuex.Store({
         })
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
-          commit('UPDATE_LOGIN_USER', res.data)
+          commit('UPDATE_LOGIN_USER1', res.data)
           axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
             localStorage.setItem('userNickname', res.data.nickname)
+            commit('UPDATE_LOGIN_USER2', res.data)
             commit('LOGIN_CERTIFICATE', true)
 
             router.push({ name: 'Main' })
@@ -515,12 +570,13 @@ export default new Vuex.Store({
         })
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
-          commit('UPDATE_LOGIN_USER', res.data)
+          commit('UPDATE_LOGIN_USER1', res.data)
           axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
             localStorage.setItem('userNickname', res.data.nickname)
+            commit('UPDATE_LOGIN_USER2', res.data)
             commit('LOGIN_CERTIFICATE', true)
             router.push({ name: 'Main' })
           })

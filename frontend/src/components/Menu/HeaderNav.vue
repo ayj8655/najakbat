@@ -4,7 +4,7 @@
       <router-link to="/"><img src="@/assets/mococo.png" /></router-link>
     </div>
     <div id="right">
-      <div v-if="!myProfileNumber">
+      <div v-if="!isLogin">
         <router-link to="/login"
           ><img src="@/assets/login.png" alt="로그인"
         /></router-link>
@@ -14,40 +14,64 @@
           ><img src="@/assets/profile_sample.png" alt="프로필"
         /></router-link>
       </div>
-      <router-link to="/myalerts"><img :src="notiImg" /></router-link>
+      <router-link v-if="notiImg" to="/myalerts"><img src="@/assets/noti_green.png" /></router-link>
+      <router-link v-else to="/myalerts"><img src="@/assets/noti.png" /></router-link>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+// import { mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   data() {
     return {
       path: this.$route.path,
-      notiImg: require("@/assets/noti.png"),
+      notiImg: null,
       myProfileNumber: null,
+      isLogin: this.$store.state.accessToken
     };
   },
   created() {
     this.notiImg = this.path.includes("myalerts")
-      ? require("@/assets/noti_green.png")
-      : require("@/assets/noti.png");
-    axios
-      .get("user/my")
-      .then((res) => {
-        this.myProfileNumber = res.data["userNumber"];
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      // ? require("@/assets/noti_green.png")
+      // : require("@/assets/noti.png");
+    
+    if (this.$store.state.accessToken) {
+      axios
+        .get("user/my")
+        .then((res) => {
+          this.myProfileNumber = res.data["userNumber"];
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+
+      // console.log(this.notiImg)
+      this.$store.dispatch('getSearchNotice')
+      for (var item of this.$store.state.searchNotices) {
+        if (!item.isRead) {
+          this.notiImg = true
+          break;
+        }
+        else {
+          this.notiImg = false
+        }
+      }
+    }
+
   },
   computed: {
     flag() {
       if(this.$route.path.includes("mycrop/detail")) return false
       else return true
-    }
+    },
+    ...mapState([
+      'searchNotices',
+      // 'noticeIsreads',
+    ])
   }
 };
 </script>

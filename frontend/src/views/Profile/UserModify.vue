@@ -1,6 +1,7 @@
 <template>
   <div>
     <header-nav></header-nav>
+    <Sidebar id="side-bar" />
     <div class="modify-font container w-75">
       <div class="mt-3 mb-5">
         <h1>회원정보 수정</h1>
@@ -204,8 +205,10 @@
         </div>
       </div>
     </div>
+  <div v-show="this.$store.state.sidebar == false">
     <div id="foot"></div>
     <menubar id="menubar"></menubar>
+  </div>
   </div>
 </template>
 
@@ -215,6 +218,7 @@ import HeaderNav from "@/components/Menu/HeaderNav.vue";
 import Menubar from "@/components/Menu/Menubar.vue";
 import PhoneCertified from "@/components/Login/PhoneCertified.vue";
 import PutAddress from "@/components/Login/PutAddress.vue";
+import Sidebar from "@/components/Sidebar/Sidebar.vue";
 import axios from "axios";
 import { mapActions } from "vuex";
 
@@ -224,6 +228,7 @@ export default {
     HeaderNav,
     PhoneCertified,
     PutAddress,
+    Sidebar
   },
   data() {
     return {
@@ -405,6 +410,10 @@ export default {
 </script>
 
 <style scoped>
+#side-bar {
+  z-index: 1;
+  position: fixed;
+}
 #foot {
   height: 150px;
 }

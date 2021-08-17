@@ -23,6 +23,11 @@ public class UserRecordService {
 		return true;
 	}
 	
+	// 유저 기록 정보 생성
+	public Optional<UserRecord> findByUserNumber(int userNumber) {
+		return userRecordDAO.findByUserNumber(userNumber);
+	}
+	
 	// 사용자 추정 이득 추가
 	public boolean addGold(int userNumber, int gold) {
 		Optional<UserRecord> recordOpt = userRecordDAO.findByUserNumber(userNumber);
@@ -83,6 +88,33 @@ public class UserRecordService {
 		if(!recordOpt.isPresent()) return false;
 		
 		userRecordDAO.AddWaterCount(userNumber);
+		return true;
+	}
+	
+	// 사용자의 request count 증가
+	public boolean addRequestCount(int userNumber) {
+		Optional<UserRecord> recordOpt = userRecordDAO.findByUserNumber(userNumber);
+		if(!recordOpt.isPresent()) return false;
+		
+		userRecordDAO.AddRequestCount(userNumber);
+		return true;
+	}
+	
+	// 사용자의 answer count 증가
+	public boolean addAnswerCount(int userNumber) {
+		Optional<UserRecord> recordOpt = userRecordDAO.findByUserNumber(userNumber);
+		if(!recordOpt.isPresent()) return false;
+		
+		userRecordDAO.AddAnswerCount(userNumber);
+		return true;
+	}
+	
+	// 사용자의 share count 증가
+	public boolean addShareCount(int userNumber) {
+		Optional<UserRecord> recordOpt = userRecordDAO.findByUserNumber(userNumber);
+		if(!recordOpt.isPresent()) return false;
+		
+		userRecordDAO.AddShareCount(userNumber);
 		return true;
 	}
 }
