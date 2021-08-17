@@ -13,26 +13,24 @@
       <div class="">
         <div class="modal-title" align="center" id="exampleModalLabel10">
           <!-- <div class="dropdown" align="center"> -->
-          <div class="form-group nicknameinput dropdown- p-3 pb-2" align="center">
+          <div class="form-group nicknameinput p-3 pb-2" align="center">
             <input
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+
               type="text"
-              class="form-control dropdown-toggle"
+              class="form-control"
               id="sword"
               name="sword"
               v-model="sword"
               placeholder="받는사람의 닉네임을 입력하세요."
             />
-            <ul class="dropdown-menu" aria-labelledby="sword">
+            <!-- <ul class="dropdown-menu" aria-labelledby="sword">
               <li v-for="(userinfo, index) in alluserInfo" :key="index">
-              <!-- <li v-for="(userinfo, index) in alluserInfo" :key="index" v-show="((sword='') || (userinfo.nickname.includes(sword)))"> -->
                 <div v-if="((sword=='') || userinfo.nickname.includes(sword))" class="dropdown-item">
                   <div @click="syncronizeNickname (userinfo.nickname)">{{ userinfo.nickname }}</div>
                 </div>
                 <div v-else-if="index > 10"></div>
               </li>
-            </ul>
+            </ul> -->
           </div>
           에게 보내는 쪽지
         </div>
@@ -63,7 +61,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState} from 'vuex'
 import { mapActions } from 'vuex'
 // import Dropdown from 'vue-simple-search-dropdown'
 
@@ -75,33 +73,26 @@ export default {
       nickname: '',
       sword: '',
       skey: 'content',
-      // receiver: '',
+      receiver: '',
     }
-  },
-  created() {
-    this.$store.dispatch('getUserinfoAll')
-    // console.log(this.$store.state.profile.userNumber)
-    // console.log(this.$store.state.alluserInfo)
   },
   computed: {
     ...mapState([
-      'alluserInfo',
-      // 'receiver'
+      'ReceiverNumber'
     ])
   },
+
   methods: {
     ...mapActions([
       'messagePost'
     ]),
     postingMessage() {
-      console.log(this.sword)
-      for (const userinfo of this.alluserInfo) {
-        if (userinfo.nickname === this.sword) {
-          this.$store.state.receiver = userinfo.userNumber
-        }
-      }
-      // console.log(this.$store.state.receiver)
-      this.$store.dispatch('messagePost', [this.content, this.$store.state.receiver])
+      // console.log(this.sword)
+      this.$store.dispatch('getReceiverNumber', this.sword)
+      this.receiver = this.ReceiverNumber
+      // console.log(this.$store.state.ReceiverNumber)
+      console.log(this.receiver)
+      this.$store.dispatch('messagePost', [this.content, this.receiver])
       this.$router.go(0)
     },
     syncronizeNickname (receiverNickname) {

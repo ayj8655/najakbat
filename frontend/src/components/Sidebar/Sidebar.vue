@@ -1,5 +1,6 @@
 <template>
 <div>
+  <div>
 
   <div id="Sidebar">
     <transition name="slide-fade">
@@ -7,10 +8,10 @@
         <div class="container infos w-100 px-0 mt-5">
           <div class="container row d-flex mx-4">
             <router-link :to="'/profile/' + profileNumber" class="col-1 p-0 ps-2">
-            <img src="@/assets/profile_sample.png" class="profile">
+            <img src="@/assets/profile_sample.png" class="profile" @click="sidebarOff">
             </router-link>
             <div class="container col-5 d-flex flex-column mx-5 mt-2 pe-1">
-              <div class="nickname">닉네임</div>
+              <div class="nickname">{{ nickname }}</div>
               <div class="email">email@gmail.com</div>
             </div>
           </div>
@@ -18,43 +19,22 @@
         <div class="d-flex flex-column bd-highlight mb-3" @click="sidebarOff">
           <router-link  to="/Settings" class="text-design p-3 bd-highlight">설정</router-link>
           <router-link  to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
-          <div class="p-3 text-design bd-highlight">
+          <div class="p-3 text-design bd-highlight" @click="logout">
             <!-- Button trigger modal -->
-            <div type="button" class="" data-bs-toggle="modal" data-bs-target="#logout" @click="logout">
+            <div type="button" class="">
               로그아웃
             </div>
-
-  <div class="modal fade" id="logout" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel2">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          로그아웃
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>    
+            <!-- <logout/> -->
 
             <!-- Modal -->
 
-            
-
           </div>
-
 
           <div class="text-design p-3 bd-highlight">
             <!-- Button trigger modal -->
-            <div type="button" class="" data-bs-toggle="modal" data-bs-target="#exit">
+            <div type="button" class="" >
               탈퇴하기
             </div>
-            <!-- <l/> -->
             <!-- Modal -->
 
 
@@ -62,7 +42,7 @@
         </div>
       </div>
     </transition>        
-
+  </div>
   </div>
   </div>
 </template>
@@ -71,18 +51,19 @@
 import vClickOutside from 'v-click-outside'
 import { mapActions } from 'vuex'
 import { mapState } from 'vuex'
-// import l from './include/l.vue'
+// import Logout from '@/components/Sidebar/include/Logout.vue'
 
 export default {
   name: "Sidebar",
   directives: {
     clickOutside: vClickOutside.directive
   },
-  // components: {
-  //   l
-  // },
+  components: {
+      // Logout
+  },
   data () {
     return {
+      nickname: localStorage.getItem('userNickname'),
       profileNumber: localStorage.getItem('userNumber')
     }
   },
@@ -99,7 +80,8 @@ export default {
       this.$store.state.sidebar = false
     },
     ...mapActions ([
-      'logout'
+      'logout',
+      'withDrawl'
     ])
 
   },
@@ -113,6 +95,7 @@ export default {
 </script>
 
 <style scoped>
+.modal-backdrop { z-index: -999999; }
 .infos {
   height: 150px;
 }

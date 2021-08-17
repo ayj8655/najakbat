@@ -14,7 +14,11 @@
           ><img src="@/assets/profile_sample.png" alt="프로필"
         /></router-link>
       </div>
-      <router-link v-if="notiImg" to="/myalerts"><img src="@/assets/noti_green.png" /></router-link>
+
+      <router-link v-if="notiImg" to="/myalerts">
+        <img v-if="isAlert" src="@/assets/noti_green.png" />
+        <img v-else src="@/assets/noti_new.png"/>
+        </router-link>
       <router-link v-else to="/myalerts"><img src="@/assets/noti.png" /></router-link>
     </div>
   </div>
@@ -31,14 +35,20 @@ export default {
       path: this.$route.path,
       notiImg: null,
       myProfileNumber: null,
+      isAlert: false,
       isLogin: this.$store.state.accessToken
     };
   },
   created() {
+      if (this.$route.name === "MyAlerts") {
+        this.isAlert = true
+      }
+      else {
+        this.isAlert = false
+      }
     this.notiImg = this.path.includes("myalerts")
       // ? require("@/assets/noti_green.png")
       // : require("@/assets/noti.png");
-    
     if (this.$store.state.accessToken) {
       axios
         .get("user/my")
@@ -72,7 +82,7 @@ export default {
       'searchNotices',
       // 'noticeIsreads',
     ])
-  }
+  },
 };
 </script>
 
