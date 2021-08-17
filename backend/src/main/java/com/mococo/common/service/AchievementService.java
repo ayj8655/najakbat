@@ -161,6 +161,30 @@ public class AchievementService {
 						}
 						break;
 						
+					case "request_count":
+						if(condition.getMax() <= record.getRequestCount()) {
+							count++;
+						} else {
+							check = false;
+						}
+						break;
+						
+					case "answer_count":
+						if(condition.getMax() <= record.getAnswerCount()) {
+							count++;
+						} else {
+							check = false;
+						}
+						break;
+						
+					case "share_count":
+						if(condition.getMax() <= record.getShareCount()) {
+							count++;
+						} else {
+							check = false;
+						}
+						break;
+						
 					default:
 						break;
 					}
