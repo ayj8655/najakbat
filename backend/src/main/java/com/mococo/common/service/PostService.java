@@ -1,29 +1,29 @@
 package com.mococo.common.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import javax.transaction.Transactional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.mococo.common.dao.PostDAO;
 import com.mococo.common.dao.PostPhotoDAO;
 import com.mococo.common.dao.PostRecommendDAO;
 import com.mococo.common.model.Post;
 import com.mococo.common.model.PostPhoto;
 import com.mococo.common.model.PostRecommend;
-import com.mococo.common.model.PostRecommendPK;
 import com.mococo.common.model.User;
 
 @Service
@@ -37,6 +37,12 @@ public class PostService {
 	
 	@Autowired
 	PostPhotoDAO postphotoDAO;
+	
+	@Autowired
+	AmazonS3 amazonS3;
+	
+	@Value("${aws.s3.bucket}")
+	private String s3bucket;
 	
 	// 게시글 번호로 해당 Post 리턴
 	public Optional<Post> findPostByPostNumber(int no){
@@ -155,9 +161,9 @@ public class PostService {
 
 	public Post insertPost(Post post, MultipartFile[] files) throws IllegalStateException, IOException {
 		Post p = postDAO.save(post);
-		
         if(files == null){
             // TODO : 파일이 없을 땐 어떻게 해야할까.. 고민을 해보아야 할 것
+        	System.out.println("텅비었어....");
         }
         // 파일에 대해 DB에 저장하고 가지고 있을 것
         else{
@@ -167,25 +173,22 @@ public class PostService {
 				if (!originalFileName.isEmpty()) {
 					String sourceFileName = mfile.getOriginalFilename();
 					String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
-					File destinationFile;
+
 					String destinationFileName;
-					String fileUrl = "C:\\SSAFY\\Mococo\\backend\\src\\main\\resources\\photos\\";
-					do {
-						destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
-						destinationFile = new File(fileUrl + destinationFileName);
-					} while (destinationFile.exists());
+					destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
 	
-					destinationFile.getParentFile().mkdirs();
-					mfile.transferTo(destinationFile);
 	
-					photo.setSaveFile(destinationFileName);
-					photo.setOriginFile(sourceFileName);
-					photo.setSaveFolder(fileUrl);
+					// S3 Bucket에 저장
+					File file = convertMultiPartFileToFile(mfile);
 					
-					System.out.println("길이" + photo.getSaveFolder().length());
+					amazonS3.putObject(new PutObjectRequest(s3bucket, "post/"+destinationFileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+					
 					photo.setPost(post);
-					System.out.println(photo.getSaveFile());
+					photo.setOriginFile(originalFileName);
+					photo.setSaveFile(destinationFileName);
+					photo.setSaveFolder("post");
 					postphotoDAO.save(photo);
+					file.delete();
 				}
 
 			}
@@ -243,5 +246,24 @@ public class PostService {
 
         return p;
 	}
+	
+	public List<Object> findTopPost(int size) {
+		return postDAO.findTopPost(PageRequest.of(0, size));
+	}
+	
+	
+	// multipart file -> file
+	private File convertMultiPartFileToFile(MultipartFile multipartFile) {
+		File file = new File(multipartFile.getOriginalFilename());
+        try {
+            FileOutputStream outputStream = new FileOutputStream(file) ;
+            outputStream.write(multipartFile.getBytes());
+            outputStream.close();
+        } catch (final IOException ex) {
+        	System.out.println("Error converting the multi-part file to file= "+ex.getMessage());
+        }
+        return file;
+	}
+	
 	
 }

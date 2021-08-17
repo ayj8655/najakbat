@@ -44,6 +44,11 @@ export default new Vuex.Store({
     messageReceiverNickname: '',
     alluserInfo: '',
     messageNumber: '',
+    SenderNumber: '',
+    ReceiverNumber: '',
+
+    // qna 변수
+    qnas: [],
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
@@ -101,6 +106,12 @@ export default new Vuex.Store({
       state.userId = '';
       state.userNumber = '';
       state.userNickname = '';
+    },
+
+    // Qna mutations
+
+    GET_QNA(state, qna) { 
+      state.qnas = qna
     },
 
     // Get User
@@ -205,11 +216,15 @@ export default new Vuex.Store({
         console.error(err)
       })
     },
-    getUserinfoAll (context){
-      axios.get(`user/all`)
+
+    // qna actions
+    getQnas (context) {
+      axios({
+        method: 'get',
+        url: `qna/all`
+      })
       .then(res => {
-        context.commit('GET_USERINFO_ALL', res.data)
-        // console.log(this.state.alluserInfo)
+        context.commit('GET_QNA', res.data)
       })
       .catch(err => {
         console.error(err)
@@ -233,6 +248,7 @@ export default new Vuex.Store({
           commentNotice: settingsStatus[2],
           messageNotice: settingsStatus[3],
           darkMode: settingsStatus[4],
+          noticeTime: settingsStatus[5],
           userNumber: localStorage.getItem('userNumber'),
         }
       })
@@ -402,6 +418,7 @@ export default new Vuex.Store({
       commit('DELETE_TOKEN');
       localStorage.removeItem('access_token');
       localStorage.clear();
+      router.go(0)
     },
 
     //Modify actions

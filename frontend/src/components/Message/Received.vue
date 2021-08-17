@@ -8,7 +8,7 @@
   <button type="button" class="btn btn-sm btn-warning mb-2" v-if="isdeleteactivated" @click="activateDelete">삭제 취소</button>
   <button type="button" class="btn btn-sm btn-secondary mb-2" v-else @click="activateDelete">알림 삭제</button>
   </div>
-    <div class="container notice mt-2">
+    <div class="container mt-2">
       <div class="row">
         <div class="font1 col-2 px-0">
           닉네임
@@ -33,7 +33,7 @@
       <div v-for="(receivedMessage, idx) in receivedMessages" :key="idx">
     <div v-if="((sword=='') || (skey=='content' && receivedMessage.content.includes(sword)) || (skey=='nickname' && receivedMessage.senderNickname.includes(sword)))" class="container px-0" @click="[detail(receivedMessage), reading([idx, receivedMessage.messageNumber])]" >
       <div class="isRead-false border border-end-0 border-start-0 bg-white">
-        <div class="container notice mt-2">
+        <div class="container mt-2">
           <div class="row">
             <!-- 메세지 삭제 -->
 
@@ -75,7 +75,7 @@
     <div v-for="(receivedMessage, idx) in receivedMessages" :key="idx">
     <div class="container px-0" @click="[detail(receivedMessage), reading([idx, receivedMessage.messageNumber])]" >
       <div class="isRead-false border border-end-0 border-start-0 bg-white">
-        <div class="container notice mt-2" >
+        <div class="container mt-2" >
           <div class="row" >
           <div class="col-1 px-0" v-show="isdeleteactivated">
             <input class="mt-2" type="checkbox" id="checkbox" @click="selectMessage(receivedMessage)">
@@ -193,6 +193,8 @@ export default {
         this.$store.state.messageTime = message.time
         this.$store.state.messageSenderNickname = message.senderNickname
         this.$store.state.messageNumber = message.messageNumber
+        this.$store.state.SenderNumber = message.senderNumber
+        this.$store.state.ReceiverNumber = message.receiverNumber
         console.log(this.$store.state.messageSenderNickname)
       }
     },

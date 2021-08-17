@@ -83,7 +83,6 @@ public class PostController {
 	// 게시물 n개씩 조회해서 보내주는 것
 	@RequestMapping(value = "/infinite", method = RequestMethod.GET)
 	@ApiOperation(value = "게시글 전체 조회 인피니티 스크롤")
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<?> searchInfinitePost(@RequestParam("limit") int limit) throws IOException {
 		try {
 
@@ -101,7 +100,6 @@ public class PostController {
 
 	@RequestMapping(value = "/type/{type}", method = RequestMethod.GET)
 	@ApiOperation(value = "게시물 타입별 조회")
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	public ResponseEntity<?> searchPostType(@PathVariable String type) throws IOException {
 		logger.info("게시물 분류 조회");
 		int postType = 0;
@@ -364,6 +362,20 @@ public class PostController {
 				logger.info("질문/나눔게시글 완료 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
+			// 카운트 증가 (질문 완료 / 나눔 완료)
+			switch(post.get().getPostType()) {
+			case 3:
+				userRecordService.addRequestCount(post.get().getUserNumber());
+				break;
+				
+			case 4:
+				userRecordService.addShareCount(post.get().getUserNumber());
+				break;
+				
+			default:
+				break;
+			}
+			
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.info("질문/나눔게시글 완료 오류");
@@ -373,8 +385,17 @@ public class PostController {
 		}
 	}
 	
-	
-	
-	
+	@RequestMapping(value = "/top", method = RequestMethod.GET)
+	@ApiOperation(value = "인기 게시글 리스트 반환")
+	public ResponseEntity<?> searchTopCrop(@RequestParam int size) throws IOException {
+		logger.info("인기 게시글 리스트 반환");
 
+		try {
+			List<Object> postList = postService.findTopPost(size);
+			return new ResponseEntity<>(postList, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

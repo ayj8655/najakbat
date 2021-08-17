@@ -19,7 +19,7 @@
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
           </div>
           <div class="carousel-inner">
-            <div :class="[{'carousel-item active':(index==0)},{'carousel-item':(index>0)}]" v-for="(t, index) in tops" :key="index" @slideclick="movePage(t.cropNumber)">
+            <div :class="[{'carousel-item active':(index==0)},{'carousel-item':(index>0)}]" v-for="(t, index) in tops" :key="index" @click="movePage(t.cropNumber)">
               <img
                 :src="t.image"
                 class="d-block"
@@ -39,7 +39,7 @@
         <p>제철 농작물을 추천 받고 키워 보세요!</p>
         <div id="row">
           <div
-            class="items"
+            class="items m-2"
             v-for="(crop, index) in cropInThisMonth"
             :key="index"
             @click="movePage(crop.cropNumber)"
@@ -52,7 +52,17 @@
       <div class="mb-5">
         <h3>커뮤니티 인기 게시글</h3>
         <p>인기 있는 게시글을 추천 받아 보세요!</p>
-        <div></div>
+        <div>
+          <vueper-slides id="post-slide" fixed-height="250px" autoplay>
+            <vueper-slide v-for="(post, index) in posts" :key="index" style="background-color: #b6c790;">
+              <template v-slot:content>
+                <div id="post-box" class="m-5">
+                  <list-row :post="post"></list-row>
+                </div>
+              </template>
+            </vueper-slide>
+          </vueper-slides>
+        </div>
       </div>
     </div>
     <div v-show="this.$store.state.sidebar == false">
@@ -67,15 +77,20 @@ import axios from "axios";
 import HeaderNav from "../components/Menu/HeaderNav.vue";
 import Menubar from "../components/Menu/Menubar.vue";
 import Sidebar from "../components/Sidebar/Sidebar.vue";
+import ListRow from "../components/Community/include/ListRow.vue";
+import { VueperSlides, VueperSlide } from 'vueperslides'
+import 'vueperslides/dist/vueperslides.css'
+
 export default {
   name: "Main",
-  components: { Menubar, HeaderNav, Sidebar },
+  components: { Menubar, HeaderNav, Sidebar, ListRow, VueperSlides, VueperSlide },
   data() {
     return {
       id: null,
       month: 0,
       tops: [],
       crops: [],
+      posts: [],
     };
   },
   created() {
@@ -92,6 +107,10 @@ export default {
       this.crops = data.data;
       // console.log(this.cropInThisMonth);
     });
+    axios.get("post/top?size=10").then((data)=> {
+      this.posts = data.data;
+      // console.log(this.posts);
+    });
   },
   methods: {
     movePage(cropNumber) {
@@ -102,6 +121,10 @@ export default {
         ? require("@/assets/crop/" + crop.image)
         : require("@/assets/thumbnail.png");
     },
+      movePage2(postno) {
+        console.log("hihi");
+        this.$router.push(`/community/detail/${postno}`);
+      },
   },
   computed: {
     cropInThisMonth() {
@@ -121,7 +144,7 @@ export default {
   z-index: 1;
 }
 .carousel {
-  z-index: -1;
+  z-index: 0;
 }
 #main-body {
   font-family: Noto Sans KR;
@@ -159,5 +182,16 @@ h3 {
   height: 75px;
   border-radius: 5px;
   border: solid 1px #efefef;
+}
+
+#post-slide {
+  z-index: 0;
+}
+
+#post-box {
+  min-height: 150px;
+  border: 5px solid #b6c790;
+  border-radius: 15px;
+  background: #ffffff;
 }
 </style>

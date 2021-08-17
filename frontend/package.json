@@ -27,6 +27,7 @@
     "vue-simple-alert": "^1.1.1",
     "vue-simple-search-dropdown": "^1.0.1",
     "vue-youtube": "^1.4.0",
+    "vueperslides": "^2.15.2",
     "vuex": "^3.4.0"
   },
   "devDependencies": {

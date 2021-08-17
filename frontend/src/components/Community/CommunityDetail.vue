@@ -2,7 +2,10 @@
   <div class="container mt-2">
     <div id="post-area">
       <div id="post-head">
-        <div id="category"><img :src="this.typeimg" width="35px" /></div>
+        <div class="d-flex justify-content-start">
+          <div id="category"><img :src="this.typeimg" width="35px" /></div>
+          <div class="mx-1" v-if="this.post.finish"><img src="../../assets/complate.png" width="35px" /></div>
+        </div>
         <div class="mt-2 mb-2" id="title">{{ this.post.title }}</div>
         <div>
           <span id="left">{{ this.post.userNickname }}</span>
@@ -29,8 +32,9 @@
           <img src="@/assets/comment_green.png" width="15px" />{{this.post.commentCount}}
         </span>
         <div id="right" v-if="this.$store.state.userNumber == this.post.userNumber">
-          <span class="modifyBtn" @click="modifyPost">수정</span> |
-          <span class="deleteBtn" @click="deletePost">삭제</span>
+          <span class="modifyBtn m-0" @click="modifyPost">수정</span> |
+          <span class="deleteBtn m-0" @click="deletePost">삭제</span>
+          <span class="m-0" @click="complatePost" v-if="!this.post.finish && (this.post.postType == 3 || this.post.postType == 4)"> |<img src="@/assets/complate.png" width="35px" /></span>
         </div>
       </div>
     </div>
@@ -140,6 +144,16 @@ export default {
     onModifyCommentCancel(isShow) {
       this.isModifyShow = isShow;
     },
+    complatePost() {
+      axios.put(`post/finish/${this.no}`)
+      .then(res => {
+        this.post.finish = true
+        res
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    }
   },
   computed: {},
 };

@@ -16,13 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mococo.common.model.Crop;
 import com.mococo.common.model.UserCrop;
 import com.mococo.common.model.UserCropDetailResponse;
 import com.mococo.common.model.UserCropRecord;
@@ -34,6 +32,7 @@ import com.mococo.common.service.UserRecordService;
 import com.mococo.common.service.WaterRecordService;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 //http://localhost:8080/swagger-ui.html/
 
@@ -63,14 +62,11 @@ public class UserCropController {
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 등록")
-	public ResponseEntity<String> insertCrop(@RequestParam String cropno, @RequestParam String userno, @RequestParam String cropnickname, @RequestParam String cropdesc)
+	public ResponseEntity<String> insertCrop(@RequestParam String cropno, @RequestParam String userno, @RequestParam String cropnickname, @RequestParam String cropdesc, @ApiParam(value = "growingPeriodData (crop number가 0일때만 사용)", required = false) @RequestParam(required = false) Integer growingPeriodData, @ApiParam(value = "waterPeriodData (crop number가 0일때만 사용)", required = false) @RequestParam(required = false) Integer waterPeriodData)
 			throws IOException {
 		logger.info("작물 등록");
 
 		try {
-			if (cropno == "1000") {
-				// db에 없는 기타 작물일 때 처리 방식 추후에 만들기
-			}
 			int crop_number = Integer.parseInt(cropno);
 			int user_number = Integer.parseInt(userno);
 			Date now_time = new Date();
@@ -85,11 +81,20 @@ public class UserCropController {
 			userCrop.setCropNickname(cropnickname);
 			userCrop.setDescription(cropdesc);
 			
-			// target date, need_date: 물줘야하는날짜, finish=false, water_cycle, 다음 물 줘야하는날
-			Optional<Object> dayInfo = userCropService.findGrowingPeriodAndWaterPeriod(crop_number);
-			JSONObject jsonDayInfo = new JSONObject((Map) dayInfo.get());
-			int growingPeriod = (int) jsonDayInfo.get("growingPeriod");
-			int waterPeriod = (int) jsonDayInfo.get("waterPeriod");
+			int growingPeriod = 0;
+			int waterPeriod = 0;
+			
+			// db에 있는 작물일 경우
+			if (crop_number != 0) {
+				// target date, need_date: 물줘야하는날짜, finish=false, water_cycle, 다음 물 줘야하는날
+				Optional<Object> dayInfo = userCropService.findGrowingPeriodAndWaterPeriod(crop_number);
+				JSONObject jsonDayInfo = new JSONObject((Map) dayInfo.get());
+				growingPeriod = (int) jsonDayInfo.get("growingPeriod");
+				waterPeriod = (int) jsonDayInfo.get("waterPeriod");
+			} else {
+				growingPeriod = growingPeriodData == null ? 0 : growingPeriodData;
+				waterPeriod = waterPeriodData == null ? 0 : waterPeriodData;
+			}
 
 			cal.setTime(now_time);
 
@@ -124,7 +129,7 @@ public class UserCropController {
 	@RequestMapping(value = "/", method = RequestMethod.DELETE)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 삭제")
-	public ResponseEntity<String> deleteCrop(@RequestBody int userCropNumber) throws IOException {
+	public ResponseEntity<String> deleteCrop(@RequestParam int userCropNumber) throws IOException {
 		logger.info("작물 삭제");
 
 		try {

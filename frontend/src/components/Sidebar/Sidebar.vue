@@ -1,10 +1,12 @@
 <template>
-  <div id="sidebar-1">
+<div>
+
+  <div id="Sidebar">
     <transition name="slide-fade">
       <div class="container greenbg w-75" v-if="sidebar" v-click-outside="onClickOutside">
-        <div class="container infos w-100 h-25 px-0 mt-5">
+        <div class="container infos w-100 px-0 mt-5">
           <div class="container row d-flex mx-4">
-            <router-link :to="'/profile/' + this.$store.state.myNumber" class="col-1 p-0 ps-2">
+            <router-link :to="'/profile/' + profileNumber" class="col-1 p-0 ps-2">
             <img src="@/assets/profile_sample.png" class="profile">
             </router-link>
             <div class="container col-5 d-flex flex-column mx-5 mt-2 pe-1">
@@ -15,62 +17,54 @@
         </div>
 
         <div class="d-flex flex-column bd-highlight mb-3">
-          <router-link to="/Settings" class="p-2 bd-highlight">설정</router-link>
-          <router-link to="/DirectQuery" class="p-2 bd-highlight">1:1 문의</router-link>
-          <div class="p-2 bd-highlight">
+          <router-link to="/Settings" class="text-design p-3 bd-highlight">설정</router-link>
+          <router-link to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
+          <div class="p-3 text-design bd-highlight">
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" @click="logout">
+            <div type="button" class="" data-bs-toggle="modal" data-bs-target="#logout" @click="logout">
               로그아웃
-            </button>
+            </div>
+
+  <div class="modal fade" id="logout" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel2">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          로그아웃
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>    
 
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <!-- <h5 class="modal-title" id="exampleModalLabel">Modal title</h5> -->
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    ...
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+            
+
           </div>
-          <div class="p-2 bd-highlight">
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              탈퇴하기
-            </button>
 
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    ...
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>
-                </div>
-              </div>
+
+          <div class="text-design p-3 bd-highlight">
+            <!-- Button trigger modal -->
+            <div type="button" class="" data-bs-toggle="modal" data-bs-target="#exit">
+              탈퇴하기
             </div>
+            <l/>
+            <!-- Modal -->
+
 
           </div>
         </div>
       </div>
-    </transition>
+    </transition>        
+
+  </div>
   </div>
 </template>
 
@@ -78,12 +72,16 @@
 import vClickOutside from 'v-click-outside'
 import { mapActions } from 'vuex'
 import { mapState } from 'vuex'
+// import l from './include/l.vue'
 
 export default {
-  name: 'sidebar-1',
+  name: "Sidebar",
   directives: {
     clickOutside: vClickOutside.directive
   },
+  // components: {
+  //   l
+  // },
   data () {
     return {
       profileNumber: localStorage.getItem('userNumber')
@@ -112,6 +110,9 @@ export default {
 </script>
 
 <style scoped>
+.infos {
+  height: 150px;
+}
 .greenbg {
   position: fixed;
   width: 80%;
@@ -163,6 +164,19 @@ export default {
 
 
   color: #000000;
+}
+.text-design {
+  text-decoration: none;
+  color: #FFFFFF;
+  font-weight: bold;
+  border-radius: 15px 15px;
+}
+
+.text-design:hover {
+  background: white;
+  opacity: 0.5;
+  color: #01431B;
+  box-shadow: 5px 5px 5px;
 }
 .slide-fade-enter-active {
   transition: all .3s ease;
