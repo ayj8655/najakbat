@@ -6,7 +6,8 @@ import router from "../router"
 
 
 Vue.use(Vuex);
-axios.defaults.baseURL = 'http://i5b203.p.ssafy.io:8080/'
+// axios.defaults.baseURL = 'http://i5b203.p.ssafy.io:8080/'
+axios.defaults.baseURL = 'http://localhost:8080/'
 
 axios.interceptors.request.use(config => {
   const accessToken = localStorage.getItem('access_token')
@@ -49,6 +50,11 @@ export default new Vuex.Store({
 
     // qna 변수
     qnas: [],
+    qnaQuestion: '',
+    qnaType: '',
+    qnaTime: '',
+    qnaAnswer: '',
+    
 
     // signup 정보
     userId: localStorage.getItem('userId') || '',
@@ -336,24 +342,29 @@ export default new Vuex.Store({
       },
 
     //  qna 작성
-    qnaPost(context, [qnatype, question, type, usernickname, userno]) {
+    qnaPost(context, [qnatype, question]) {
+      console.log(localStorage.getItem('userNickname'))
+      console.log(localStorage.getItem('userNumber'))
       axios({
         method: 'post',
         url: `qna/`,
         params: {
-          quatype: qnatype,
+          qnatype: qnatype,
           question: question,
-          type: type,
-          usernickname: usernickname,
-          userno: userno
+          usernickname: localStorage.getItem('userNickname'),
+          userno: localStorage.getItem('userNumber')
         }
       })
       .then(res => {
+        
         console.log(res.data)
       })
       .catch(err => {
+        // console.log(usernickname)
+        // console.log(userno)
         console.error(err)
       })
+      context
     },
 
     messageDelete(context, [messageNum]) {

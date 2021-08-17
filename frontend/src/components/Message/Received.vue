@@ -195,7 +195,7 @@ export default {
         this.$store.state.messageNumber = message.messageNumber
         this.$store.state.SenderNumber = message.senderNumber
         this.$store.state.ReceiverNumber = message.receiverNumber
-        console.log(this.$store.state.messageSenderNickname)
+        // console.log(this.$store.state.messageSenderNickname)
       }
     },
     reading(messageinfo) {
