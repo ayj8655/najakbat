@@ -2,16 +2,21 @@
   <section class="section">
     <div class="container">
       <h2 class="subtitle has-text-centered">
-        {{ year }}년 {{ month }}월 <!-- 현재 달력의 년, 월 표시 -->
+        {{ year }}년 {{ month }}월
+        <!-- 현재 달력의 년, 월 표시 -->
       </h2>
-      <table class="table has-text-centered is-fullwidth">
+      <table
+        class="table has-text-centered is-fullwidth"
+      >
         <thead>
           <th v-for="day in days" :key="day">{{ day }}</th>
         </thead>
         <tbody>
           <tr v-for="(date, idx) in dates" :key="idx">
             <td
-              :class="[{todayFont:(day==today)? true:false}]" v-for="(day, secondIdx) in date" :key="secondIdx"
+              v-for="(day, secondIdx) in date"
+              :key="secondIdx"
+              :id="'colors' + daysForColor[day]"
             >
               {{ day }}
             </td>
@@ -23,44 +28,68 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
+  props: {
+    plantedDate: String,
+  },
   data() {
     return {
-      days: [
-        '월',
-        '화',
-        '수',
-        '목',
-        '금',
-        '토',
-        '일',
-      ],
+      days: ["월", "화", "수", "목", "금", "토", "일"],
       dates: [],
       currentYear: 0,
       currentMonth: 0,
       year: 0,
       month: 0,
       today: 0,
+      // colors: ['#446631', '#71873F', '#B6C790', '#EDDE8E', '#EBB856', '#999999'],
+      // colorFlag : [true, false, false, false, false, false],
+      daysForCalendar: null,
+      daysForColor: [],
+      startDay: 100,
     };
   },
-  created() { // 데이터에 접근이 가능한 첫 번째 라이프 사이클
+  created() {
+    // 데이터에 접근이 가능한 첫 번째 라이프 사이클
     const date = new Date();
     this.today = date.getDate();
     this.year = date.getFullYear();
     this.month = date.getMonth() + 1;
-    this.calendarData();
+    axios
+      .get(`user/crop/record/month?userCropNumber=${this.$route.params.no}`)
+      .then((data) => {
+        this.daysForCalendar = data.data;
+        // console.log(this.plantedDate);
+        // console.log(this.daysForCalendar);
+        let mnum = Number(this.plantedDate.substring(5, 7));
+        let dnum = Number(this.plantedDate.substring(8, 10));
+        if (mnum == this.month) this.startDay = dnum;
+        else this.startDay = 1;
+        let lastDay = new Date(this.year, this.month, 0).getDate();
+        for (let index = 0; index <= lastDay; index++) {
+          if (index >= this.startDay && index <= this.today)
+            this.daysForColor[index] = 0;
+          else this.daysForColor[index] = -1;
+        }
+        this.daysForCalendar.forEach((d) => {
+          let mnum = Number(d.recordDate.substring(5, 7));
+          let dnum = Number(d.recordDate.substring(8, 10));
+          if (mnum == this.month) {
+            this.daysForColor[dnum] = d.state;
+          }
+        });
+        // console.log(this.daysForColor);
+        this.calendarData();
+      });
   },
   methods: {
     calendarData() {
-      const [
-        monthFirstDay,
-        monthLastDate,
-        lastMonthLastDate,
-      ] = this.getFirstDayLastDate(this.year, this.month);
+      const [monthFirstDay, monthLastDate, lastMonthLastDate] =
+        this.getFirstDayLastDate(this.year, this.month);
       this.dates = this.getMonthOfDays(
         monthFirstDay,
         monthLastDate,
-        lastMonthLastDate,
+        lastMonthLastDate
       );
     },
     getFirstDayLastDate(year, month) {
@@ -75,13 +104,9 @@ export default {
       const prevLastDate = new Date(lastYear, lastMonth, 0).getDate(); // 지난 달 마지막 날짜
       return [firstDay, lastDate, prevLastDate];
     },
-    getMonthOfDays(
-      monthFirstDay,
-      monthLastDate,
-      prevMonthLastDate,
-    ) {
+    getMonthOfDays(monthFirstDay, monthLastDate, prevMonthLastDate) {
       let day = 1;
-      let prevDay = (prevMonthLastDate - monthFirstDay) + 1;
+      let prevDay = prevMonthLastDate - monthFirstDay + 1;
       const dates = [];
       let weekOfDays = [];
       while (day <= monthLastDate) {
@@ -103,7 +128,7 @@ export default {
       const len = weekOfDays.length;
       if (len > 0 && len < 7) {
         for (let k = 1; k <= 7 - len; k += 1) {
-        //   weekOfDays.push(k);
+          //   weekOfDays.push(k);
         }
       }
       if (weekOfDays.length > 0) dates.push(weekOfDays); // 남은 날짜 추가
@@ -115,6 +140,26 @@ export default {
 
 <style script>
 .todayFont {
-    color: green;
+  color: white;
+}
+#colors-1 {
+}
+#colors0 {
+  background-color: #446631;
+}
+#colors1 {
+  background-color: #71873f;
+}
+#colors2 {
+  background-color: #b6c790;
+}
+#colors3 {
+  background-color: #edde8e;
+}
+#colors4 {
+  background-color: #ebb856;
+}
+#colors5 {
+  background-color: gray;
 }
 </style>
