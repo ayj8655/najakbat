@@ -17,8 +17,10 @@ public class CorsConfig {
       config.addAllowedOrigin("http://localhost:3000");
       config.addAllowedOrigin("http://192.168.45.109:3000");
       config.addAllowedOrigin("http://i5b203.p.ssafy.io:3000");
-      config.addAllowedOrigin("http://i5b203.p.ssafy.io:80");
       config.addAllowedOrigin("http://i5b203.p.ssafy.io");
+      
+      
+      config.addAllowedOrigin("http://3.38.38.20");
       config.addAllowedHeader("*");
       config.addAllowedMethod("*");
       
