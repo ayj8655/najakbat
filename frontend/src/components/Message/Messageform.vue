@@ -1,17 +1,17 @@
 <template>
 <div class="pt-3 pb-3">
-<button type="button" class="btn buttoncolor" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button type="button" class="btn buttoncolor" data-bs-toggle="modal" data-bs-target="#exampleModal10">
   새 쪽지 쓰기
 </button>
 <!-- {{ alluserInfo }} -->
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal10" tabindex="-1" aria-labelledby="exampleModalLabel10" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="container modaldesign">
     <div class="modal-content">
       <div class="">
-        <div class="modal-title" align="center" id="exampleModalLabel">
+        <div class="modal-title" align="center" id="exampleModalLabel10">
           <!-- <div class="dropdown" align="center"> -->
           <div class="form-group nicknameinput dropdown- p-3 pb-2" align="center">
             <input
