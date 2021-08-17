@@ -1,5 +1,6 @@
 <template>
 <div>
+  <div>
 
   <div id="Sidebar">
     <transition name="slide-fade">
@@ -10,7 +11,7 @@
             <img src="@/assets/profile_sample.png" class="profile" @click="sidebarOff">
             </router-link>
             <div class="container col-5 d-flex flex-column mx-5 mt-2 pe-1">
-              <div class="nickname">닉네임</div>
+              <div class="nickname">{{ nickname }}</div>
               <div class="email">email@gmail.com</div>
             </div>
           </div>
@@ -18,25 +19,22 @@
         <div class="d-flex flex-column bd-highlight mb-3" @click="sidebarOff">
           <router-link  to="/Settings" class="text-design p-3 bd-highlight">설정</router-link>
           <router-link  to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
-          <div class="p-3 text-design bd-highlight">
+          <div class="p-3 text-design bd-highlight" @click="logout">
             <!-- Button trigger modal -->
             <div type="button" class="">
               로그아웃
             </div>
+            <!-- <logout/> -->
 
             <!-- Modal -->
 
-            
-
           </div>
-
 
           <div class="text-design p-3 bd-highlight">
             <!-- Button trigger modal -->
             <div type="button" class="" >
               탈퇴하기
             </div>
-            <!-- <l/> -->
             <!-- Modal -->
 
 
@@ -44,7 +42,7 @@
         </div>
       </div>
     </transition>        
-
+  </div>
   </div>
   </div>
 </template>
@@ -53,18 +51,19 @@
 import vClickOutside from 'v-click-outside'
 import { mapActions } from 'vuex'
 import { mapState } from 'vuex'
-// import l from './include/l.vue'
+// import Logout from '@/components/Sidebar/include/Logout.vue'
 
 export default {
   name: "Sidebar",
   directives: {
     clickOutside: vClickOutside.directive
   },
-  // components: {
-  //   l
-  // },
+  components: {
+      // Logout
+  },
   data () {
     return {
+      nickname: localStorage.getItem('userNickname'),
       profileNumber: localStorage.getItem('userNumber')
     }
   },
@@ -96,6 +95,7 @@ export default {
 </script>
 
 <style scoped>
+.modal-backdrop { z-index: -999999; }
 .infos {
   height: 150px;
 }
