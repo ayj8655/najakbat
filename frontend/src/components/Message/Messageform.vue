@@ -91,7 +91,7 @@ export default {
       this.$store.dispatch('getReceiverNumber', this.sword)
       this.receiver = this.ReceiverNumber
       // console.log(this.$store.state.ReceiverNumber)
-      // console.log(this.$store.state.receiver)
+      console.log(this.receiver)
       this.$store.dispatch('messagePost', [this.content, this.receiver])
       this.$router.go(0)
     },
