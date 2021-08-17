@@ -368,14 +368,14 @@ export default {
             phone: this.phone
           })
           .then(res => {
-            res
+            console.log(res);
           })
           .err(err => {
             console.error(err);
           })
         }
       }
-      console.log(this.passwordRealChange, this.password);
+      // console.log(this.passwordRealChange, this.password);
     }
   },
   watch: {
@@ -397,9 +397,11 @@ export default {
         this.nickname = res.data.nickname;
         this.phone = res.data.phone;
         this.address = res.data.address;
-        var getAddress = res.data.address.split(",");
-        this.region = getAddress[0];
-        this.city = getAddress[1];
+        if (this.address) {
+          var getAddress = res.data.address.split(",");
+          this.region = getAddress[0];
+          this.city = getAddress[1];
+        }
         this.userId = res.data.id
       })
       .catch((err) => {

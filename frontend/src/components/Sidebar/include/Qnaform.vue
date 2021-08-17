@@ -14,8 +14,8 @@
         <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
         <select class="selected" v-model="selected">
           <option disabled value="">문의사항 분류를 선택해주세요</option>
-          <option>농작물 도감 정보 정정 요청</option>
-          <option>시스템 버그 신고</option>
+          <option>정보 정정 요청</option>
+          <option>버그 신고</option>
           <option>기타</option>
         </select>        
       </div>
@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="">
-        <button v-if="content" type="button" data-bs-dismiss="modal" class="btn buttoncolor2 mb-3 mx-2" >보내기</button>
+        <button v-if="content" type="button" data-bs-dismiss="modal" class="btn buttoncolor2 mb-3 mx-2" @click="postingQna">보내기</button>
         <button v-else disabled type="button" data-bs-dismiss="modal" class="btn buttoncolor2 mb-3 mx-2" >보내기</button>
         <button type="button" class="btn btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
       </div>
@@ -51,7 +51,13 @@ export default {
       content: '',
       selected: '',
     }
-  }
+  },
+  methods: {
+    postingQna() {
+      this.$store.dispatch('qnaPost', [this.selected, this.content])
+      this.$router.go(0)
+    }
+  },
 }
 </script>
 
