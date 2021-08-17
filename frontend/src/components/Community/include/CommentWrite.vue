@@ -7,7 +7,7 @@
         v-model="content"
         placeholder="댓글 내용을 작성하세요."
       ></textarea>
-      <button type="button" class="btn btn-success" @click="registComment">
+      <button type="button" class="btn btn-success" :disabled="this.content.length == 0" @click="registComment">
         등록
       </button>
     </div>
@@ -29,23 +29,28 @@ export default {
   },
   methods: {
     registComment() {
-      axios
-        .post(`comment/?postno=${this.no}&user_number=${this.$store.state.userNumber}&parent=0`,
-          {
-            postno: this.no,
-            userNumber: Number(this.$store.state.userNumber),
-            userNickname: this.$store.state.userNickname,
-            parent: 0,
-            content: this.content,
-          },
-        )
-        .then(() => {
-          // alert("댓글이 등록되었습니다.");
-          window.location.reload();
-        });
       if (!localStorage.getItem("userNumber")) {
         // alert("로그인 후 이용해주세요.");
         this.$router.push("/user/login");
+      } else {
+        axios
+          .post(`comment/?postno=${this.no}&user_number=${this.$store.state.userNumber}&parent=0`,
+            {
+              postno: this.no,
+              userNumber: Number(this.$store.state.userNumber),
+              userNickname: this.$store.state.userNickname,
+              parent: 0,
+              content: this.content,
+            },
+          )
+          .then((data) => {
+            // alert("댓글이 등록되었습니다.");
+            // window.location.reload();
+            if(data.data=="success") {
+              this.content = "";
+              this.$emit("reload-comment");
+            }
+          });
       }
     },
   },

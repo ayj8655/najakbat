@@ -15,10 +15,9 @@
             </div>
           </div>
         </div>
-
-        <div class="d-flex flex-column bd-highlight mb-3">
-          <router-link to="/Settings" class="text-design p-3 bd-highlight">설정</router-link>
-          <router-link to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
+        <div class="d-flex flex-column bd-highlight mb-3" @click="sidebarOff">
+          <router-link  to="/Settings" class="text-design p-3 bd-highlight">설정</router-link>
+          <router-link  to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
           <div class="p-3 text-design bd-highlight">
             <!-- Button trigger modal -->
             <div type="button" class="" data-bs-toggle="modal" data-bs-target="#logout" @click="logout">
@@ -55,7 +54,7 @@
             <div type="button" class="" data-bs-toggle="modal" data-bs-target="#exit">
               탈퇴하기
             </div>
-            <l/>
+            <!-- <l/> -->
             <!-- Modal -->
 
 
@@ -91,9 +90,13 @@ export default {
     onClickOutside () {
       this.$store.state.sidebar = false
     },
+
     Sidebaron () {
       this.$store.state.sidebar = ! this.$store.state.sidebar
       console.log(this.profileNumber)
+    },
+    sidebarOff() {
+      this.$store.state.sidebar = false
     },
     ...mapActions ([
       'logout'

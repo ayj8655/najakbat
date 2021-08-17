@@ -6,7 +6,7 @@ import router from "../router"
 
 
 Vue.use(Vuex);
-axios.defaults.baseURL = 'http://i5b203.p.ssafy.io:8080/'
+axios.defaults.baseURL = 'http://3.38.38.20:8080/'
 
 axios.interceptors.request.use(config => {
   const accessToken = localStorage.getItem('access_token')
@@ -115,11 +115,15 @@ export default new Vuex.Store({
     },
 
     // Get User
-    UPDATE_LOGIN_USER(state, payload) {
+    UPDATE_LOGIN_USER1(state, payload) {
       state.accessToken = payload.token
+    },
+
+    UPDATE_LOGIN_USER2(state, payload) {
       state.userNumber = payload.userNumber
       state.userNickname = payload.nickname
       state.userId = payload.id
+      console.log(state);
     },
 
     // user certificate
@@ -330,6 +334,28 @@ export default new Vuex.Store({
           })
         context
       },
+
+    //  qna 작성
+    qnaPost(context, [qnatype, question, type, usernickname, userno]) {
+      axios({
+        method: 'post',
+        url: `qna/`,
+        params: {
+          quatype: qnatype,
+          question: question,
+          type: type,
+          usernickname: usernickname,
+          userno: userno
+        }
+      })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    },
+
     messageDelete(context, [messageNum]) {
       axios({
         method: 'delete',
@@ -412,6 +438,9 @@ export default new Vuex.Store({
         })
     },
     
+    // QNA actions
+    
+
     // Logout actions
 
     logout({ commit }) {
@@ -514,12 +543,13 @@ export default new Vuex.Store({
         })
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
-          commit('UPDATE_LOGIN_USER', res.data)
+          commit('UPDATE_LOGIN_USER1', res.data)
           axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
             localStorage.setItem('userNickname', res.data.nickname)
+            commit('UPDATE_LOGIN_USER2', res.data)
             commit('LOGIN_CERTIFICATE', true)
 
             router.push({ name: 'Main' })
@@ -540,12 +570,13 @@ export default new Vuex.Store({
         })
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
-          commit('UPDATE_LOGIN_USER', res.data)
+          commit('UPDATE_LOGIN_USER1', res.data)
           axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
             localStorage.setItem('userNickname', res.data.nickname)
+            commit('UPDATE_LOGIN_USER2', res.data)
             commit('LOGIN_CERTIFICATE', true)
             router.push({ name: 'Main' })
           })

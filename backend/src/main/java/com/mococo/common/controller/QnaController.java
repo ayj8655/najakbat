@@ -40,8 +40,9 @@ public class QnaController {
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@ApiOperation(value = "QnA 질문하기")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	public ResponseEntity<String> insertQna(@RequestParam(value = "type") String type,
-			@RequestParam(value = "userno") int userno, @RequestParam(value = "quatype") String qnatype,
+	public ResponseEntity<String> insertQna(
+			@RequestParam(value = "userno") int userno,
+			@RequestParam(value = "qnatype") String qnatype,
 			@RequestParam(value = "usernickname") String usernickname,
 			@RequestParam(value = "question") String question
 			) throws IOException {
