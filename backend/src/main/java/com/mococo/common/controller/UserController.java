@@ -510,11 +510,11 @@ public class UserController {
 	@ApiOperation(value = "프로필 사진 등록", notes = "유저번호를 받아 등록잘되었는지 user 리턴. 실패시 FAIL", response = User.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "userNumber", value = "등록하고싶은 userNumber", required = true) })
 	public ResponseEntity<?> insertProfilePhoto(@RequestParam(value = "userNumber") int userNumber,
-													@RequestParam(value = "image", required = false) MultipartFile file) throws IOException {
+			@RequestParam(value = "image", required = false) MultipartFile file) throws IOException {
 		logger.info("프로필 사진 등록");
 
 		try {
-			Optional<User> user = userService.insertProfilePhoto(userNumber,file);
+			Optional<User> user = userService.insertProfilePhoto(userNumber, file);
 
 			if (user.isPresent()) {
 				return new ResponseEntity<>(user, HttpStatus.OK);
@@ -530,14 +530,16 @@ public class UserController {
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "프로필 사진 수정", notes = "유저번호를 받아 수정잘되었는지 success 리턴.", response = User.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "userNumber", value = "수정하고싶은 userNumber", required = true) })
-	public ResponseEntity<?> updateProfilePhoto(@RequestParam(value = "userNumber") int userNumber) throws IOException {
+	public ResponseEntity<?> updateProfilePhoto(@RequestParam(value = "userNumber") int userNumber,
+			@RequestParam(value = "photoNumber") int photoNumber,
+			@RequestParam(value = "image", required = false) MultipartFile file) throws IOException {
 		logger.info("프로필 사진 수정");
 
 		try {
-			Optional<UserRecord> userRecordOpt = userRecordService.findByUserNumber(userNumber);
+			Optional<User> user = userService.updateProfilePhoto(userNumber,photoNumber,file);
 
-			if (userRecordOpt.isPresent()) {
-				return new ResponseEntity<>(userRecordOpt, HttpStatus.OK);
+			if (user.isPresent()) {
+				return new ResponseEntity<>(user, HttpStatus.OK);
 			}
 			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
@@ -550,14 +552,15 @@ public class UserController {
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "프로필 사진 삭제", notes = "유저번호를 받아 삭제잘되었는지 success 리턴.", response = User.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "userNumber", value = "삭제하고싶은 userNumber", required = true) })
-	public ResponseEntity<?> deleteProfilePhoto(@RequestParam(value = "userNumber") int userNumber) throws IOException {
+	public ResponseEntity<?> deleteProfilePhoto(@RequestParam(value = "userNumber") int userNumber,
+												@RequestParam(value = "photoNumber") int photoNumber) throws IOException {
 		logger.info("프로필 사진 삭제");
 
 		try {
-			Optional<UserRecord> userRecordOpt = userRecordService.findByUserNumber(userNumber);
+			boolean ret = userService.deleteProfilePhoto(userNumber,photoNumber);
 
-			if (userRecordOpt.isPresent()) {
-				return new ResponseEntity<>(userRecordOpt, HttpStatus.OK);
+			if (ret == true) {
+				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
 			}
 			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
 		} catch (Exception e) {

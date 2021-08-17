@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -42,10 +44,10 @@ public class UserService {
 
 	@Autowired
 	UserDAO userDAO;
-	
+
 	@Autowired
 	ProfilePhotoDAO profilephotoDAO;
-	
+
 	@Autowired
 	private final PasswordEncoder passwordEncoder;
 
@@ -275,28 +277,28 @@ public class UserService {
 
 	public Optional<User> insertProfilePhoto(int userNumber, MultipartFile mfile) {
 		Optional<User> user = userDAO.findById(userNumber);
-		
-		if(mfile == null){
+
+		if (mfile == null) {
 			// TODO : 파일이 없을 땐 어떻게 해야할까.. 고민을 해보아야 할 것
 			System.out.println("텅비었어....");
 		}
 		// 파일에 대해 DB에 저장하고 가지고 있을 것
-		else{
+		else {
 
 			ProfilePhoto photo = new ProfilePhoto();
 			String originalFileName = mfile.getOriginalFilename();
 			if (!originalFileName.isEmpty()) {
 				String sourceFileName = mfile.getOriginalFilename();
 				String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
-		
+
 				String destinationFileName;
 				destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
 
-
 				// S3 Bucket에 저장
 				File file = convertMultiPartFileToFile(mfile);
-				
-				amazonS3.putObject(new PutObjectRequest(s3bucket, "profile/"+destinationFileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+
+				amazonS3.putObject(new PutObjectRequest(s3bucket, "profile/" + destinationFileName, file)
+						.withCannedAcl(CannedAccessControlList.PublicRead));
 
 				photo.setUser(user.get());
 				photo.setOriginFile(originalFileName);
@@ -306,9 +308,78 @@ public class UserService {
 				file.delete();
 			}
 
-	
 		}
 		return user;
+	}
+
+	public Optional<User> updateProfilePhoto(int userNumber, int recentPhotoNum, MultipartFile mfile) {
+		Optional<User> user = userDAO.findById(userNumber);
+
+		Optional<ProfilePhoto> recentphoto = profilephotoDAO.findById(recentPhotoNum);
+
+		// 기존에 것을 지워야한다.
+
+		// Bucket에서 삭제한다.
+		amazonS3.deleteObject(s3bucket, recentphoto.get().getSaveFolder() + "/" + recentphoto.get().getSaveFile());
+
+		profilephotoDAO.deleteById(recentPhotoNum);
+
+		if (mfile == null) {
+			// TODO : 파일이 없을 땐 어떻게 해야할까.. 고민을 해보아야 할 것
+			System.out.println("텅비었어....");
+		}
+		// 파일에 대해 DB에 저장하고 가지고 있을 것
+		else {
+
+			ProfilePhoto photo = new ProfilePhoto();
+			String originalFileName = mfile.getOriginalFilename();
+			if (!originalFileName.isEmpty()) {
+				String sourceFileName = mfile.getOriginalFilename();
+				String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
+
+				String destinationFileName;
+				destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + sourceFileNameExtension;
+
+				// S3 Bucket에 저장
+				File file = convertMultiPartFileToFile(mfile);
+
+				amazonS3.putObject(new PutObjectRequest(s3bucket, "profile/" + destinationFileName, file)
+						.withCannedAcl(CannedAccessControlList.PublicRead));
+
+				photo.setUser(user.get());
+				photo.setOriginFile(originalFileName);
+				photo.setSaveFile(destinationFileName);
+				photo.setSaveFolder("profile");
+				profilephotoDAO.save(photo);
+				file.delete();
+			}
+
+		}
+		return user;
+	}
+
+	public boolean deleteProfilePhoto(int userNumber, int recentPhotoNum) {
+		try {
+			Optional<ProfilePhoto> recentphoto = profilephotoDAO.findById(recentPhotoNum);
+
+			// 기존에 것을 지워야한다.
+
+			// Bucket에서 삭제한다.
+			amazonS3.deleteObject(s3bucket, recentphoto.get().getSaveFolder() + "/" + recentphoto.get().getSaveFile());
+
+			profilephotoDAO.deleteById(recentPhotoNum);
+			return true;
+		} catch (AmazonServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			
+		} catch (SdkClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}
+		return false;
 	}
 
 	private File convertMultiPartFileToFile(MultipartFile multipartFile) {

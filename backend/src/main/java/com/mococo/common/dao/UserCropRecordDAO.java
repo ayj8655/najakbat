@@ -14,8 +14,9 @@ import com.mococo.common.model.UserCropRecord;
 public interface UserCropRecordDAO extends JpaRepository<UserCropRecord, Integer> {
 	
 	public Optional<UserCropRecord> findByRecordNumber(int recordNumber);
+	@Query(value = "select ucr.* from user_crop_record ucr where ucr.user_crop_number = :userCropNumber order by record_date desc", nativeQuery=true)
 	public List<UserCropRecord> findAllByUserCropNumber(int userCropNumber);
 	
-	@Query(value = "select ucr.* from user_crop_record ucr where ucr.user_crop_number = :userCropNumber and SUBSTRING(ucr.record_date,6,2) = :month", nativeQuery=true)
+	@Query(value = "select ucr.* from user_crop_record ucr where ucr.user_crop_number = :userCropNumber and SUBSTRING(ucr.record_date,6,2) = :month order by record_date desc", nativeQuery=true)
 	public List<UserCropRecord> findAllByUserCropNumberAndDate(int userCropNumber, String month);
 }
