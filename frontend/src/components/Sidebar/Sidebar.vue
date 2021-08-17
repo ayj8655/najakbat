@@ -20,10 +20,9 @@
           <router-link  to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
           <div class="p-3 text-design bd-highlight">
             <!-- Button trigger modal -->
-            <div type="button" class="" @click="logout">
+            <div type="button" class="">
               로그아웃
             </div>
-
 
             <!-- Modal -->
 
@@ -82,7 +81,8 @@ export default {
       this.$store.state.sidebar = false
     },
     ...mapActions ([
-      'logout'
+      'logout',
+      'withDrawl'
     ])
 
   },

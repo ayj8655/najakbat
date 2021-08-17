@@ -34,14 +34,13 @@ export default new Vuex.Store({
     // Alerts 변수
     searchNotices: [],
     noticeUnread: [],
-
     // Message 변수
     receivedMessages: [],
     sentMessages: [],
     messageContent: '',
     messageTime: '',
     messageReceiverNickname: '',
-
+    
     messageNumber: '',
     SenderNumber: '',
     ReceiverNumber: '',
@@ -360,8 +359,8 @@ export default new Vuex.Store({
         }
       })
       .then(res => {
-        
         console.log(res.data)
+        // this.$router.go(0)
       })
       .catch(err => {
         // console.log(usernickname)
@@ -464,6 +463,19 @@ export default new Vuex.Store({
       localStorage.clear();
       router.go(0)
     },
+    withDrawl(context) {
+      axios({ 
+        method: 'delete',
+        url: `user/${localStorage.getItem('userNumber')}`
+      })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    },
+    
 
     //Modify actions
     backToProfile() {
