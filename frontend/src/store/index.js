@@ -128,7 +128,6 @@ export default new Vuex.Store({
       state.userNumber = payload.userNumber
       state.userNickname = payload.nickname
       state.userId = payload.id
-      console.log(state);
     },
 
     // user certificate
@@ -482,12 +481,13 @@ export default new Vuex.Store({
         })
         .then(res => {
           localStorage.setItem('access_token', res.data.token)
-          commit
+          commit('UPDATE_LOGIN_USER1', res.data)
           axios.get('user/my')
           .then(res => {
             localStorage.setItem('userId', res.data.id)
             localStorage.setItem('userNumber', res.data.userNumber)
             localStorage.setItem('userNickname', res.data.nickname)
+            commit('UPDATE_LOGIN_USER2', res.data)
             router.push({ path: 'SignupNext' })
           })
           .catch(err => {

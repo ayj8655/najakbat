@@ -26,14 +26,7 @@
         </div>
         <div class="m-2" id="post-body">
           <div v-html="enterToBr(this.post.content)"></div>
-        </div>
-        <div class="mt-2 mb-3" id="post-photos" v-if="this.post.photos">
-          <div id="row">
-            <div class="items" v-for="(p, index) in photos" :key="index">
-              <img :src="p" />
-              <!-- <p>{{p.originFile}}</p> -->
-            </div>
-          </div>
+          <Picture :images="post.photos" />
         </div>
         <div id="post-foot">
           <span>
@@ -78,6 +71,7 @@
 import axios from "axios";
 import Comment from "@/components/Community/include/Comment.vue";
 import CommentWrite from "@/components/Community/include/CommentWrite.vue";
+import Picture from "@/components/Community/include/Picture.vue";
 import router from "@/router"
 
 export default {
@@ -85,6 +79,7 @@ export default {
   components: {
     Comment,
     CommentWrite,
+    Picture
   },
   props: {
     // post: Object,
@@ -107,6 +102,7 @@ export default {
     if (this.$store.state.accessToken) {
       axios.get(`post/${this.no}`).then(({ data }) => {
         this.post = data;
+        // console.log(this.post);
         switch (this.post.postType) {
           case 1:
             this.typeimg = require("@/assets/category_free.png");
@@ -121,10 +117,6 @@ export default {
             this.typeimg = require("@/assets/category_share.png");
             break;
         }
-        // console.log(this.post);
-        this.post.photos.forEach((p, index) => {
-          this.photos[index] = require("@/assets/post/"+p.saveFile);
-        });
       });
       axios.get(`post/like?user_number=${this.$store.state.userNumber}`).then((data) => {
         console.log(data.data);
@@ -137,11 +129,9 @@ export default {
       });
       axios.get(`comment/${this.no}/${this.$store.state.userNumber}`)
       .then(({ data }) => {
-        // console.log(this.$store.state.userNumber);
         this.recoComments = data;
       })
       .catch(err => {
-        console.log(this.$store.state.userNumber);
         err
       })
     }
