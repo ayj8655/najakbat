@@ -429,8 +429,9 @@ public class UserController {
 		try {
 			Optional<User> user = userService.findByUserNumber(userNumber);
 			Optional<ProfilePhoto> profilePhoto = userService.findProfilePhoto(userNumber);
-			
-			user.get().setProfilePhoto(profilePhoto.get());
+			if(profilePhoto.isPresent()) {
+				user.get().setProfilePhoto(profilePhoto.get());
+			}
 			
 			return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 		} catch (Exception e) {
