@@ -18,32 +18,9 @@
         </div>
       </div>
     </div>
-    <!-- <div v-for="(qna, idx) in qnas" :key="idx">
-      <div type="button" @click="detail(qna)" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="isRead-false border border-end-0 border-start-0 bg-white">
-      <div class="container mt-2">
-        <div class="row">
-          <div class="font2 col-3 px-0">
-            {{ qna.qnaType }}
-          </div>
-          <div class="font2 col-4 px-0">
-            {{ qna.question.substring(0,5) }}...
-          </div>
-          <div class="font1 col-2 px-0">
-            <div v-if="qna.finish" class="font1 text-danger">답변완료</div>
-            <div v-else class="font1">미답변</div>
-          </div>
-          <div class="col-3 px-0">
-            <div class="font1 mx-1 p-1">
-            {{ qna.date | moment('YYYY-MM-DD') }}
-            </div>
-          </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
 <!-- infinite -->
 <div v-for="(qna, $index) in list" :key="$index">
-  <div type="button" @click="detail(qna)" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="isRead-false border border-end-0 border-start-0 bg-white">
+  <div @click="detail(qna)" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="isRead-false border border-end-0 border-start-0 bg-white">
       <div class="container mt-2">
         <div class="row">
           <div class="font2 col-3 px-0">
@@ -77,13 +54,10 @@
     <div class="modal-content1">
       <div class="">
         <div class="modal-title" align="center" id="exampleModalLabel">
-      
           <div class="p-2 pb-2" align="center">
-            
             <div class="mb-0 font2">분류: {{this.qnaType}}</div>
           </div>
         </div>
-      
       </div>
       <div class="modal-body pt-2">
         <div class="mycontainer text-start p-1">{{ this.qnaQuestion }}</div>
