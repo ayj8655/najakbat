@@ -9,7 +9,11 @@
   <!-- <button type="button" class="btn btn-sm btn-secondary mb-3" @click="Activatedelete">알림 삭제</button> -->
   <img src="../../assets/open-trash-can.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-if="isdeleteactivated" @click="Activatedelete"/>
   <img src="../../assets/trash-can-with-cover.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-else @click="Activatedelete"/>
-  <button type="button" class="btn btn-sm btn-danger mb-2 p-0 px-1" v-if="isdeleteactivated" @click="deleteNotices">선택 삭제</button>
+  <div v-if="isdeleteactivated">
+  <button type="button" class="btn btn-sm btn-danger mb-2 p-0 px-1" v-if="checkedList.length > 0" @click="deleteNotices">선택 삭제</button>
+  <button type="button" class="btn btn-sm btn-danger mb-2 p-0 px-1" v-else disabled @click="deleteNotices">선택 삭제</button>
+
+  </div>
   </div>
   <div v-for="(searchNotice, index) in searchNotices.slice().reverse()" :key="index">
     <div class="container px-4">
@@ -29,7 +33,7 @@
               <!-- <img v-else src="@/assets/noti_green.png" width="30px" height="30px" alt=""> -->
             </div>
             <div class="col-8 px-0">
-              <div class="content">
+              <div class="content font2">
                 {{searchNotice.content}}
               </div>
               <div class="date mx-1">
@@ -54,7 +58,7 @@
               <img src="@/assets/noti_green.png" width="30px" height="30px" alt="">
             </div>
             <div class="col-8 px-0">
-              <div class="content">
+              <div class="content font2">
                 {{searchNotice.content}}
               </div>
               <div class="date mx-1">
@@ -251,6 +255,23 @@ export default {
   box-sizing: border-box;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 15px;
+}
+.font1 {
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 25px;
+
+  color: #999999;
+}
+
+.font2 {
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 25px;
 }
 
 </style>

@@ -29,7 +29,7 @@
             {{ qna.question.substring(0,5) }}...
           </div>
           <div class="font1 col-2 px-0">
-            <div v-if="qna.finish" class="font1">답변완료</div>
+            <div v-if="qna.finish" class="font1 text-danger">답변완료</div>
             <div v-else class="font1">미답변</div>
           </div>
           <div class="col-3 px-0">
