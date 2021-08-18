@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mococo.common.jwt.JwtFilter;
 import com.mococo.common.jwt.TokenProvider;
 import com.mococo.common.model.LoginDto;
+import com.mococo.common.model.ProfilePhoto;
 import com.mococo.common.model.TokenDto;
 import com.mococo.common.model.User;
 import com.mococo.common.model.UserRecord;
@@ -427,6 +428,10 @@ public class UserController {
 
 		try {
 			Optional<User> user = userService.findByUserNumber(userNumber);
+			Optional<ProfilePhoto> profilePhoto = userService.findProfilePhoto(userNumber);
+			
+			user.get().setProfilePhoto(profilePhoto.get());
+			
 			return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 		} catch (Exception e) {
 			System.out.println("회원 검색 실패");

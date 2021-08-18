@@ -309,7 +309,6 @@ public class UserService {
 				photo.setOriginFile(originalFileName);
 				photo.setSaveFile(destinationFileName);
 				photo.setSaveFolder("profile");
-				user.get().setProfilePhoto(photo);
 				profilephotoDAO.save(photo);
 				file.delete();
 			}
@@ -387,6 +386,19 @@ public class UserService {
 		}
 		return false;
 	}
+	
+	public Optional<ProfilePhoto> findProfilePhoto(int userNumber) {
+	
+		try {
+			Optional<ProfilePhoto> photo = profilephotoDAO.findByUserNumber(userNumber);
+			return photo;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 
 	private File convertMultiPartFileToFile(MultipartFile multipartFile) {
 		File file = new File(multipartFile.getOriginalFilename());
@@ -404,6 +416,7 @@ public class UserService {
 		return userDAO.updateWithdraw(userNumber);
 	}
 
+	
 	/*
 	 * public void updateById(String userId, User user) {
 	 * 
