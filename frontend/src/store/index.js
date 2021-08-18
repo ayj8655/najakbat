@@ -193,7 +193,7 @@ export default new Vuex.Store({
         method: 'get',
         url: `message/receiver`,
         params: {
-          userNumber: 1,
+          userNumber: localStorage.getItem('userNumber'),
           page: 0
         }
       })
@@ -210,7 +210,7 @@ export default new Vuex.Store({
         method: 'get',
         url: `message/sender`,
         params: {
-          userNumber: 1,
+          userNumber: localStorage.getItem('userNumber'),
           page: 0
         }
       })

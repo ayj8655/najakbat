@@ -19,7 +19,7 @@
         <div class="d-flex flex-column bd-highlight mb-3" @click="sidebarOff">
           <router-link  to="/Settings" class="text-design p-3 bd-highlight">설정</router-link>
           <router-link  to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
-          <div class="p-3 text-design bd-highlight" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <div class="p-3 text-design bd-highlight" data-bs-toggle="modal" data-bs-target="#logout">
             <!-- Button trigger modal -->
             <div type="button" class="">
               로그아웃
@@ -43,12 +43,11 @@
     </transition>        
   </div>
   </div>
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="logout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="">
         <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         ...

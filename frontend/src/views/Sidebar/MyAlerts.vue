@@ -4,12 +4,12 @@
   <Sidebar id="side-bar" />
   <router-view></router-view>
   <h3 class="mb-3 mt-5 fw-bold">알림</h3>
-  <button type="button" class="btn btn-warning mb-2" v-if="isdeleteactivated" @click="Activatedelete">삭제 취소</button>
+  <button type="button" class="btn btn-sm btn-warning mb-3" v-if="isdeleteactivated" @click="Activatedelete">삭제 취소</button>
   <div v-else>
-  <button type="button" class="btn btn-secondary mb-2" @click="Activatedelete">알림 삭제</button>
-  <button type="button" class="btn btn-warning mb-2" @click="deleteAllNotices">전체 삭제</button>
+  <button type="button" class="btn btn-sm btn-secondary mb-3" @click="Activatedelete">알림 삭제</button>
+
   </div>
-  <div v-for="(searchNotice, index) in searchNotices" :key="index">
+  <div v-for="(searchNotice, index) in searchNotices.slice().reverse()" :key="index">
     <div class="container px-4">
       <div v-if="searchNotice.isRead" class="isRead-false border border-end-0 border-start-0 bg-white" @click="Reading ([searchNotice, index])">
         <div class="container notice mt-2">
@@ -65,7 +65,8 @@
       </div>
     </div>
   </div>
-  <button type="button" class="btn btn-danger mt-3" v-show="isdeleteactivated" @click="deleteNotices">선택 삭제</button>
+  <button type="button" class="btn btn-sm btn-danger mt-3" v-if="isdeleteactivated" @click="deleteNotices">선택 삭제</button>
+  <button type="button" class="btn btn-sm btn-warning mt-3" v-else @click="deleteAllNotices">전체 삭제</button>
   <div v-show="this.$store.state.sidebar == false">
     <div id="foot"></div>
     <menubar id="menubar"></menubar>
