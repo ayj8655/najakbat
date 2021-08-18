@@ -45,9 +45,33 @@ public class PostController {
 
 	@Autowired
 	PostPhotoService postphotoService;
-	
+
 	@Autowired
 	UserRecordService userRecordService;
+
+	// 키워드 기반 게시물 조회
+	@RequestMapping(value = "/search/{keyword}", method = RequestMethod.GET)
+	@ApiOperation(value = " 키워드로 게시글 조회")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	public ResponseEntity<?> searchPostByKeyword(@PathVariable String keyword) throws IOException {
+		try {
+			logger.info("키워드로 게시글 조회");
+
+			List<Post> post = postService.findByKeywordContains(keyword);
+			if (post == null) {
+				logger.info("해당 키워드를 가진 게시글이 없음");
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+			}
+
+			logger.info("키워드로 게시글 조회 성공");
+			return new ResponseEntity<List<Post>>(post, HttpStatus.OK);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			logger.info("키워드 게시글 검색 에러");
+			return new ResponseEntity<String>(ERROR, HttpStatus.OK);
+		}
+	}
 
 	// 하나의 게시물의 내용 조회
 	@RequestMapping(value = "/{no}", method = RequestMethod.GET)
@@ -212,7 +236,7 @@ public class PostController {
 				logger.info("게시글 등록 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
-			
+
 			// 게시글 수 증가
 			userRecordService.addPostCount(user_number);
 
@@ -251,19 +275,17 @@ public class PostController {
 	@RequestMapping(value = "/{postno}", method = RequestMethod.PUT, consumes = { "multipart/form-data" })
 	@ApiOperation(value = "게시글 수정")
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
-	public ResponseEntity<String> updatePost(
-			@PathVariable(value = "postno") String postno,
-			@RequestParam(value = "type") String type,
-			@RequestParam(value = "content") String content, @RequestParam(value = "title") String title,
+	public ResponseEntity<String> updatePost(@PathVariable(value = "postno") String postno,
+			@RequestParam(value = "type") String type, @RequestParam(value = "content") String content,
+			@RequestParam(value = "title") String title,
 			@RequestParam(value = "keyword", required = false) String keyword,
 			@RequestParam(value = "user_nickname") String user_nickname,
 			@RequestParam(value = "user_number") int user_number,
 			@RequestParam(value = "insertimage", required = false) MultipartFile[] files,
-			@RequestParam(value = "deleteimage", required = false) List<Integer> dlist
-			) throws IOException {
+			@RequestParam(value = "deleteimage", required = false) List<Integer> dlist) throws IOException {
 		Optional<Post> p = postService.findPostByPostNumber(Integer.parseInt(postno));
 		Post post = p.get();
-		
+
 		post.setContent(content);
 		int postType = 0;
 		if (type.equals("자유")) {
@@ -290,15 +312,13 @@ public class PostController {
 		try {
 			logger.info("게시글 수정");
 
-
 			Post ret = postService.updatePost(post, files, dlist);
-
 
 			if (ret == null) {
 				logger.info("게시글 수정 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
-			
+
 			// 게시글 수 증가
 			userRecordService.addPostCount(user_number);
 
@@ -311,10 +331,7 @@ public class PostController {
 		}
 
 	}
-	
-	
-	
-	
+
 	// 사용자가 게시글 추천을 누르면 게시글의 좋아요가 하나 늘어나고, 몇번 유저가 몇번 게시글에 좋아요를 눌렀는지 post_recommend
 	// table에 추가한다.
 	@RequestMapping(value = "/recommend/{postno}", method = RequestMethod.PUT)
@@ -326,11 +343,11 @@ public class PostController {
 		try {
 			int post_number = Integer.parseInt(postno);
 			int ret = postService.recommendPost(post_number, user_number);
-			if(ret == 1) {
+			if (ret == 1) {
 				logger.info("게시글 추천 올리기");
 				userRecordService.addRecommendCount(user_number, 1);
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-			} else if(ret == 0){
+			} else if (ret == 0) {
 				logger.info("게시글 추천 내리기");
 				userRecordService.addRecommendCount(user_number, -1);
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -363,19 +380,19 @@ public class PostController {
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}
 			// 카운트 증가 (질문 완료 / 나눔 완료)
-			switch(post.get().getPostType()) {
+			switch (post.get().getPostType()) {
 			case 3:
 				userRecordService.addRequestCount(post.get().getUserNumber());
 				break;
-				
+
 			case 4:
 				userRecordService.addShareCount(post.get().getUserNumber());
 				break;
-				
+
 			default:
 				break;
 			}
-			
+
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.info("질문/나눔게시글 완료 오류");
@@ -384,7 +401,7 @@ public class PostController {
 			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@RequestMapping(value = "/top", method = RequestMethod.GET)
 	@ApiOperation(value = "인기 게시글 리스트 반환")
 	public ResponseEntity<?> searchTopCrop(@RequestParam int size) throws IOException {
@@ -398,20 +415,19 @@ public class PostController {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@RequestMapping(value = "/like", method = RequestMethod.GET)
 	@ApiOperation(value = "사용자 별 좋아요한 게시글번호 리스트")
 	public ResponseEntity<?> searchLikePost(@RequestParam int user_number) throws IOException {
 		logger.info("인기 게시글 리스트 반환");
 
 		try {
-			
+
 			return new ResponseEntity<List<Object>>(postService.findLikePostById(user_number), HttpStatus.OK);
 
 		} catch (Exception e) {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	
+
 }

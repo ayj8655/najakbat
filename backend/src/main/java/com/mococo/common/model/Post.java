@@ -37,7 +37,7 @@ public class Post {
 	private boolean isDelete; // 게시글이 지워졌는지 여부 - 지워졌어도 db에는 존재
 	
 	
-	 @ManyToMany(mappedBy = "posts",fetch = FetchType.LAZY)
+	 @ManyToMany(mappedBy = "posts")
 	 private List<User> users = new ArrayList<>();
 	 
 	 
@@ -47,7 +47,6 @@ public class Post {
      	   cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
      	   orphanRemoval = true
      )
-     
      private List<PostPhoto> photos = new ArrayList<>();
      
      public void addPhoto(PostPhoto photo) {
