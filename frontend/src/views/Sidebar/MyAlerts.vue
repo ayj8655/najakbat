@@ -4,10 +4,12 @@
   <Sidebar id="side-bar" />
   <router-view></router-view>
   <h3 class="mb-3 mt-5 fw-bold">알림</h3>
-  <button type="button" class="btn btn-sm btn-warning mb-3" v-if="isdeleteactivated" @click="Activatedelete">삭제 취소</button>
-  <div v-else>
-  <button type="button" class="btn btn-sm btn-secondary mb-3" @click="Activatedelete">알림 삭제</button>
-
+  <!-- <button type="button" class="btn btn-sm btn-warning mb-3" v-if="isdeleteactivated" @click="Activatedelete">삭제 취소</button> -->
+  <div class="d-flex flex-row-reverse px-4">
+  <!-- <button type="button" class="btn btn-sm btn-secondary mb-3" @click="Activatedelete">알림 삭제</button> -->
+  <img src="../../assets/open-trash-can.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-if="isdeleteactivated" @click="Activatedelete"/>
+  <img src="../../assets/trash-can-with-cover.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-else @click="Activatedelete"/>
+  <button type="button" class="btn btn-sm btn-danger mb-2 p-0 px-1" v-if="isdeleteactivated" @click="deleteNotices">선택 삭제</button>
   </div>
   <div v-for="(searchNotice, index) in searchNotices.slice().reverse()" :key="index">
     <div class="container px-4">
@@ -65,12 +67,28 @@
       </div>
     </div>
   </div>
-  <button type="button" class="btn btn-sm btn-danger mt-3" v-if="isdeleteactivated" @click="deleteNotices">선택 삭제</button>
-  <button type="button" class="btn btn-sm btn-warning mt-3" v-else @click="deleteAllNotices">전체 삭제</button>
+  <button type="button" class="btn btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#deleteall" v-if="isdeleteactivated">비우기</button>
   <div v-show="this.$store.state.sidebar == false">
     <div id="foot"></div>
     <menubar id="menubar"></menubar>
   </div>
+<!-- Modal -->
+<div class="modal fade" id="deleteall" tabindex="-1" aria-labelledby="deleteallLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modaldesign">
+      <div class="">
+        <h5 class="modal-title mt-3" id="deleteallLabel">전체 알림 삭제</h5>
+      </div>
+      <div class="modal-body">
+        모든 알림을 삭제하시겠습니까?
+      </div>
+      <div class="">
+        <button type="button" class="btn btn-sm btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-sm buttoncolor2 mb-3 mx-2" @click="deleteAllNotices">전체삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 </template>
 
@@ -140,11 +158,27 @@ export default {
     },
     deleteAllNotices () {
       this.$store.dispatch('deleteAllNotices')
-      this.$router.go(0)
+            setTimeout(() => {
+        this.$router.go(0)
+      }, 1000)
+        this.$fire({
+          title: "성공!",
+          text: "알림을 삭제하였습니다.",
+          type: "success",
+          timer: 3000,
+      })
     },
     deleteNotices () {
       this.$store.dispatch('deleteNotices', this.checkedList)
-      this.$router.go(0)
+            setTimeout(() => {
+        this.$router.go(0)
+      }, 1000)
+        this.$fire({
+          title: "성공!",
+          text: "알림을 삭제하였습니다.",
+          type: "success",
+          timer: 3000,
+      })
     }
 
     },
@@ -163,7 +197,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 #side-bar {
   z-index: 1;
@@ -207,4 +241,16 @@ export default {
   color: #999999;
   text-align: right;
 }
+.buttoncolor2 {
+  background: #71873F;
+  color: #FFFFFF;
+}
+.modal-content {
+  background: #FFFFFF;
+  border: 3px solid #B6C790;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+}
+
 </style>

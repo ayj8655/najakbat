@@ -68,7 +68,7 @@
 
 
             <div class="font2 col-2 px-0">
-              {{ sentMessage.senderNickname }}
+              {{ sentMessage.receiverNickname }}
             </div>
             <div class="col-5 px-0">
               <div class="font2">
@@ -114,7 +114,7 @@
             
 
             <div class="font2 col-2 px-0">
-              {{ sentMessage.senderNickname }}
+              {{ sentMessage.receiverNickname }}
             </div>
             <div v-if="isdeleteactivated" class="col-4 px-0">
               <div class="font2">
