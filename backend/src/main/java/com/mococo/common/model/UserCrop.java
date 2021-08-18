@@ -2,12 +2,18 @@ package com.mococo.common.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,6 +27,7 @@ import lombok.NoArgsConstructor;
 public class UserCrop {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_crop_number")
 	private int userCropNumber;
 	private int userNumber;
 	private int cropNumber;
@@ -38,4 +45,9 @@ public class UserCrop {
 	private int waterCycle;		// 물주는 주기
 	private boolean isWater;	// 현재 물을 잘 주었는지 여부 - 물줘야하는 D-DAY만 FALSE가 됨
 	
+	@JsonManagedReference
+	@OneToOne(mappedBy="userCrop", fetch = FetchType.LAZY)
+	private UserCropPhoto userCropPhoto;
+	
+
 }

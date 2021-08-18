@@ -35,4 +35,5 @@ public class UserCropDetailResponse {
 	private int remainDate; // 수확까지 몇일
 	private int waterDate; // 물주기까지 몇일
 	private boolean isWater; // 물준 여부
+	private UserCropPhoto userCropPhoto;
 }
