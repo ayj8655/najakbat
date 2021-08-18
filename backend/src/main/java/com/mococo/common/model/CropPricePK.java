@@ -1,8 +1,6 @@
 package com.mococo.common.model;
 
 import java.io.Serializable;
-import java.util.Date;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

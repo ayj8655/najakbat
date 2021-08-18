@@ -22,13 +22,13 @@
           <router-link v-if="profileNumber == 1" to="/Admin" class="text-design p-3 bd-highlight">관리자 페이지</router-link>
           <div class="p-3 text-design bd-highlight" data-bs-toggle="modal" data-bs-target="#logout">
             <!-- Button trigger modal -->
-            <div type="button" class="">
+            <div class="">
               로그아웃
             </div>
           </div>
           <div class="text-design p-3 bd-highlight" data-bs-toggle="modal" data-bs-target="#withdrawl">
             <!-- Button trigger modal -->
-            <div type="button" class="" >
+            <div class="" >
               탈퇴하기
             </div>
           </div>

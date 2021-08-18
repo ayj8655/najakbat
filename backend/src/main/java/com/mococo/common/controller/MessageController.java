@@ -18,16 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.Message;
-import com.mococo.common.model.Post;
 import com.mococo.common.model.User;
 import com.mococo.common.service.MessageService;
 import com.mococo.common.service.NoticeService;
 import com.mococo.common.service.UserService;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import springfox.documentation.annotations.ApiIgnore;
 
 //http://localhost:8080/swagger-ui.html/
 

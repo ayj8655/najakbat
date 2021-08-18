@@ -7,8 +7,8 @@
   <!-- <button type="button" class="btn btn-sm btn-warning mb-3" v-if="isdeleteactivated" @click="Activatedelete">삭제 취소</button> -->
   <div class="d-flex flex-row-reverse px-4">
   <!-- <button type="button" class="btn btn-sm btn-secondary mb-3" @click="Activatedelete">알림 삭제</button> -->
-  <img src="../../assets/open-trash-can.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-if="isdeleteactivated" @click="Activatedelete"/>
-  <img src="../../assets/trash-can-with-cover.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-else @click="Activatedelete"/>
+  <img src="../../assets/open-trash-can.png" width="40px" height="30px" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-if="isdeleteactivated" @click="Activatedelete"/>
+  <img src="../../assets/trash-can-with-cover.png" width="40px" height="30px" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-else @click="Activatedelete"/>
   <div v-if="isdeleteactivated">
   <button type="button" class="btn btn-sm btn-danger mb-2 p-0 px-1" v-if="checkedList.length > 0" @click="deleteNotices">선택 삭제</button>
   <button type="button" class="btn btn-sm btn-danger mb-2 p-0 px-1" v-else disabled @click="deleteNotices">선택 삭제</button>

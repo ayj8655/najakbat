@@ -18,8 +18,9 @@
         </div>
       </div>
     </div>
-    <div v-for="(qna, idx) in qnas" :key="idx">
-      <div type="button" @click="detail(qna)" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="isRead-false border border-end-0 border-start-0 bg-white">
+<!-- infinite -->
+<div v-for="(qna, $index) in list" :key="$index">
+  <div @click="detail(qna)" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="isRead-false border border-end-0 border-start-0 bg-white">
       <div class="container mt-2">
         <div class="row">
           <div class="font2 col-3 px-0">
@@ -40,21 +41,23 @@
           </div>
         </div>
       </div>
+</div>
 
-    </div>
+<infinite-loading @infinite="infiniteHandler"></infinite-loading>
+
+
+
+<!-- modal -->
 <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="container modaldesign">
     <div class="modal-content1">
       <div class="">
         <div class="modal-title" align="center" id="exampleModalLabel">
-      
           <div class="p-2 pb-2" align="center">
-            
             <div class="mb-0 font2">분류: {{this.qnaType}}</div>
           </div>
         </div>
-      
       </div>
       <div class="modal-body pt-2">
         <div class="mycontainer text-start p-1">{{ this.qnaQuestion }}</div>
@@ -78,14 +81,15 @@
 </template>
 
 <script>
+import axios from 'axios';
 import {mapState} from 'vuex'
 import Qnaform from '../../components/Sidebar/include/Qnaform.vue'
-// import InfiniteLoading from "vue-infinite-loading";
+import InfiniteLoading from "vue-infinite-loading";
 
 export default {
   components: {
     Qnaform,
-    // InfiniteLoading,
+    InfiniteLoading,
   },
   created() {
     this.$store.dispatch('getQnas')
@@ -99,6 +103,7 @@ export default {
       qnaAnswer: null,
       content: '',
       limit: 0,
+      list: [],
     }
   },
   computed: {
@@ -122,6 +127,28 @@ export default {
     },
     splitContent(content) {
       return content.substring(0,51)
+    },
+    infiniteHandler($state) {
+      let userNumber = localStorage.getItem('userNumber')
+      axios.get(`qna/user/${userNumber}`, {
+        params: {
+          limit: this.limit,
+        }
+      })
+      .then((response) => {
+        setTimeout(() => {
+          if (response.data.length) {
+            this.list = this.list.concat(response.data);
+            this.limit += 1;
+            $state.loaded();
+          } else {
+            $state.complete();
+          }
+        }, 1000);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     }
   }
 }

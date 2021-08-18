@@ -5,16 +5,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -107,7 +103,7 @@ public class WeatherService {
 				jobj3 = (JSONObject) jArr3.get(0);
 				x = (String) jobj3.get("x");
 				y = (String) jobj3.get("y");
-				String test3 = (String) jobj3.get("value");
+//				String test3 = (String) jobj3.get("value");
 //				System.out.println(test3 + "의 x값 : " + x + ", y값 :" + y);
 
 				// 각각의 값들 다 받았음 이제 요청하고저장하면됨
@@ -131,6 +127,8 @@ public class WeatherService {
 		// 동네예보조회
 		String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
+		
+		//아래 키는 빼려고 했는데 오류나서 일단 넣어둠 -> UnsatisfiedDependencyException
 		String serviceKey = "JO3E4gAgxqUOYOhg27Kp8g3ppUEZh9cMc8P7DEXwLzopTW2ffCn6LFsaNxDCGztD20Jp77KkA3SNDnDhtcRY6w%3D%3D";
 //		String nx = "61"; // 위도
 //		String ny = "128"; // 경도

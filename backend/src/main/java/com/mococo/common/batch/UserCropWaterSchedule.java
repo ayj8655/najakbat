@@ -1,16 +1,13 @@
 package com.mococo.common.batch;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.mococo.common.model.Crop;
 import com.mococo.common.model.UserCrop;
 import com.mococo.common.model.UserSetting;
-import com.mococo.common.service.CropService;
 import com.mococo.common.service.NoticeService;
 import com.mococo.common.service.UserCropService;
 import com.mococo.common.service.UserSettingService;
@@ -20,7 +17,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Component

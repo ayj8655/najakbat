@@ -8,10 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
-import javax.transaction.Transactional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.RandomStringUtils;
@@ -31,7 +28,6 @@ import com.mococo.common.dao.ProfilePhotoDAO;
 import com.mococo.common.dao.UserDAO;
 import com.mococo.common.model.Authority;
 import com.mococo.common.model.LoginDto;
-import com.mococo.common.model.PostPhoto;
 import com.mococo.common.model.ProfilePhoto;
 import com.mococo.common.model.User;
 import com.mococo.common.util.SecurityUtil;
@@ -92,9 +88,15 @@ public class UserService {
 	}
 
 	// api키값들은 외부로 빼면 좋을거같음
-	private String apiKey = "NCSILJGEPXL11XYN";
-	private String apiSecret = "TVVIYJQU4ZZD50FRZYFHHW2TPGLXP05B";
-	private String fromNumber = "01033149036";
+	
+	@Value("${send.apiKey}")
+	private String apiKey;
+	
+	@Value("${send.apiSecret}")
+	private String apiSecret;
+	
+	@Value("${send.fromNumber}")
+	private String fromNumber;
 
 	public boolean sendMessage(String toNumber, String randomNumber) {
 
@@ -104,7 +106,7 @@ public class UserService {
 		params.put("to", toNumber);
 		params.put("from", fromNumber);
 		params.put("type", "SMS");
-		params.put("text", "[대충어플이름] 인증번호 " + randomNumber + " 를 입력하세용.");
+		params.put("text", "[나작밭] 인증번호 " + randomNumber + " 를 입력하세요.");
 		params.put("app_version", "test app 1.2"); // application name and version
 
 		try {
@@ -193,6 +195,7 @@ public class UserService {
 //		return user;
 //	}
 
+	//모바일 로그인시 기기의 토큰값을 저장하는 메소드
 	public void insertToken(LoginDto loginDto) {
 		Optional<User> ret = userDAO.findById(loginDto.getId());
 
@@ -213,6 +216,7 @@ public class UserService {
 		return true;
 	}
 
+	//유저번호를 통해 회원정보를 수정할 때 사용
 	public boolean updateByUserNumber(User user) {
 
 		Optional<User> updateUser = userDAO.findByUserNumber(user.getUserNumber());
@@ -235,6 +239,7 @@ public class UserService {
 		return true;
 	}
 
+	//비밀번호를 수정할 때 사용
 	public boolean updateById(User user) {
 
 		Optional<User> updateUser = userDAO.findById(user.getId());
@@ -381,6 +386,19 @@ public class UserService {
 		}
 		return false;
 	}
+	
+	public Optional<ProfilePhoto> findProfilePhoto(int userNumber) {
+	
+		try {
+			Optional<ProfilePhoto> photo = profilephotoDAO.findByUserNumber(userNumber);
+			return photo;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 
 	private File convertMultiPartFileToFile(MultipartFile multipartFile) {
 		File file = new File(multipartFile.getOriginalFilename());
@@ -398,6 +416,7 @@ public class UserService {
 		return userDAO.updateWithdraw(userNumber);
 	}
 
+	
 	/*
 	 * public void updateById(String userId, User user) {
 	 * 
