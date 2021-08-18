@@ -80,9 +80,12 @@
 <script>
 import {mapState} from 'vuex'
 import Qnaform from '../../components/Sidebar/include/Qnaform.vue'
+// import InfiniteLoading from "vue-infinite-loading";
+
 export default {
   components: {
-    Qnaform
+    Qnaform,
+    // InfiniteLoading,
   },
   created() {
     this.$store.dispatch('getQnas')
@@ -95,6 +98,7 @@ export default {
       qnaType: '',
       qnaAnswer: null,
       content: '',
+      limit: 0,
     }
   },
   computed: {
