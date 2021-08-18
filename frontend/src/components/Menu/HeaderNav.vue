@@ -45,8 +45,8 @@ export default {
       }
       else {
         this.isAlert = false
-      }
-    this.notiImg = this.path.includes("myalerts")
+      };
+    this.notiImg = this.path.includes("myalerts");
       // ? require("@/assets/noti_green.png")
       // : require("@/assets/noti.png");
     if (this.$store.state.accessToken) {
@@ -57,10 +57,10 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-        })
+        });
 
       // console.log(this.notiImg)
-      this.$store.dispatch('getSearchNotice')
+      this.$store.dispatch('getSearchNotice');
       for (var item of this.$store.state.searchNotices) {
         if (!item.isRead) {
           this.notiImg = true
