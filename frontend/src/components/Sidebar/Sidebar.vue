@@ -19,43 +19,55 @@
         <div class="d-flex flex-column bd-highlight mb-3" @click="sidebarOff">
           <router-link  to="/Settings" class="text-design p-3 bd-highlight">설정</router-link>
           <router-link  to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
-          <div class="p-3 text-design bd-highlight" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <div class="p-3 text-design bd-highlight" data-bs-toggle="modal" data-bs-target="#logout">
             <!-- Button trigger modal -->
             <div type="button" class="">
               로그아웃
             </div>
-            <!-- <logout/> -->
-
-            <!-- Modal -->
           </div>
-
-          <div class="text-design p-3 bd-highlight">
+          <div class="text-design p-3 bd-highlight" data-bs-toggle="modal" data-bs-target="#withdrawl">
             <!-- Button trigger modal -->
             <div type="button" class="" >
               탈퇴하기
             </div>
-            <!-- Modal -->
-
-
           </div>
         </div>
       </div>
     </transition>        
   </div>
   </div>
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+  <!-- logout Modal -->
+<div class="modal fade" id="logout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modaldesign">
+      <div class="">
+        <h5 class="modal-title mt-3" id="deleteallLabel">로그아웃</h5>
       </div>
       <div class="modal-body">
-        ...
+        로그아웃 하시겠습니까?
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+      <div class="">
+        <button type="button" class="btn btn-sm btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-sm buttoncolor2 mb-3 mx-2" @click="logout">로그아웃</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 탈퇴하기 모달 -->
+<div class="modal fade" id="withdrawl" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modaldesign">
+      <div class="">
+        <h5 class="modal-title mt-3" id="deleteallLabel">회원탈퇴</h5>
+      </div>
+      <div class="modal-body">
+        정말로 탈퇴 하시겠습니까?
+      </div>
+      <div class="">
+        <button type="button" class="btn btn-sm btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-sm btn-danger mb-3 mx-2" @click="withDrawl">탈퇴하기</button>
       </div>
     </div>
   </div>
@@ -192,5 +204,16 @@ export default {
 /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(10px);
   opacity: 0.1;
+}
+.modal-content {
+  background: #FFFFFF;
+  border: 3px solid #B6C790;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+}
+.buttoncolor2 {
+  background: #71873F;
+  color: #FFFFFF;
 }
 </style>

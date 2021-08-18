@@ -50,6 +50,7 @@ export default {
   height: 100px;
 }
 .foot-bg {
-  background-color: #446631;
+  /* background-color: #446631; */
+  background-color: #4A643B;
 }
 </style>

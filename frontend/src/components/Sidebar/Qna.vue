@@ -26,7 +26,7 @@
             {{ qna.qnaType }}
           </div>
           <div class="font2 col-4 px-0">
-            {{ qna.question }}
+            {{ qna.question.substring(0,5) }}...
           </div>
           <div class="font1 col-2 px-0">
             <div v-if="qna.finish" class="font1">답변완료</div>
@@ -94,6 +94,7 @@ export default {
       qnaQuestion: '',
       qnaType: '',
       qnaAnswer: null,
+      content: '',
     }
   },
   computed: {
@@ -114,6 +115,9 @@ export default {
       // console.log(this.qnaQuestion)
       // console.log(this.qnaType)
       // console.log(this.qnaAnswer)
+    },
+    splitContent(content) {
+      return content.substring(0,51)
     }
   }
 }

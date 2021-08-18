@@ -5,7 +5,7 @@
       <router-link to="/dict"><img src="@/assets/menu_dict.png" id="menu_icon"></router-link>
       <router-link to="/mycrop"><img src="@/assets/menu_mylist.png" id="menu_icon"></router-link>
       <router-link to="/community"><img src="@/assets/menu_community.png" id="menu_icon"></router-link>
-      <img src="@/assets/menu_etc.png" id="menu_icon" @click="Sidebaron">
+      <img type="button" src="@/assets/menu_etc.png" id="menu_icon" @click="Sidebaron">
     </nav>
   </div>
 </template>
