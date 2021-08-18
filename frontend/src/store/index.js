@@ -335,6 +335,7 @@ export default new Vuex.Store({
           })
           .then(res => {
             console.log(res.data)
+            this.ReceiverNumber = ''
           })
           .catch(err => {
             // console.log(this.receiver)
@@ -405,11 +406,11 @@ export default new Vuex.Store({
       })
       .then(res => {
         console.log(res.data)
-        console.log(url)
+        // console.log(url)
       })
       .catch(err => {
         console.log(err)
-        console.log(url)
+        // console.log(url)
       })
     },
     

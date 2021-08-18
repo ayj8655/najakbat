@@ -70,6 +70,7 @@ export default {
       // console.log(this.$store.state.receiver)
       // console.log(this.$store.state.messageSenderNickname)
       this.$store.dispatch('messagePost', [this.content, this.$store.state.SenderNumber])
+      this.$route.go(0)
     },
   },
 

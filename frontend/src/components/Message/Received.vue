@@ -234,9 +234,9 @@ export default {
         console.log(this.checkedList)
     },
     deleteMessageList() {
-      // this.$router.go(0)
       const messageList = JSON.parse(JSON.stringify((this.checkedList)))
       this.$store.dispatch('messageListDelete', messageList)
+      this.$router.go(0)
     }
   },
   watch: {
