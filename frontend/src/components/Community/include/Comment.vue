@@ -120,6 +120,7 @@
       <div class="modal-body pt-2">
         <div class="form-group" align="left">
           <textarea
+            @click="findNumber"
             class="form-control"
             rows="15"
             id="content"
@@ -253,16 +254,20 @@ export default {
         });
       }
     },
-    postingMessage(nickname) {
-      console.log(nickname)
-      this.$store.dispatch('getReceiverNumber', nickname)
+    postingMessage() {
+      // console.log(nickname)
+      // this.$store.dispatch('getReceiverNumber', nickname)
       this.receiver = this.ReceiverNumber
       console.log(this.receiver)
-      this.$store.dispatch('messagePost', [this.content, this.receiver])
+      this.$store.dispatch('messagePost', [this.content, this.$store.state.ReceiverNumber])
     },
     syncNickname(nickname) {
       // console.log(nickname)
       this.$store.state.messageReceiverNickname = nickname
+      this.content = ''
+    },
+    findNumber() {
+      this.$store.dispatch('getReceiverNumber', this.$store.state.messageReceiverNickname)
     }
   },
   computed: {

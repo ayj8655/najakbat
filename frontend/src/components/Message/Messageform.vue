@@ -39,6 +39,7 @@
       <div class="modal-body pt-2">
         <div class="form-group" align="left">
           <textarea
+            @click="findNumber"
             class="form-control"
             rows="15"
             id="content"
@@ -49,8 +50,8 @@
         </div>
       </div>
       <div class="">
-        <button v-if="content" type="button" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
-        <button v-else disabled type="button" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage ()">보내기</button>
+        <button v-if="content" type="button" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage">보내기</button>
+        <button v-else disabled type="button" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage">보내기</button>
         <button type="button" class="btn btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
       </div>
     </div>
@@ -78,26 +79,22 @@ export default {
   },
   computed: {
     ...mapState([
-      'ReceiverNumber'
+      // 'ReceiverNumber'
     ])
   },
-
   methods: {
     ...mapActions([
       'messagePost'
     ]),
     postingMessage() {
       // console.log(this.sword)
-      this.$store.dispatch('getReceiverNumber', this.sword)
-      this.receiver = this.ReceiverNumber
-      // console.log(this.$store.state.ReceiverNumber)
-      console.log(this.receiver)
-      this.$store.dispatch('messagePost', [this.content, this.receiver])
+      // this.$store.dispatch('getReceiverNumber', this.sword)
+ 
+      this.$store.dispatch('messagePost', [this.content, this.$store.state.ReceiverNumber])
       this.$router.go(0)
     },
-    syncronizeNickname (receiverNickname) {
-      // console.log(localStorage.getItem('userNumber'))
-      this.sword = receiverNickname
+    findNumber() {
+      this.$store.dispatch('getReceiverNumber', this.sword)
     }
   },
 
