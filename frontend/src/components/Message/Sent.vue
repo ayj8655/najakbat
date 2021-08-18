@@ -7,12 +7,14 @@
   <div class="d-flex flex-row-reverse">
   <img src="../../assets/open-trash-can.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-if="isdeleteactivated" @click="activateDelete"/>
   <img src="../../assets/trash-can-with-cover.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-else @click="activateDelete"/>
-  <img src="../../assets/search-interface-symbol.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1" @click="activateSearch"/>
-  <messageform />
-  </div>
   <div v-if="isdeleteactivated">
   <button type="button" class="btn btn-danger p-0 px-1" v-if="checkedList.length > 0" @click="deleteMessageList">선택 삭제</button>
   <button type="button" class="btn btn-danger p-0 px-1" v-else disabled @click="deleteMessageList">선택 삭제</button>
+  </div>
+  <div v-else class="d-flex flex-row">
+  <img src="../../assets/search-interface-symbol.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1" @click="activateSearch"/>
+  <messageform />
+  </div>
   </div>
   <div v-if="onSearch" class="container">
     <div class="row ms-auto">
@@ -67,15 +69,15 @@
             <!-- 메세지 삭제 -->
 
 
-            <div class="font2 col-2 px-0">
+            <div class="font2 col-2 px-0 mb-2">
               {{ sentMessage.receiverNickname }}
             </div>
             <div class="col-5 px-0">
-              <div class="font2">
+              <div class="font2 mb-2">
                 {{sentMessage.content.substring(0,5)}}...
               </div>
             </div>
-            <div class="font1 col-2 px-0">
+            <div class="font1 col-2 px-0 mb-2">
               <div v-if="sentMessage.isRead">
                 읽음
               </div>
@@ -84,7 +86,7 @@
               </div>
             </div>
             <div class="col-3 px-0">
-              <div class="font1 mx-1">
+              <div class="font1 mx-1 mb-2">
                 {{ sentMessage.time | moment('YYYY-MM-DD') }} 
               </div>
             </div>
@@ -113,20 +115,20 @@
             <!-- 삭제 -->
             
 
-            <div class="font2 col-2 px-0">
+            <div class="font2 col-2 px-0 mb-2">
               {{ sentMessage.receiverNickname }}
             </div>
             <div v-if="isdeleteactivated" class="col-4 px-0">
-              <div class="font2">
+              <div class="font2 mb-2">
                 {{sentMessage.content.substring(0,5)}}...
               </div>
             </div>
             <div v-else class="col-5 px-0">
-              <div class="font2">
+              <div class="font2 mb-2">
                 {{sentMessage.content.substring(0,5)}}...
               </div>
             </div>
-            <div class="font1 col-2 px-0">
+            <div class="font1 col-2 px-0 mb-2">
               <div v-if="sentMessage.isRead">
                 읽음
               </div>
@@ -135,7 +137,7 @@
               </div>
             </div>
             <div class="col-3 px-0">
-              <div class="font1 mx-1">
+              <div class="font1 mx-1 mb-2">
                 {{ sentMessage.time | moment('YYYY-MM-DD') }} 
               </div>
             </div>

@@ -19,6 +19,7 @@
         <div class="d-flex flex-column bd-highlight mb-3" @click="sidebarOff">
           <router-link  to="/Settings" class="text-design p-3 bd-highlight">설정</router-link>
           <router-link  to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
+          <router-link v-if="profileNumber == 1" to="/Admin" class="text-design p-3 bd-highlight">관리자 페이지</router-link>
           <div class="p-3 text-design bd-highlight" data-bs-toggle="modal" data-bs-target="#logout">
             <!-- Button trigger modal -->
             <div type="button" class="">
@@ -89,6 +90,7 @@ export default {
   components: {
       // Logout
   },
+  
   data () {
     return {
       nickname: localStorage.getItem('userNickname'),
