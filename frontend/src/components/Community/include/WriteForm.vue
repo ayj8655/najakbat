@@ -203,7 +203,7 @@ export default {
       formData.append("type", this.postType);
       formData.append("title", this.title);
       formData.append("content", this.content);
-      formData.append("keyword", this.keywordOrigin);
+      formData.append("keyword", (this.keywordOrigin.length>0)? this.keywordOrigin.substring(0, this.keywordOrigin.length-1): this.keywordOrigin);
       formData.append("user_nickname", this.userNickname);
       formData.append("user_number", this.userNumber);
       if (this.files.length) {

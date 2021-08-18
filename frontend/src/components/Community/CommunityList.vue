@@ -40,7 +40,12 @@
         <span class="search" @click="changeFlag"
           ><img :src="searchImg" width="30px"
         /></span>
-        <font-awesome-icon :icon="['fas', 'pencil-alt']" size="lg" @click="postWrite" class="pen-color" />
+        <font-awesome-icon
+          :icon="['fas', 'pencil-alt']"
+          size="lg"
+          @click="postWrite"
+          class="pen-color"
+        />
       </span>
       <div class="row mt-3" id="search-area" v-show="isSearch">
         <span class="col-4">
@@ -64,12 +69,18 @@
 
       <hr />
     </div>
-    <div class="post-area">
+    <div class="post-area" v-if="!loadingFlag">
       <list-row
-        v-for="(post, index) in this.list"
+        v-for="(post, index) in list"
         :key="index"
         :post="post"
-        v-show="((sword=='') || (skey=='name' && post.userNickname.includes(sword)) || (skey=='title' && post.title.includes(sword) || (skey=='content' && post.content.includes(sword))))"
+        :photo="photolist[index]"
+        v-show="
+          sword == '' ||
+          (skey == 'name' && post.userNickname.includes(sword)) ||
+          (skey == 'title' && post.title.includes(sword)) ||
+          (skey == 'content' && post.content.includes(sword))
+        "
       />
       <infinite-loading
         @infinite="infiniteHandler"
@@ -91,9 +102,12 @@ export default {
   data() {
     return {
       list: [],
+      photolist: [],
       limit: 0,
       type: 0,
       listOrigin: [],
+      photolistOrigin: [],
+      loadingFlag : false,
       colorChange: [true, false, false, false, false],
       isSearch: false,
       skey: "name",
@@ -109,7 +123,9 @@ export default {
       this.$router.push("/community/write");
     },
     showAllPost() {
+      this.loadingFlag = false;
       this.list = [];
+      this.photolist = [];
       this.type = 0;
       this.limit = 0;
       this.colorChange.forEach((c, index) => {
@@ -125,11 +141,30 @@ export default {
       });
       this.colorChange[type] = true;
       this.listOrigin = this.list;
-      this.list = [];
+      this.photolistOrigin = this.photolist;
+      this.loadingFlag = true;
       axios
         .get(`post/type/${text}`)
         .then(({ data }) => {
-          this.list = data;
+          this.list = null;
+          this.list = data.postList;
+          this.photolist = null;
+          this.photolist = [];
+          this.list.forEach((l, index) => {
+            if(!isNaN(l)) {
+              this.list[index] = null;
+            } else {
+              if (!this.photolist[index]) {
+                this.photolist[index] = null;
+                if (l.photos && l.photos.length) {
+                  this.photolist[index] =
+                    "https://mococobucket.s3.ap-northeast-2.amazonaws.com/post/" +
+                    l.photos[0].saveFile;
+                }
+              }
+            }
+          });
+          this.loadingFlag = false;
         })
         .catch((error) => {
           console.log(error);
@@ -146,9 +181,28 @@ export default {
           },
         })
         .then((response) => {
+          // console.log(response.data.postList);
+          // console.log(response.data.photosList);
           setTimeout(() => {
-            if (response.data.length) {
-              this.list = this.list.concat(response.data);
+            if (response.data.postList.length) {
+              this.list = this.list.concat(response.data.postList);
+              this.list.forEach((l, index) => {
+                if (!this.photolist[index]) {
+                  this.photolist[index] = null;
+                  if (response.data.photosList.length) {
+                    for (let i = 0; i < response.data.photosList.length; i++) {
+                      if (
+                        l.postNumber ==
+                        response.data.photosList[i].post.postNumber
+                      ) {
+                        this.photolist[index] =
+                          "https://mococobucket.s3.ap-northeast-2.amazonaws.com/post/" +
+                          response.data.photosList[i].saveFile;
+                      }
+                    }
+                  }
+                }
+              });
               this.limit += 1;
               $state.loaded();
             } else {
@@ -200,6 +254,6 @@ export default {
   margin-right: 5px;
 }
 .pen-color {
-  color: #B6C790;
+  color: #b6c790;
 }
 </style>
