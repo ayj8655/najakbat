@@ -36,7 +36,7 @@
             </div>
             <div class="col-5 px-0">
               <div class="font2">
-                {{sentMessage.content}}
+                {{sentMessage.content.substring(0,5)}}...
               </div>
             </div>
             <div class="font1 col-2 px-0">
@@ -75,7 +75,7 @@
             </div>
             <div class="col-5 px-0">
               <div class="font2">
-                {{sentMessage.content}}
+                {{sentMessage.content.substring(0,5)}}...
               </div>
             </div>
             <div class="font1 col-2 px-0">

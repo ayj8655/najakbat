@@ -4,9 +4,9 @@
   <div v-if="isClick" class="mt-3"><MessageObject/></div>
   
   <div v-else class="container">
-  <div class="d-flex flex-row-reverse">
+  <div class="">
   <button type="button" class="btn btn-sm btn-warning mb-2" v-if="isdeleteactivated" @click="activateDelete">삭제 취소</button>
-  <button type="button" class="btn btn-sm btn-secondary mb-2" v-else @click="activateDelete">알림 삭제</button>
+  <button type="button" class="btn btn-sm btn-secondary mb-2" v-else @click="activateDelete">메시지 삭제</button>
   </div>
     <div class="container mt-2">
       <div class="row">
@@ -43,7 +43,7 @@
             </div>
             <div class="col-5 px-0">
               <div class="font2">
-                {{receivedMessage.content}}
+                {{receivedMessage.content.substring(0,5)}}...
               </div>
             </div>
             <div class="font1 col-2 px-0">
@@ -89,12 +89,12 @@
             </div>
             <div v-if="isdeleteactivated" class="col-4 px-0">
               <div class="font2">
-                {{receivedMessage.content}}
+                {{receivedMessage.content.substring(0,5)}}...
               </div>
             </div>
             <div v-else class="col-5 px-0">
               <div class="font2">
-                {{receivedMessage.content}}
+                {{receivedMessage.content.substring(0,5)}}...
               </div>
             </div>
             <div class="font1 col-2 px-0">
