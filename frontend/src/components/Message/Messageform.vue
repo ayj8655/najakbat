@@ -92,6 +92,11 @@ export default {
  
       this.$store.dispatch('messagePost', [this.content, this.$store.state.ReceiverNumber])
       this.$router.go(0)
+      this.$fire({
+        title: "성공!",
+        text: "메시지를 보냈습니다",
+        type: "success",
+      })
     },
     findNumber() {
       this.$store.dispatch('getReceiverNumber', this.sword)
