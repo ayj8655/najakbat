@@ -309,6 +309,7 @@ public class UserService {
 				photo.setOriginFile(originalFileName);
 				photo.setSaveFile(destinationFileName);
 				photo.setSaveFolder("profile");
+				user.get().setProfilePhoto(photo);
 				profilephotoDAO.save(photo);
 				file.delete();
 			}
