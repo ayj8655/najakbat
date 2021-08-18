@@ -32,13 +32,15 @@
           v-for="(achieve, index) in achieves"
           :key="index"
         >
-          <div v-if="achieve.finish" class="mission-font">
-            <img :src="findImg(achieve.achieveName)" class="container">
-            <p class="mt-2">{{ achieve.achieveName }}</p>
-          </div>
-          <div v-else class="mission-font">
-            <img src="../../assets/lock.png" class="container"/>
-            <p class="mt-2">{{ achieve.achieveName }}</p>
+          <div data-bs-toggle="modal" data-bs-target="#missionModal" @click="pickMission(achieve)">
+            <div v-if="achieve.finish" class="mission-font">
+              <img :src="findImg(achieve.achieveName)" class="container">
+              <p class="mt-2">{{ achieve.achieveName }}</p>
+            </div>
+            <div v-else class="mission-font">
+              <img src="../../assets/lock.png" class="container p-0"/>
+              <p class="mt-2">{{ achieve.achieveName }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -53,15 +55,40 @@
           :key="index"
         >
           <div class="mission-font">
-            <img :src="findCropImg(usercrop)" class="container">
-            <p class="mt-2">가나</p>
+            <router-link :to="'/mycrop/detail/' + usercrop.userCropNumber" class="logo">
+              <img :src="findCropImg(usercrop)" class="container p-0">
+              <p class="mt-2">{{ usercrop.cropNickname }}</p>
+            </router-link>
           </div>
         </div>
       </div>
       <div v-else class="my-3">
         <h3>등록된 작물이 없습니다</h3>
         <div class="d-flex justify-content-end mt-5">
-          <router-link to="/mycrop/list" class="logo "><span>작물 등록하러 가기 👉</span></router-link>
+          <router-link to="/mycrop/list" class="logo"><span>작물 등록하러 가기 👉</span></router-link>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="missionModal" tabindex="-1" aria-labelledby="missionModalLabel" aria-hidden="true" v-if="targetMission">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="missionModalLabel">{{ targetMission.achieveName }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="my-5">
+              <h3>{{ targetMission.achieveDec }}</h3>
+            </div>
+            <div v-if="targetMission.finish">
+              <h5>달성😁</h5>
+            </div>
+            <div v-else>
+              <h5>미달성😥</h5>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -80,7 +107,8 @@ export default {
       targetActivity: null,
       crops: [],
       usercrops: [],
-      cropImg: []
+      cropImg: [],
+      targetMission: null
     }
   },
   created() {
@@ -95,6 +123,7 @@ export default {
     axios.get(`user/record/${this.userNumber}`)
     .then(res => {
       this.targetActivity = res.data
+      this.targetMission = res.data
     })
     .catch(err => {
       console.error(err);
@@ -110,10 +139,9 @@ export default {
         });
       });
 
-    axios.get(`user/crop/list?userNumber=${this.userNumber}`)
+    axios.get(`user/crop/all?userNumber=${this.userNumber}`)
     .then((res) => {
       this.usercrops = res.data;
-      console.log(this.usercrops);
     })
     .catch((err) => {
       console.error(err);
@@ -129,10 +157,14 @@ export default {
       this.crops.forEach((crop, i) => {
         if(crop.cropNumber==ucrop.cropNumber) {
           index = i;
-          console.log(crop);
         }
       });
       return (this.crops[index].image)? require("@/assets/crop/" + this.crops[index].image):require("@/assets/thumbnail.png");
+    },
+
+    pickMission(target) {
+      this.targetMission = target
+      return target
     }
   }
 }
@@ -151,7 +183,8 @@ export default {
 #row .items {
   display: inline-block;
   /* margin-left: 10px; */
-  width: 100px;
+  width: 80px;
+  height: 70px;
 }
 
 #row .items:first-child {
