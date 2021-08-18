@@ -281,7 +281,11 @@ public class PostService {
 	public List<Post> findByKeywordContains(String keyword) {
 
 		return postDAO.findByKeywordContains(keyword);
-		
+
+	}
+
+	public List<PostPhoto> findPostPhotoByPostNumber(int postno) {
+		return postphotoDAO.findAllByPostNumber(postno);
 	}
 
 }
