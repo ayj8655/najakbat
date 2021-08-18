@@ -78,10 +78,11 @@ public class UserController {
 		System.out.println(userService);
 
 		Optional<User> user = userService.findById(loginDto.getId());
-		if(user.isPresent() && user.get().getActivated() == false) {
+		// 유저가 탈퇴한 유저인지 아닌지 확인
+		if (user.isPresent() && user.get().getActivated() == false) {
 			return new ResponseEntity<>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		// id,passoword를 통해 UsernamePasswordAuthenticationToken을 생성
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				loginDto.getId(), loginDto.getPassword());
@@ -119,6 +120,7 @@ public class UserController {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+		// 회원가입을 성공적으로 진행했다면
 		Optional<User> tempuser = userService.findById(userDto.getId());
 		UserSetting us = new UserSetting(tempuser.get().getUserNumber(), 1, 1, 1, 1, 0, 6); // 유저 설정 디폴트값 초기에 6시로 알림 세팅
 		userSettingService.save(us);
@@ -230,7 +232,7 @@ public class UserController {
 		}
 	}
 
-	// 번호 받아서 중복확인
+	// 핸드폰번호 받아서 중복확인
 	@RequestMapping(value = "/pass/confirmPhone/{phone}", method = RequestMethod.GET)
 	@ApiOperation(value = "핸드폰번호 중복 확인", notes = "핸드폰번호 입력하면 중복여부를 확인한 후 중복이 없다면 성공, 있다면 실패 반환하는 메소드", response = String.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "phone", value = "중복확인 하고싶은 phone", required = true) })
@@ -279,6 +281,7 @@ public class UserController {
 
 	}
 
+	// 닉네임으로 유저번호를 찾아서 리턴
 	@RequestMapping(value = "/search/{nickName}", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER')") // 두가지 권한 모두 호출가능
 	@ApiOperation(value = "닉네임으로 유저번호 찾기", notes = "닉네임으로 유저번호를 찾아서 리턴 있으면 유저번호 없으면 Fail", response = String.class)
@@ -382,13 +385,13 @@ public class UserController {
 
 	}
 
+	//아이디랑 핸드폰 확인후 비밀번호 변경
 	@RequestMapping(value = "/pass/pwFind", method = RequestMethod.POST)
-	@ApiOperation(value = "비밀번호변경", notes = "아이디와변경할 비밀번호를 입력하면 성공 실패 반환", response = String.class)
+	@ApiOperation(value = "비밀번호변경", notes = "아이디와 핸드폰번호, 변경할 비밀번호를 입력하면 성공 실패 반환", response = String.class)
 	public ResponseEntity<String> pwFind(@RequestBody User user) throws IOException {
 		logger.info("비밀번호변경");
 
 		// 아이디랑 핸드폰이 일치하는지 확인
-
 		boolean temp = userService.findByIdAndPhone(user.getId(), user.getPhone());
 
 		if (!temp) {
@@ -414,6 +417,7 @@ public class UserController {
 
 	}
 
+	//유저 번호로 유저정보 반환
 	@RequestMapping(value = "/{userNumber}", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "유저번호로 유저정보 검색", notes = "유저번호를 받아 검색된 유저 정보 반환.", response = User.class)
@@ -431,6 +435,7 @@ public class UserController {
 
 	}
 
+	//어드민용 모든 회원의 정보 검색
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@ApiOperation(value = "모든 회원정보 검색.", response = User.class)
@@ -540,7 +545,7 @@ public class UserController {
 		logger.info("프로필 사진 수정");
 
 		try {
-			Optional<User> user = userService.updateProfilePhoto(userNumber,photoNumber,file);
+			Optional<User> user = userService.updateProfilePhoto(userNumber, photoNumber, file);
 
 			if (user.isPresent()) {
 				return new ResponseEntity<>(user, HttpStatus.OK);
@@ -557,11 +562,11 @@ public class UserController {
 	@ApiOperation(value = "프로필 사진 삭제", notes = "유저번호를 받아 삭제잘되었는지 success 리턴.", response = User.class)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "userNumber", value = "삭제하고싶은 userNumber", required = true) })
 	public ResponseEntity<?> deleteProfilePhoto(@RequestParam(value = "userNumber") int userNumber,
-												@RequestParam(value = "photoNumber") int photoNumber) throws IOException {
+			@RequestParam(value = "photoNumber") int photoNumber) throws IOException {
 		logger.info("프로필 사진 삭제");
 
 		try {
-			boolean ret = userService.deleteProfilePhoto(userNumber,photoNumber);
+			boolean ret = userService.deleteProfilePhoto(userNumber, photoNumber);
 
 			if (ret == true) {
 				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);

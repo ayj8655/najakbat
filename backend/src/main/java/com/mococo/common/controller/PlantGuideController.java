@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mococo.common.model.Crop;
-import com.mococo.common.model.CropPrice;
 import com.mococo.common.service.CropService;
 
 import io.swagger.annotations.ApiOperation;
