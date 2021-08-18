@@ -20,7 +20,8 @@
             <font-awesome-icon v-else :icon="['fas', 'envelope']" size="lg" class="message-color" data-bs-toggle="modal" data-bs-target="#messagereply" @click="syncNickname(getNickname)"/>
             <!-- <router-link v-else> -->
             <!-- </router-link> -->
-            <span class="message-style ms-2">쪽지함</span>
+            <span class="message-style ms-2" v-if="this.userNum == this.$route.params.usernumber">쪽지함</span>
+            <span class="message-style ms-2" v-else>쪽지보내기</span>
           </div>
         </div>
       </div>
@@ -113,6 +114,7 @@ export default {
       content: '',
       receiver: '',
       userNick: localStorage.getItem('userNickname'),
+      userNum: localStorage.getItem('userNumber')
     };
   },
   methods: {

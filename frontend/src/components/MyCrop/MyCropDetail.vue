@@ -636,6 +636,7 @@ import axios from "axios";
 import Calendar from "./include/Calendar.vue";
 import LineChart from "./include/LineChart";
 import PieChart from "./include/PieChart";
+import router from "@/router"
 
 export default {
   components: { Calendar, LineChart, PieChart },
@@ -690,102 +691,109 @@ export default {
     this.init();
   },
   created() {
-    axios.get(`user/crop/detail?userCropNumber=${this.ucropno}`).then((res) => {
-      this.ucrop = res.data;
-      this.nameForEdit = this.ucrop.cropNickname;
-      this.descForEdit = this.ucrop.description;
-      this.plantedDate = this.ucrop.plantedDate.substring(0, 10);
-      this.targetDate = this.ucrop.targetDate.substring(0, 10);
-      if (this.ucrop.cropNumber > 0) {
-        axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
-          // console.log(this.crop);
-          this.crop = data.data;
-          this.crop.image = require("@/assets/crop/" + this.crop.image);
-          this.lowTemp = this.crop.temperature.split("~")[0] + "℃";
-          this.highTemp = this.crop.temperature.split("~")[1] + "℃";
-          this.suns.forEach((s, index) => {
-            this.suns[index] =
-              index < this.crop.sun
-                ? require("@/assets/sun.png")
-                : require("@/assets/sun_off.png");
-          });
-          this.waters.forEach((w, index) => {
-            this.waters[index] =
-              index < this.crop.water
-                ? require("@/assets/water_on.png")
-                : require("@/assets/water_off.png");
-          });
-        });
-        axios
-          .get(`user/crop/state3m?userCropNumber=${this.ucropno}`)
-          .then((response) => {
-            // let keys
-            // console.log(response);
-            // if(response.data=="") return;
-            for (let index = 0; index <= 5; index++) {
-              this.chartData2.datasets[0].data[index] = this.getDataInObj(response.data, index);
-            }
-            // console.log(this.chartData2);
-            this.chartLoading2 = true;
-          });
-        axios
-          .get(`guide/plant/price/thirty?cropNumber=${this.ucrop.cropNumber}`)
-          .then((response) => {
-            this.prices = response.data;
-            // console.log(this.prices);
-            this.prices.forEach((p, index) => {
-              this.chartData.label[index] = p.date.substring(2, 10);
-              this.chartData.data[index] = p.price;
-              this.avgPrice += p.price;
+    axios.get('user/my')
+    .then(res => {
+      var myNum = res.data.userNumber
+      axios.get(`user/crop/detail?userCropNumber=${this.ucropno}`).then((res) => {
+        if (myNum != res.data.userNumber) {
+          router.go(-1)
+        }
+        this.ucrop = res.data;
+        this.nameForEdit = this.ucrop.cropNickname;
+        this.descForEdit = this.ucrop.description;
+        this.plantedDate = this.ucrop.plantedDate.substring(0, 10);
+        this.targetDate = this.ucrop.targetDate.substring(0, 10);
+        if (this.ucrop.cropNumber > 0) {
+          axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
+            // console.log(this.crop);
+            this.crop = data.data;
+            this.crop.image = require("@/assets/crop/" + this.crop.image);
+            this.lowTemp = this.crop.temperature.split("~")[0] + "℃";
+            this.highTemp = this.crop.temperature.split("~")[1] + "℃";
+            this.suns.forEach((s, index) => {
+              this.suns[index] =
+                index < this.crop.sun
+                  ? require("@/assets/sun.png")
+                  : require("@/assets/sun_off.png");
             });
-            this.avgPrice /= this.prices.length;
-            let priceStr = String(this.avgPrice);
-            if (!priceStr.includes(".")) priceStr += ".";
-            let overDot = priceStr.split(".")[0];
-            let underDot = priceStr.split(".")[1];
-            if (overDot.length > 3) {
-              overDot =
-                overDot.substring(0, overDot.length - 3) +
-                "," +
-                overDot.substring(overDot.length - 3, overDot.length);
-            }
-            this.avgPrice = "";
-            this.avgPrice =
-              underDot.length > 0 ? overDot + "." + underDot : overDot;
-            // console.log(this.avgPrice);
-            this.chartLoading = false;
+            this.waters.forEach((w, index) => {
+              this.waters[index] =
+                index < this.crop.water
+                  ? require("@/assets/water_on.png")
+                  : require("@/assets/water_off.png");
+            });
           });
-      }
-      // axios
-      // .get(`user/crop/record/month?userCropNumber=${this.$route.params.no}`)
-      // .then((data) => {
-      //   this.daysForCalendar = data.data;
-      // });
-      axios
-        .get(`user/crop/record?userCropNumber=${this.ucropno}`)
-        .then((data) => {
-          this.record = data.data;
-          this.record.forEach((r) => {
-            r.recordDate = this.changeDate(r.recordDate);
+          axios
+            .get(`user/crop/state3m?userCropNumber=${this.ucropno}`)
+            .then((response) => {
+              // let keys
+              // console.log(response);
+              // if(response.data=="") return;
+              for (let index = 0; index <= 5; index++) {
+                this.chartData2.datasets[0].data[index] = this.getDataInObj(response.data, index);
+              }
+              // console.log(this.chartData2);
+              this.chartLoading2 = true;
+            });
+          axios
+            .get(`guide/plant/price/thirty?cropNumber=${this.ucrop.cropNumber}`)
+            .then((response) => {
+              this.prices = response.data;
+              // console.log(this.prices);
+              this.prices.forEach((p, index) => {
+                this.chartData.label[index] = p.date.substring(2, 10);
+                this.chartData.data[index] = p.price;
+                this.avgPrice += p.price;
+              });
+              this.avgPrice /= this.prices.length;
+              let priceStr = String(this.avgPrice);
+              if (!priceStr.includes(".")) priceStr += ".";
+              let overDot = priceStr.split(".")[0];
+              let underDot = priceStr.split(".")[1];
+              if (overDot.length > 3) {
+                overDot =
+                  overDot.substring(0, overDot.length - 3) +
+                  "," +
+                  overDot.substring(overDot.length - 3, overDot.length);
+              }
+              this.avgPrice = "";
+              this.avgPrice =
+                underDot.length > 0 ? overDot + "." + underDot : overDot;
+              // console.log(this.avgPrice);
+              this.chartLoading = false;
+            });
+        }
+        // axios
+        // .get(`user/crop/record/month?userCropNumber=${this.$route.params.no}`)
+        // .then((data) => {
+        //   this.daysForCalendar = data.data;
+        // });
+        axios
+          .get(`user/crop/record?userCropNumber=${this.ucropno}`)
+          .then((data) => {
+            this.record = data.data;
+            this.record.forEach((r) => {
+              r.recordDate = this.changeDate(r.recordDate);
+            });
+            // console.log(this.record);
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          // console.log(this.record);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      axios
-        .get(`user/crop/water?userCropNumber=${this.ucropno}`)
-        .then((data) => {
-          this.water = data.data;
-          // console.log(this.water);
-          this.water.forEach((w) => {
-            w.recordDate = this.changeDate(w.recordDate);
+        axios
+          .get(`user/crop/water?userCropNumber=${this.ucropno}`)
+          .then((data) => {
+            this.water = data.data;
+            // console.log(this.water);
+            this.water.forEach((w) => {
+              w.recordDate = this.changeDate(w.recordDate);
+            });
+          })
+          .catch((err) => {
+            console.log(err);
           });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
+      });
+    })
     axios.get("user/my").then((res) => {
       if (res.data.address) {
         axios.get(`weather/${res.data.address}`).then((data) => {
