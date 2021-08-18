@@ -1,8 +1,6 @@
 <template>
-<div class="pt-3 pb-3">
-<button type="button" class="btn buttoncolor" data-bs-toggle="modal" data-bs-target="#exampleModal10">
-  새 쪽지 쓰기
-</button>
+<div class="mb-2">
+<img src="../../assets/send.png" width="40px" height="30px" type="button" class="p-0 px-1" data-bs-toggle="modal" data-bs-target="#exampleModal10"/>
 <!-- {{ alluserInfo }} -->
 
 <!-- Modal -->
@@ -39,7 +37,7 @@
       <div class="modal-body pt-2">
         <div class="form-group" align="left">
           <textarea
-            @click="findNumber"
+            
             class="form-control"
             rows="15"
             id="content"
@@ -79,7 +77,7 @@ export default {
   },
   computed: {
     ...mapState([
-      // 'ReceiverNumber'
+      'ReceiverNumber'
     ])
   },
   methods: {
@@ -89,13 +87,12 @@ export default {
     postingMessage() {
       // console.log(this.sword)
       // this.$store.dispatch('getReceiverNumber', this.sword)
- 
       this.$store.dispatch('messagePost', [this.content, this.$store.state.ReceiverNumber])
       setTimeout(() => {
-        this.$router.go(0)
+          this.$router.go(0)
       }, 1000)
         this.$fire({
-          title: "성공!",
+            title: "성공!",
           text: "메시지를 보냈습니다",
           type: "success",
           timer: 3000,
@@ -103,7 +100,9 @@ export default {
 
 
     },
-    findNumber() {
+  },
+  watch: {
+    sword: function () {
       this.$store.dispatch('getReceiverNumber', this.sword)
     }
   },

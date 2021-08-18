@@ -4,9 +4,38 @@
   <div v-if="isClick" class="mt-3"><MessageObject/></div>
   
   <div v-else class="container">
-  <div class="">
-  <button type="button" class="btn btn-sm btn-warning mb-2" v-if="isdeleteactivated" @click="activateDelete">삭제 취소</button>
-  <button type="button" class="btn btn-sm btn-secondary mb-2" v-else @click="activateDelete">메시지 삭제</button>
+  <div class="d-flex flex-row-reverse">
+  <img src="../../assets/open-trash-can.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-if="isdeleteactivated" @click="activateDelete"/>
+  <img src="../../assets/trash-can-with-cover.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-else @click="activateDelete"/>
+  <img src="../../assets/search-interface-symbol.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1" @click="activateSearch"/>
+  <messageform />
+  </div>
+  <div v-if="isdeleteactivated">
+  <button type="button" class="btn btn-danger p-0 px-1" v-if="checkedList.length > 0" @click="deleteMessageList">선택 삭제</button>
+  <button type="button" class="btn btn-danger p-0 px-1" v-else disabled @click="deleteMessageList">선택 삭제</button>
+  </div>
+  <div v-if="onSearch" class="container">
+    <div class="row ms-auto">
+      <select class="col-3 selectdesign px-0" name="key" id="skey" v-model="skey">
+        <option disabled value="">검색기준</option>
+          <option value="content">
+             내용
+            </option>
+          <option value="nickname">
+            닉네임
+            </option>
+      </select>
+      <input
+        type="text"
+        class="mx-1 inputdesign col-7 px-1"
+        
+        name="sword"
+        v-model="sword"
+        placeholder="쪽지 검색"
+        
+        />
+        <img src="../../assets/search_green.png" type="button" width="20px" height="30px" class="col-1 px-0" @click="searchingmessage"/>
+    </div>
   </div>
     <div class="container mt-2">
       <div class="row">
@@ -116,31 +145,7 @@
     </div>
 </div>
 </div>
-  <button type="button" class="btn btn-danger mt-3 mb-3" v-if="isdeleteactivated" @click="deleteMessageList">선택 삭제</button>
-  <messageform v-else />
-<div class="container">
-    <div class="row">
-      <select class="col-3 selectdesign px-0" name="key" id="skey" v-model="skey">
-        <option disabled value="">검색기준</option>
-          <option value="content">
-             내용
-            </option>
-          <option value="nickname">
-            닉네임
-            </option>
-      </select>
-      <input
-        type="text"
-        class="mx-1 inputdesign col-7 px-0"
-        
-        name="sword"
-        v-model="sword"
-        placeholder="쪽지 검색"
-        
-        />
-        <img src="../../assets/search_green.png" type="button" width="30px" height="30px" class="col px-0" @click="searchingmessage"/>
-    </div>
-  </div>
+
 </div>
 </keep-alive>
 </div>
@@ -167,6 +172,7 @@ export default {
       isdeleteactivated: false,
       isClick: false,
       isSearch: false,
+      onSearch: false,
       sword: '',
       skey: 'content',
       checkedList: [],
@@ -210,11 +216,16 @@ export default {
     },
     searchingmessage() {
       this.isSearch = ! this.isSearch
-      console.log(this.isSelect)
+      // console.log(this.isSelect)
+    },
+    activateSearch() {
+      this.onSearch = ! this.onSearch
+      this.isdeleteactivated = false
     },
     activateDelete () {
       this.isdeleteactivated = ! this.isdeleteactivated
       // console.log(this.isdeleteactivated)
+      this.onSearch = false
     },
     selectContent () {
       this.isSelect = false
@@ -236,7 +247,15 @@ export default {
     deleteMessageList() {
       const messageList = JSON.parse(JSON.stringify((this.checkedList)))
       this.$store.dispatch('messageListDelete', messageList)
-      this.$router.go(0)
+      setTimeout(() => {
+        this.$router.go(0)
+      }, 1000)
+        this.$fire({
+          title: "성공!",
+          text: "메시지를 삭제하였습니다.",
+          type: "success",
+          timer: 3000,
+      })
     }
   },
   watch: {
