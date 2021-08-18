@@ -335,6 +335,7 @@ export default new Vuex.Store({
           })
           .then(res => {
             console.log(res.data)
+            this.ReceiverNumber = ''
           })
           .catch(err => {
             // console.log(this.receiver)
