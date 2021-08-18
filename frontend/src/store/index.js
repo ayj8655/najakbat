@@ -405,11 +405,11 @@ export default new Vuex.Store({
       })
       .then(res => {
         console.log(res.data)
-        console.log(url)
+        // console.log(url)
       })
       .catch(err => {
         console.log(err)
-        console.log(url)
+        // console.log(url)
       })
     },
     
