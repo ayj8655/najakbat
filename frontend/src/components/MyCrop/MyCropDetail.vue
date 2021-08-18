@@ -183,7 +183,7 @@
               />
               물 주기
             </div>
-            <div id="date">{{ this.water[0].recordDate }}</div>
+            <div id="date" align="right">{{ this.water[0].recordDate }}</div>
           </div>
           <div id="water-content-item" v-if="this.water.length > 1">
             <div class="m-2" align="left">
@@ -194,7 +194,7 @@
               />
               물 주기
             </div>
-            <div id="date">{{ this.water[1].recordDate }}</div>
+            <div id="date" align="right">{{ this.water[1].recordDate }}</div>
           </div>
           <div id="water-content-item" v-if="this.water.length > 2">
             <div class="m-2" align="left">
@@ -205,7 +205,7 @@
               />
               물 주기
             </div>
-            <div id="date">{{ this.water[2].recordDate }}</div>
+            <div id="date" align="right">{{ this.water[2].recordDate }}</div>
           </div>
         </div>
       </div>
@@ -221,31 +221,31 @@
         </div>
         <div id="record-content">
           <div id="record-content-item" v-if="this.record.length > 0">
-            <span>
-              <div
-                :class="['color-' + this.record[0].state, { circle: true }]"
-              />
-              <div v-text="changeState(record[0].state)"></div>
-            </span>
-            <div id="date">{{ this.record[0].recordDate }}</div>
+            <div align="left">
+                <div style="display: inline-block; margin: 2px 5px;"
+                  :class="['color-' + this.record[0].state, { circle: true }]"
+                />
+              <span v-text="changeState(record[0].state)" />
+            </div>
+            <div id="date" align="right">{{ this.record[0].recordDate }}</div>
           </div>
           <div id="record-content-item" v-if="this.record.length > 1">
-            <span>
-              <div
-                :class="['color-' + this.record[1].state, { circle: true }]"
-              />
-              <div v-text="changeState(record[1].state)"></div>
-            </span>
-            <div id="date">{{ this.record[1].recordDate }}</div>
+            <div align="left">
+                <div style="display: inline-block; margin: 2px 5px;"
+                  :class="['color-' + this.record[1].state, { circle: true }]"
+                />
+              <span v-text="changeState(record[1].state)" />
+            </div>
+            <div id="date" align="right">{{ this.record[1].recordDate }}</div>
           </div>
           <div id="record-content-item" v-if="this.record.length > 2">
-            <span>
-              <div
-                :class="['color-' + this.record[2].state, { circle: true }]"
-              />
-              <div v-text="changeState(record[2].state)"></div>
-            </span>
-            <div id="date">{{ this.record[2].recordDate }}</div>
+            <div align="left">
+                <div style="display: inline-block; margin: 2px 5px;" 
+                  :class="['color-' + this.record[2].state, { circle: true }]"
+                />
+              <span v-text="changeState(record[2].state)" />
+            </div>
+            <div id="date" align="right">{{ this.record[2].recordDate }}</div>
           </div>
         </div>
       </div>
@@ -256,8 +256,15 @@
         <div id="gray-box-2">등록한 상태기록이 없어요 :(</div>
       </div>
     </div>
-    <div class="m-2 mt-3">
+    <div class="m-2 mt-3" v-if="chartLoading2">
       <h4>통계</h4>
+      <div class="m-2" id="contents-area">
+        <div id="content" class="text-lg-center pa-5" style="width: 100%">
+          <pie-chart class="mt-3" :chartData="chartData2" />
+          <div class="mt-3 mb-3">
+          </div>
+        </div>
+      </div>
     </div>
     <div class="m-2 mt-3" v-if="this.prices.length">
       <h4>가격정보</h4>
@@ -283,13 +290,17 @@
         >
           <line-chart class="mt-3" :chartData="chartData" />
           <div class="mt-3 mb-3">
-            <p>1개월 이내 평균 시세: 100g당 {{this.avgPrice}}원</p>
-            <h3>{{this.$store.state.userNickname}}님의 추정이득은<br>{{this.avgPrice}}원이에요!</h3>
+            <p>1개월 이내 평균 시세: 1kg당 {{ this.avgPrice }}원</p>
+            <h3>
+              {{ this.$store.state.userNickname }}님의 추정이득은<br />{{
+                this.avgPrice
+              }}원이에요!
+            </h3>
           </div>
         </div>
       </div>
     </div>
-    <div class="m-2 mt-3">
+    <div class="m-2 mt-3" v-if="ucrop.cropNumber > 0">
       <h4>작물 도감</h4>
       <div id="more">
         <span @click="movePage2(ucrop.cropNumber)">more ></span>
@@ -510,10 +521,8 @@
                 :key="index"
                 style="border: 2px solid #aaaaaa; border-radius: 5px"
               >
-                <div class="m-2" align="left" display="inline">
-                  <span
-                    ><div :class="['color-' + r.state, { circle: true }]"
-                  /></span>
+                <div class="m-2" align="left">
+                  <div :class="['color-' + r.state, { circle: true }]"  style="display: inline-block; margin: 0 5px" />
                   <span v-text="changeState(r.state)"></span>
                 </div>
                 <div class="m-2" id="date" align="right">
@@ -625,10 +634,11 @@
 <script>
 import axios from "axios";
 import Calendar from "./include/Calendar.vue";
-import LineChart from './include/LineChart'
+import LineChart from "./include/LineChart";
+import PieChart from "./include/PieChart";
 
 export default {
-  components: { Calendar, LineChart },
+  components: { Calendar, LineChart, PieChart },
   data() {
     return {
       ucropno: this.$route.params.no,
@@ -658,8 +668,22 @@ export default {
       state_detail: "",
       prices: [],
       avgPrice: 0,
-      chartLoading: true, // 데이터를 불러오기 전까지는 progress circle을 사용 
-      chartData: {label:[], data: []}
+      chartLoading: true, // 데이터를 불러오기 전까지는 progress circle을 사용
+      chartLoading2: false,
+      chartData: { label: [], data: [] },
+      chartData2: { 
+        labels: ["아주 좋아요", "이파리가 시들었어요", "이파리 색이 이상해요", "병해충이 발생했어요", "단단하지 않고 물렁해요", "기타"],
+        datasets: [
+          {
+            borderwidth: 1, 
+            borderColor:['#869F77', '#C8D7A6', '#EDDE8E', '#FDE9EA', '#E7B5AC', '#999999'], 
+            backgroundColor:['#A8B99D', '#D7E4BA', '#FDF2B8', '#FDE9EA', '#E7B5AC', '#CAC8C8'], 
+            data:[0, 0, 0, 0, 0, 0],
+            label: "상태기록 통계",
+            hoverOffset: 4,
+          }
+        ] 
+      },
     };
   },
   mounted() {
@@ -672,25 +696,66 @@ export default {
       this.descForEdit = this.ucrop.description;
       this.plantedDate = this.ucrop.plantedDate.substring(0, 10);
       this.targetDate = this.ucrop.targetDate.substring(0, 10);
-      axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
-        // console.log(this.crop);
-        this.crop = data.data;
-        this.crop.image = require("@/assets/crop/" + this.crop.image);
-        this.lowTemp = this.crop.temperature.split("~")[0] + "℃";
-        this.highTemp = this.crop.temperature.split("~")[1] + "℃";
-        this.suns.forEach((s, index) => {
-          this.suns[index] =
-            index < this.crop.sun
-              ? require("@/assets/sun.png")
-              : require("@/assets/sun_off.png");
+      if (this.ucrop.cropNumber > 0) {
+        axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
+          // console.log(this.crop);
+          this.crop = data.data;
+          this.crop.image = require("@/assets/crop/" + this.crop.image);
+          this.lowTemp = this.crop.temperature.split("~")[0] + "℃";
+          this.highTemp = this.crop.temperature.split("~")[1] + "℃";
+          this.suns.forEach((s, index) => {
+            this.suns[index] =
+              index < this.crop.sun
+                ? require("@/assets/sun.png")
+                : require("@/assets/sun_off.png");
+          });
+          this.waters.forEach((w, index) => {
+            this.waters[index] =
+              index < this.crop.water
+                ? require("@/assets/water_on.png")
+                : require("@/assets/water_off.png");
+          });
         });
-        this.waters.forEach((w, index) => {
-          this.waters[index] =
-            index < this.crop.water
-              ? require("@/assets/water_on.png")
-              : require("@/assets/water_off.png");
-        });
-      });
+        axios
+          .get(`user/crop/state3m?userCropNumber=${this.ucropno}`)
+          .then((response) => {
+            // let keys
+            // console.log(response);
+            // if(response.data=="") return;
+            for (let index = 0; index <= 5; index++) {
+              this.chartData2.datasets[0].data[index] = this.getDataInObj(response.data, index);
+            }
+            // console.log(this.chartData2);
+            this.chartLoading2 = true;
+          });
+        axios
+          .get(`guide/plant/price/thirty?cropNumber=${this.ucrop.cropNumber}`)
+          .then((response) => {
+            this.prices = response.data;
+            // console.log(this.prices);
+            this.prices.forEach((p, index) => {
+              this.chartData.label[index] = p.date.substring(2, 10);
+              this.chartData.data[index] = p.price;
+              this.avgPrice += p.price;
+            });
+            this.avgPrice /= this.prices.length;
+            let priceStr = String(this.avgPrice);
+            if (!priceStr.includes(".")) priceStr += ".";
+            let overDot = priceStr.split(".")[0];
+            let underDot = priceStr.split(".")[1];
+            if (overDot.length > 3) {
+              overDot =
+                overDot.substring(0, overDot.length - 3) +
+                "," +
+                overDot.substring(overDot.length - 3, overDot.length);
+            }
+            this.avgPrice = "";
+            this.avgPrice =
+              underDot.length > 0 ? overDot + "." + underDot : overDot;
+            // console.log(this.avgPrice);
+            this.chartLoading = false;
+          });
+      }
       // axios
       // .get(`user/crop/record/month?userCropNumber=${this.$route.params.no}`)
       // .then((data) => {
@@ -719,20 +784,6 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-        });
-      axios
-        .get(`guide/plant/price/thirty?cropNumber=${this.ucrop.cropNumber}`)
-        .then((response) => {
-          this.prices = response.data;
-          // console.log(this.prices);
-          this.prices.forEach((p, index) => {
-            this.chartData.label[index] = p.date.substring(0, 10);
-            this.chartData.data[index] = p.price;
-            this.avgPrice += p.price;
-          });
-          this.avgPrice /= this.prices.length;
-          // console.log(this.avgPrice);
-          this.chartLoading = false;
         });
     });
     axios.get("user/my").then((res) => {
@@ -905,15 +956,29 @@ export default {
               .get(`user/crop/record/month?userCropNumber=${this.ucropno}`)
               .then((data) => {
                 this.daysForCalendar = data.data;
-                console.log(data.data);
+                // console.log(data.data);
               });
           }
         });
     },
-    dateClass(ymd, date) {
-      const day = date.getDate();
-      return day >= 10 && day <= 20 ? "table-info" : "";
+    getDataInObj(obj, num) {
+      let objKeys = Object.keys(obj);
+      let objValues = Object.values(obj);
+      let result = 0;
+      if(objKeys.includes(String(num))) {
+        objKeys.forEach((k, index) => {
+          if(k==num) {
+            // console.log(objValues[index]);
+            result = objValues[index];
+          }
+        });
+      }
+      return Number(result);
     },
+    // dateClass(ymd, date) {
+    //   const day = date.getDate();
+    //   return day >= 10 && day <= 20 ? "table-info" : "";
+    // },
   },
 };
 </script>
@@ -921,7 +986,7 @@ export default {
 <style scoped>
 #bg {
   min-height: 812px;
-  background-color: #446631;
+  background-color: #4A643B;
 }
 #bg > * {
   font-family: Noto Sans KR;
@@ -1012,15 +1077,15 @@ h4 {
   height: 60px;
 }
 
-#water-modal {
-  background-color: #446631;
+/* #water-modal {
+  background-color: #588061;
   border-radius: 15px;
   border: solid 3px white;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
+} */
 .pen-color-none {
   color: #aaaaaa;
 }
@@ -1039,18 +1104,18 @@ h4 {
 }
 
 .color-1 {
-  background-color: #71873f;
-}
+  background-color: #D7E4BA;
+  }
 .color-2 {
-  background-color: #b6c790;
+  background-color: #FDF2B8;
 }
 .color-3 {
-  background-color: #edde8e;
+  background-color: #FDE9EA;
 }
 .color-4 {
-  background-color: #ebb856;
+  background-color: #E7B5AC;
 }
 .color-5 {
-  background-color: #999999;
+  background-color: #CAC8C8;
 }
 </style>

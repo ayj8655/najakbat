@@ -1,6 +1,6 @@
 <template>
   <div class="container" align="center">
-    <div class="col-lg-6" align="center">
+    <div class="mt-5 col-lg-6" align="center">
       <h2>게시글 등록</h2>
       <write-form type="create"></write-form>
     </div>
@@ -19,5 +19,8 @@
 </script>
 
 <style>
-
+.container > * {
+  font-family: Noto Sans KR;
+  font-style: normal;
+}
 </style>
