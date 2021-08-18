@@ -74,9 +74,14 @@ public class UserController {
 	// 로그인 및 토큰 발급
 	@PostMapping("/authenticate")
 	@ApiOperation(value = "로그인 및 인증", notes = "로그인 및 인증 토큰을 헤더 및 바디를 통해 반환", response = TokenDto.class)
-	public ResponseEntity<TokenDto> authorize(@RequestBody LoginDto loginDto) {
+	public ResponseEntity<?> authorize(@RequestBody LoginDto loginDto) {
 		System.out.println(userService);
 
+		Optional<User> user = userService.findById(loginDto.getId());
+		if(user.isPresent() && user.get().getActivated() == false) {
+			return new ResponseEntity<>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 		// id,passoword를 통해 UsernamePasswordAuthenticationToken을 생성
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				loginDto.getId(), loginDto.getPassword());
@@ -274,7 +279,6 @@ public class UserController {
 
 	}
 
-	// 핸드폰번호 받고 받은 폰 번호로 아이디 찾고 찾은 아이디 전송 (핸드폰번호만 받으면됨)
 	@RequestMapping(value = "/search/{nickName}", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('USER')") // 두가지 권한 모두 호출가능
 	@ApiOperation(value = "닉네임으로 유저번호 찾기", notes = "닉네임으로 유저번호를 찾아서 리턴 있으면 유저번호 없으면 Fail", response = String.class)
@@ -446,9 +450,9 @@ public class UserController {
 		System.out.println(userService);
 		try {
 			System.out.println(userService);
-			boolean ret = userService.deleteById(Integer.parseInt(userNumber));
+			int ret = userService.updateWithdraw(Integer.parseInt(userNumber));
 
-			if (!ret) {
+			if (ret == 0) {
 				logger.info("회원탈퇴 실패");
 				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 			}

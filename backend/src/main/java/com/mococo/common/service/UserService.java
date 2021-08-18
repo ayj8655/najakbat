@@ -393,6 +393,10 @@ public class UserService {
 		}
 		return file;
 	}
+	
+	public int updateWithdraw(int userNumber) {
+		return userDAO.updateWithdraw(userNumber);
+	}
 
 	/*
 	 * public void updateById(String userId, User user) {
