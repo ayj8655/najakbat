@@ -500,4 +500,28 @@ public class UserCropController {
 			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	
+	@RequestMapping(value = "/state3m", method = RequestMethod.GET)
+	@ApiOperation(value = "특정 유저작물 최근 90일 상태기록 반환")
+	public ResponseEntity<?> searchUserCropState(@RequestParam int userCropNumber) throws IOException {
+		logger.info("특정 유저작물 최근 90일 상태기록 반환");
+
+		try {
+			Map<Integer, Integer> stateList = userCropRecordService.searchUserCropState3M(userCropNumber);
+			return new ResponseEntity<>(stateList, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -1,5 +1,6 @@
 package com.mococo.common.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +20,6 @@ public interface UserCropRecordDAO extends JpaRepository<UserCropRecord, Integer
 	
 	@Query(value = "select ucr.* from user_crop_record ucr where ucr.user_crop_number = :userCropNumber and SUBSTRING(ucr.record_date,6,2) = :month order by record_date desc", nativeQuery=true)
 	public List<UserCropRecord> findAllByUserCropNumberAndDate(int userCropNumber, String month);
+	
+	public List<UserCropRecord> findByUserCropNumberAndRecordDateBetween(int userCropNumber, Date start, Date end);
 }
