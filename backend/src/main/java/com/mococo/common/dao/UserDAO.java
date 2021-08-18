@@ -3,8 +3,11 @@ package com.mococo.common.dao;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -39,5 +42,9 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 	public Optional<User> findByUserNameAndPhone(String userName, String phone);
 
 	public Optional<User> findByIdAndPhone(String id, String phone);
-
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE user AS u SET u.activated = false, u.phone = null WHERE u.userNumber = :userNumber")
+	public int updateWithdraw(int userNumber);
 }
