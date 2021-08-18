@@ -20,7 +20,7 @@ public class Post {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "post_number")
+	@Column(name = "postNumber")
 	private int postNumber;
 	private int userNumber;
 	private String userNickname;

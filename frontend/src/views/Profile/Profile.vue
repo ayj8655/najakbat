@@ -27,7 +27,7 @@
         <span @click="changeComponent(2)" v-bind:class="[componentNum === 2 ? 'select-font' : 'select-font-none']">좋아요한 게시글</span>
       </div>
       <div class="container">
-        <UserActivity v-if="componentNum === 0" :userNumber="getUserNumber" />
+        <UserActivity v-if="componentNum === 0" :userNumber="getUserNumber" :userNickname="getNickname" />
         <MyCommunityList v-else-if="componentNum === 1" :userNumber="getUserNumber" />
         <LikeCommunity v-else :userNumber="getUserNumber" />
       </div>
