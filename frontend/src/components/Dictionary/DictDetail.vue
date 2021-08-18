@@ -53,7 +53,41 @@
         </div>
       </div>
     </div>
-    <button class="btn btn-success m-2">정보 수정 요청하기</button>
+    <button class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#amendinfo">정보 수정 요청하기</button>
+
+<!-- modal -->
+<div class="modal fade" id="amendinfo" tabindex="-1" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="">
+        <div class="modal-title container" align="center" id="exampleModalLabel5"></div>
+        <div class="font1 text-start mb-2 selected mx-3">문의사항 분류</div>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+        <div class="selected">
+          {{ this.selected }}
+        </div>        
+      </div>
+      <div class="modal-body pt-2">
+        <div class="font1 text-start mb-2">내용</div>
+        <div class="form-group" align="left">
+          <textarea
+            class="form-control"
+            rows="15"
+            id="content"
+            name="content"
+            v-model="content"
+            placeholder="쪽지 내용을 입력하세요."
+          ></textarea>
+        </div>
+      </div>
+      <div class="">
+        <button v-if="content" type="button" data-bs-dismiss="modal" class="btn buttoncolor2 mb-3 mx-2" @click="postingQna">보내기</button>
+        <button v-else disabled type="button" data-bs-dismiss="modal" class="btn buttoncolor2 mb-3 mx-2" >보내기</button>
+        <button type="button" class="btn btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
+      </div>
+    </div>
+  </div>
+</div>
   </div>
 </template>
 
@@ -74,7 +108,9 @@ export default {
       suns: [null, null, null, null, null],
       waters: [null, null, null, null, null],
       recipes: [],
-      videoIds: []
+      videoIds: [],
+      content: '',
+      selected: '정보 정정 요청',
     }
   },
   created() {
@@ -98,6 +134,10 @@ export default {
     });
   },
   methods: {
+    postingQna() {
+      this.$store.dispatch('qnaPost', [this.selected, this.content])
+      this.$router.go(0)
+    },
     changeTab(num) {
       this.tabs.forEach((t, index) => {
         this.tabs[index] = false;
@@ -171,5 +211,24 @@ export default {
 #sun-area img, #water-area img {
   width: 30px;
   margin: 5px;
+}
+.buttoncolor2 {
+  background: #71873F;
+  color: #FFFFFF;
+}
+.selected {
+  width: 93%;
+}
+
+.font1 {
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 22px;
+  /* identical to box height */
+
+
+  color: #000000;
 }
 </style>
