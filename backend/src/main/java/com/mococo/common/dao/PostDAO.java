@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,9 @@ public interface PostDAO extends JpaRepository<Post, Integer>{
 			+ "FROM post AS p "
 			+ "ORDER BY p.recommend DESC ")
 	public List<Object> findTopPost(Pageable pageable);
+	
+	@EntityGraph(attributePaths = "users")
+	public List<Post> findByKeywordContains(String keyword);
 	
 	
 

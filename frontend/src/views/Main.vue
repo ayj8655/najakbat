@@ -5,7 +5,7 @@
     <div id="main-body">
       <div class="mt-5 mb-5">
         <h3>실시간 인기 작물</h3>
-        <p>최근 3개월간 인기 있는 농작물들</p>
+        <p>최근 가장 인기 있는 농작물들</p>
         <div
           id="carouselExampleIndicators"
           class="carousel slide"
@@ -28,7 +28,7 @@
               />
               <div class="carousel-caption">
                 <h5>{{ t.name }}</h5>
-                <p>{{ t.description }}...</p>
+                <p>{{ t.description }}... 더보기</p>
               </div>
             </div>
           </div>

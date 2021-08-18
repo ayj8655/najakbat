@@ -15,6 +15,6 @@ public interface CropPriceDAO extends PagingAndSortingRepository<CropPrice, Inte
 			+ "FROM cropPrice AS cp LEFT JOIN crop AS c "
 			+ "ON cp.cropName = c.name "
 			+ "WHERE c.cropNumber = :cropNumber "
-			+ "ORDER BY date DESC ")
+			+ "ORDER BY date ")
 	public List<Object> findByCropNumber(Pageable pageable, int cropNumber);
 }
