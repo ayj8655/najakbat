@@ -5,14 +5,14 @@
   
   <div v-else class="container">
   <div class="d-flex flex-row-reverse">
-  <img src="../../assets/open-trash-can.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-if="isdeleteactivated" @click="activateDelete"/>
-  <img src="../../assets/trash-can-with-cover.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-else @click="activateDelete"/>
+  <img src="../../assets/open-trash-can.png" width="40px" height="30px" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-if="isdeleteactivated" @click="activateDelete"/>
+  <img src="../../assets/trash-can-with-cover.png" width="40px" height="30px" class="btn btn-sm mb-2 p-0 px-1 ms-auto" v-else @click="activateDelete"/>
   <div v-if="isdeleteactivated">
   <button type="button" class="btn btn-danger p-0 px-1" v-if="checkedList.length > 0" @click="deleteMessageList">선택 삭제</button>
   <button type="button" class="btn btn-danger p-0 px-1" v-else disabled @click="deleteMessageList">선택 삭제</button>
   </div>
   <div v-else class="d-flex flex-row">
-  <img src="../../assets/search-interface-symbol.png" width="40px" height="30px" type="button" class="btn btn-sm mb-2 p-0 px-1" @click="activateSearch"/>
+  <img src="../../assets/search-interface-symbol.png" width="40px" height="30px" class="btn btn-sm mb-2 p-0 px-1" @click="activateSearch"/>
   <messageform />
   </div>
   </div>
@@ -36,7 +36,7 @@
         placeholder="쪽지 검색"
         
         />
-        <img src="../../assets/search_green.png" type="button" width="20px" height="30px" class="col-1 px-0" @click="searchingmessage"/>
+        <img src="../../assets/search_green.png" width="20px" height="30px" class="col-1 px-0" @click="searchingmessage"/>
     </div>
   </div>
     <div class="container mt-2">
@@ -61,7 +61,7 @@
 <!-- Search list -->
 
     <div v-if="isSearch">    
-      <div v-for="(sentMessage, idx) in sentMessages" :key="idx">
+      <div v-for="(sentMessage, idx) in sentMessages.slice().reverse()" :key="idx">
     <div v-if="((sword=='') || (skey=='content' && sentMessage.content.includes(sword)) || (skey=='nickname' && sentMessage.senderNickname.includes(sword)))" class="container px-0" @click="[detail(sentMessage), reading([idx, sentMessage.messageNumber])]" >
       <div class="isRead-false border border-end-0 border-start-0 bg-white">
         <div class="container mt-2">
@@ -103,7 +103,7 @@
 <!-- Normal list -->
 
 <div v-else>
-    <div v-for="(sentMessage, idx) in sentMessages" :key="idx">
+    <div v-for="(sentMessage, idx) in sentMessages.slice().reverse()" :key="idx">
     <div class="container px-0" @click="[detail(sentMessage), reading([idx, sentMessage.messageNumber])]" >
       <div class="isRead-false border border-end-0 border-start-0 bg-white">
         <div class="container mt-2" >
