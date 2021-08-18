@@ -3,8 +3,11 @@
     <header-nav></header-nav>
     <Sidebar id="side-bar" />
     <div v-if="getNickname" class="container">
-      <div class="d-flex justify-content-start w-75 container">
-        <img src="@/assets/profile_sample.png" class="profile-size" alt="...">
+      <div class="d-flex justify-content-start w-75 container p-0">
+        <label for="file-input" class="w-25">
+          <img src="@/assets/profile_sample.png" class="w-100" alt="...">
+        </label>
+        <input id="file-input" type="file" ref="files" style="display: none;" />
         <div class="row">
           <div class="d-flex align-items-end">
             <h2 class="ms-3 me-1 my-0">{{ getNickname }}</h2>

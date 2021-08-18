@@ -471,6 +471,9 @@ export default new Vuex.Store({
       })
       .then(res => {
         console.log(res.data)
+        localStorage.removeItem('access_token');
+        localStorage.clear();
+        router.go(0)
       })
       .catch(err => {
         console.error(err)
