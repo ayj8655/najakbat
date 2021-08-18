@@ -1,6 +1,5 @@
 package com.mococo.common.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;

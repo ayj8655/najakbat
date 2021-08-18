@@ -12,14 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mococo.common.model.Crop;
 import com.mococo.common.model.Recipe;
-import com.mococo.common.model.User;
 import com.mococo.common.service.RecipeService;
 
 import io.swagger.annotations.ApiOperation;

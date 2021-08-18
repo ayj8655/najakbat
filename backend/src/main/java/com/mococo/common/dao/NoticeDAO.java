@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mococo.common.model.Notice;
-import com.mococo.common.model.User;
-
 
 @Repository
 public interface NoticeDAO extends JpaRepository<Notice, Integer>{

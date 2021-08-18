@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.mococo.common.model.Comment;
 import com.mococo.common.model.CommentRecommend;
 import com.mococo.common.model.CommentRecommendPK;
 

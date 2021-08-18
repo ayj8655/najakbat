@@ -9,11 +9,9 @@ import org.springframework.stereotype.Service;
 import com.mococo.common.dao.CommentDAO;
 import com.mococo.common.dao.CommentRecommendDAO;
 import com.mococo.common.dao.PostDAO;
-import com.mococo.common.dao.PostRecommendDAO;
 import com.mococo.common.model.Comment;
 import com.mococo.common.model.CommentRecommend;
 import com.mococo.common.model.Post;
-import com.mococo.common.model.PostRecommend;
 import com.mococo.common.model.User;
 
 @Service
