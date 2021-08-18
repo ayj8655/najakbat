@@ -145,21 +145,21 @@ export default {
 #colors-1 {
 }
 #colors0 {
-  background-color: #446631;
+  background-color: #A8B99D;
 }
 #colors1 {
-  background-color: #71873f;
-}
+  background-color: #D7E4BA;
+  }
 #colors2 {
-  background-color: #b6c790;
+  background-color: #FDF2B8;
 }
 #colors3 {
-  background-color: #edde8e;
+  background-color: #FDE9EA;
 }
 #colors4 {
-  background-color: #ebb856;
+  background-color: #E7B5AC;
 }
 #colors5 {
-  background-color: gray;
+  background-color: #CAC8C8;
 }
 </style>
