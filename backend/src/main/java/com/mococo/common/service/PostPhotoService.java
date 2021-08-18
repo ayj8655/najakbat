@@ -22,4 +22,9 @@ public class PostPhotoService {
 		
 		postphotoDAO.save(photo);
 	}
+
+	public List<PostPhoto> findAllByPostNumber(Integer postno) {
+		
+		return postphotoDAO.findAllByPostNumber(postno);
+	}
 }

@@ -23,7 +23,7 @@ public class PostPhoto {
     private int photoNumber;
 
     @ManyToOne
-    @JoinColumn (name="post_number", referencedColumnName="post_number" )
+    @JoinColumn (name="postNumber")
     private Post post;
     
     // 원본 파일이름 과 서버에 저장된 파일 경로 를 분리한 이유?
