@@ -80,8 +80,8 @@ public class UserCropController {
 			UserCrop userCrop = new UserCrop();
 			userCrop.setCropNumber(crop_number);
 			cal.add(Calendar.HOUR_OF_DAY, 9); // 9 시간 더해서 넣기
-			userCrop.setPlantedDate(now_time);
-			cal.add(Calendar.HOUR_OF_DAY, -9);
+			now_time = cal.getTime();
+			userCrop.setPlantedDate(cal.getTime());
 			userCrop.setUserNumber(user_number);
 			userCrop.setFinish(false);
 			
