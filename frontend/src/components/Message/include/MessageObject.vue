@@ -11,7 +11,7 @@
               {{ this.$store.state.messageSenderNickname }}
             </div>
             <div class="date pb-3">
-              {{ this.$store.state.messageTime | moment('YY-MM-DD HH:mm:ss')}}
+              {{ this.$store.state.messageTime | moment("subtract", "9 hours", "YY-MM-DD HH:mm:ss")}}
             </div>
           </div>
         </div>

@@ -35,7 +35,7 @@
           </div>
           <div class="col-3 px-0">
             <div class="font1 mx-1 p-1">
-            {{ qna.date | moment('YYYY-MM-DD') }}
+            {{ qna.date | moment('"subtract", "9 hours", "YYYY-MM-DD"') }}
             </div>
           </div>
           </div>
