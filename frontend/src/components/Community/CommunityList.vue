@@ -45,6 +45,7 @@
           size="lg"
           @click="postWrite"
           class="pen-color"
+          v-if="this.$store.state.userNumber"
         />
       </span>
       <div class="row mt-3" id="search-area" v-show="isSearch">
