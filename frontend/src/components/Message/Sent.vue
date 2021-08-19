@@ -87,7 +87,7 @@
             </div>
             <div class="col-3 px-0">
               <div class="font1 mx-1 mb-2">
-                {{ sentMessage.time | moment('YYYY-MM-DD') }} 
+                {{ sentMessage.time | moment("subtract", "9 hours", "YYYY-MM-DD") }} 
               </div>
             </div>
           </div>
@@ -138,7 +138,7 @@
             </div>
             <div class="col-3 px-0">
               <div class="font1 mx-1 mb-2">
-                {{ sentMessage.time | moment('YYYY-MM-DD') }} 
+                {{ sentMessage.time | moment("subtract", "9 hours", "YYYY-MM-DD") }} 
               </div>
             </div>
           </div>

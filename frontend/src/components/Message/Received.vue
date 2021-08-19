@@ -61,7 +61,7 @@
 <!-- Search list -->
 
     <div v-if="isSearch">    
-      <div v-for="(receivedMessage, idx) in receivedMessages.slice().reverse()" :key="idx">
+      <div v-for="(receivedMessage, idx) in receivedMessages" :key="idx">
     <div v-if="((sword=='') || (skey=='content' && receivedMessage.content.includes(sword)) || (skey=='nickname' && receivedMessage.senderNickname.includes(sword)))" class="container px-0" @click="[detail(receivedMessage), reading([idx, receivedMessage.messageNumber])]" >
       <div class="isRead-false border border-end-0 border-start-0 bg-white">
         <div class="container mt-2">
@@ -87,7 +87,7 @@
             </div>
             <div class="col-3 px-0">
               <div class="font1 mx-1 mb-2">
-                {{ receivedMessage.time | moment('YYYY-MM-DD') }} 
+                {{ receivedMessage.time | moment("subtract", "9 hours", "YYYY-MM-DD") }} 
               </div>
             </div>
           </div>
@@ -103,7 +103,7 @@
 <!-- Normal list -->
 
 <div v-else>
-    <div v-for="(receivedMessage, idx) in receivedMessages.slice().reverse()" :key="idx">
+    <div v-for="(receivedMessage, idx) in receivedMessages" :key="idx">
     <div class="container px-0" @click="[detail(receivedMessage), reading([idx, receivedMessage.messageNumber])]" >
       <div class="isRead-false border border-end-0 border-start-0 bg-white">
         <div class="container mt-2" >
@@ -138,7 +138,7 @@
             </div>
             <div class="col-3 px-0">
               <div class="font1 mx-1 mb-2">
-                {{ receivedMessage.time | moment('YYYY-MM-DD') }} 
+                {{ receivedMessage.time | moment("subtract", "9 hours", "YYYY-MM-DD") }} 
               </div>
             </div>
           </div>

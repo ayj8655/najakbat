@@ -6,9 +6,9 @@
     <div :class="'col-' + this.col" v-if="isShow">
       <div class="head">
         <span id="left" @click="movePage"
-          >{{ comment.userNickname
-          }}<img id="messageBtn" src="@/assets/message.png" width="20px" data-bs-toggle="modal" data-bs-target="#exampleModal2" @click="syncNickname(comment.userNickname)"
-        /></span>
+          >{{ comment.userNickname }}
+          </span>
+          <img id="messageBtn" src="@/assets/message.png" width="20px" data-bs-toggle="modal" data-bs-target="#messagereply1" @click="syncNickname(comment.userNickname)"/>
         <span id="right" v-text="changeDate(this.comment.date)" />
       </div>
       <div
@@ -103,7 +103,7 @@
       <hr />
     </div>
   <!-- Modal -->
-<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+<div class="modal fade" id="messagereply1" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="container modaldesign">
     <div class="modal-content">
