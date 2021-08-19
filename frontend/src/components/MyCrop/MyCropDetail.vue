@@ -1110,7 +1110,7 @@ export default {
             console.log(err);
           });
       } else {
-        formData.append("photoNumber", this.ucropno);
+        // formData.append("photoNumber", this.ucropno);
         axios
           .post(`user/crop/photo/insert`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
@@ -1134,7 +1134,7 @@ export default {
           this.userCropPhoto =
             "https://mococobucket.s3.ap-northeast-2.amazonaws.com/usercrop/" +
             this.ucrop.userCropPhoto.saveFile;
-      console.log(this.userCropPhoto);
+      // console.log(this.userCropPhoto);
         });
     },
     deleteUCrop() {

@@ -64,7 +64,6 @@
             name="word"
             id="sword"
             v-model="sword"
-            @keypress.enter="findForKeyword"
           />
         </span>
       </div>
@@ -81,8 +80,8 @@
           sword == '' ||
           (skey == 'name' && post.userNickname.includes(sword)) ||
           (skey == 'title' && post.title.includes(sword)) ||
-          (skey == 'content' && post.content.includes(sword)) ||
-          skey != 'keyword'
+          (skey == 'content' && post.content.includes(sword)) || 
+          (skey == 'keyword' && post!==null && post.keyword!==null & post.keyword.includes(sword))
         "
       />
       <infinite-loading
@@ -115,6 +114,8 @@ export default {
       isSearch: false,
       skey: "name",
       sword: "",
+      flag: true,
+      infiniteFlag: true,
     };
   },
   components: {
@@ -126,6 +127,7 @@ export default {
       this.$router.push("/community/write");
     },
     showAllPost() {
+      this.infiniteFlag = true;
       this.loadingFlag = false;
       this.list = [];
       this.photolist = [];
@@ -167,6 +169,7 @@ export default {
               }
             }
           });
+          this.infiniteFlag = false;
           this.loadingFlag = false;
         })
         .catch((error) => {
@@ -217,30 +220,33 @@ export default {
           console.log(error);
         });
     },
-    findForKeyword() {
-      if(this.skey=="keyword") {
-        this.listOrigin = this.list;
-        this.photolistOrigin = this.photolist;
-        this.list = null;
-        this.photolist = null;
-        axios.get(`post/search/${this.sword}`).then((data)=>{
-          this.list = data.data.postList;
-          this.list.forEach((l, index) => {
-            this.photolist[index] = null;
-            if(!isNaN(l)) {
-                this.list[index] = null;
-              } else {
-                  if (l.photos && l.photos.length) {
-                    this.photolist[index] =
-                      "https://mococobucket.s3.ap-northeast-2.amazonaws.com/post/" +
-                      l.photos[0].saveFile;
-                  }
-                }
+    // findForKeyword() {
+    //   if(this.skey=="keyword") {
+    //     this.flag = false;
+    //     this.listOrigin = this.list;
+    //     this.photolistOrigin = this.photolist;
+    //     this.list = null;
+    //     this.photolist = [];
+    //     axios.get(`post/search/${this.sword}`).then((data)=>{
+    //       console.log(data);
+    //       this.list = data.data.postList;
+    //       this.list.forEach((l, index) => {
+    //         this.photolist[index] = null;
+    //         if(!isNaN(l)) {
+    //             this.list[index] = null;
+    //           } else {
+    //               if (l.photos && l.photos.length) {
+    //                 this.photolist[index] =
+    //                   "https://mococobucket.s3.ap-northeast-2.amazonaws.com/post/" +
+    //                   l.photos[0].saveFile;
+    //               }
+    //             }
               
-          });
-        });
-      }
-    },
+    //       });
+    //       this.flag = true;
+    //     });
+    //   }
+    // },
   },
   computed: {
     searchImg() {

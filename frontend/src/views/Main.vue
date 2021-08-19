@@ -172,7 +172,7 @@ h3 {
   font-weight: bold;
 }
 #foot {
-  height: 150px;
+  /* height: 150px; */
 }
 #menubar {
   position: fixed;
@@ -204,7 +204,7 @@ h3 {
 
 #post-slide {
   z-index: 0;
-  min-height: 500px;
+  /* min-height: 500px; */
 }
 .post-box {
   min-height: 250px;
