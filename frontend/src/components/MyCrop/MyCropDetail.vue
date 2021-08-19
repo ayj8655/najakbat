@@ -59,7 +59,7 @@
         @click.prevent="commitWater(ucrop.userCropNumber)"
       />
     </div>
-    <div class="row m-2" id="gray-box">
+    <div class="row m-2 mx-3" id="gray-box">
       <div id="data-black">
         <strong>{{ crop.name }}</strong>
       </div>
@@ -139,7 +139,7 @@
         />
       </div>
     </div>
-    <div class="row m-2" id="gray-box">
+    <div class="row mx-3" id="gray-box">
       <div>
         <h3>D - {{ ucrop.remainDate }}</h3>
       </div>
@@ -153,14 +153,14 @@
         <div>{{ this.targetDate }}</div>
       </div>
     </div>
-    <div class="m-2 mt-3" id="contents-area">
+    <div class="m-2 mt-3 mx-3" id="contents-area">
       <h4>날씨</h4>
       <div id="content" v-if="this.weather">
         <img :src="weatherImg" width="45px" class="m-2" />
         <p>{{ this.weather.city }} {{ this.weather.gugun }}</p>
         <p>{{ this.weather.weather }}</p>
-        <p>온도: {{ this.weather.temperature }}℃</p>
-        <p>습도: {{ this.weather.humidity }}%</p>
+        <p><img src="../../assets/celsius.png" width="30px">&nbsp;{{ this.weather.temperature }}℃</p>
+        <p><img src="../../assets/humidity.png" width="30px">&nbsp;{{ this.weather.humidity }}%</p>
       </div>
       <div id="content" v-else>
         <h3 class="mt-3 mb-3">:(</h3>
@@ -171,7 +171,7 @@
         </button>
       </div>
     </div>
-    <div class="m-2 mt-3" id="contents-area">
+    <div class=" m-2 mt-3 mx-3" id="contents-area">
       <h4>상태달력</h4>
       <div>
         <calendar
@@ -186,8 +186,8 @@
         ></b-calendar> -->
       </div>
     </div>
-    <div class="row m-2 mt-3">
-      <h4 class="px-0">기록</h4>
+    <div class="row m-2 mt-3 mx-3 ">
+      <h4 class="px-0 m-0">기록</h4>
       <div class="col-6 ps-0" v-if="this.water.length">
         <div id="more" data-bs-toggle="modal" data-bs-target="#waterModal">
           <span>more ></span>
@@ -232,9 +232,9 @@
         <div id="more" data-bs-toggle="modal" data-bs-target="#waterModal">
           <span>more ></span>
         </div>
-        <div id="gray-box-2">물을 준 기록이 없어요 :(</div>
+        <div id="gray-box-2" class="mt-2">물을 준 기록이 없어요 :(</div>
       </div>
-      <div class="col-6" v-if="this.record.length">
+      <div class="col-6 pe-0" v-if="this.record.length">
         <div id="more" data-bs-toggle="modal" data-bs-target="#recordModal">
           <span>more ></span>
         </div>
@@ -271,15 +271,15 @@
           </div>
         </div>
       </div>
-      <div class="col-6" v-else>
+      <div class="col-6 pe-0" v-else>
         <div id="more" data-bs-toggle="modal" data-bs-target="#recordModal">
           <span>more ></span>
         </div>
-        <div id="gray-box-2">등록한 상태기록이 없어요 :(</div>
+        <div id="gray-box-2" class="mt-2">등록한 상태기록이 없어요 :(</div>
       </div>
     </div>
-    <div class="m-2 mt-3" v-if="chartLoading2">
-      <h4>통계</h4>
+    <div class="m-2 mt-3 " v-if="chartLoading2">
+      <h4 class="px-2">통계</h4>
       <div class="m-2" id="contents-area">
         <div id="content" class="text-lg-center pa-5" style="width: 100%">
           <pie-chart class="mt-3" :chartData="chartData2" />
@@ -321,9 +321,9 @@
         </div>
       </div>
     </div>
-    <div class="m-2 mt-3" v-if="ucrop.cropNumber > 0">
-      <h4>작물 도감</h4>
-      <div id="more">
+    <div class="m-2 mt-3 " v-if="ucrop.cropNumber > 0">
+      <h4 class="m-0 px-2">작물 도감</h4>
+      <div id="more" class="px-2">
         <span @click="movePage2(ucrop.cropNumber)">more ></span>
       </div>
       <div class="m-2" id="contents-area">
@@ -1207,13 +1207,14 @@ export default {
   min-height: 100px;
   padding: 20px;
   opacity: 0.8;
+  
 }
 #gray-box-2 {
   /* border: 2px solid #446631; */
   color: #ffffff;
   background-color: #aaaaaa;
   border-radius: 5px;
-  min-height: 50px;
+  min-height: 60px;
   padding: 10px;
   font-size: 12px;
 }
@@ -1246,6 +1247,7 @@ h4 {
   border-radius: 5px;
   min-height: 200px;
   padding: 20px;
+  box-shadow: 5px 5px 5px;
 }
 #temp {
   width: 50%;
@@ -1315,4 +1317,5 @@ h4 {
   left: 50%;
   margin-left: 30px;
 }
+
 </style>
