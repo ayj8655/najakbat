@@ -32,15 +32,15 @@
               <img v-if="searchNotice.isRead" src="@/assets/noti.png" width="30px" height="30px" alt="">
               <!-- <img v-else src="@/assets/noti_green.png" width="30px" height="30px" alt=""> -->
             </div>
-            <div class="col-8 px-0">
+            <div class="col-9 px-0">
               <div class="content font2">
                 {{searchNotice.content}}
               </div>
               <div class="date mx-1">
-                {{ searchNotice.date | moment("subtract", "9 hours", "YY-MM-DD HH:mm:ss") }} 
+                {{ searchNotice.date | moment("YY-MM-DD HH:mm:ss") }} 
               </div>
             </div>
-            <div class="col-1 px-0"></div>
+
           </div>
         </div>
       </div>
@@ -57,15 +57,15 @@
               <!-- <img v-if="searchNotice.isRead" src="@/assets/noti.png" width="30px" height="30px" alt=""> -->
               <img src="@/assets/noti_green.png" width="30px" height="30px" alt="">
             </div>
-            <div class="col-8 px-0">
+            <div class="col-9 px-0">
               <div class="content font2">
                 {{searchNotice.content}}
               </div>
               <div class="date mx-1">
-              {{ searchNotice.date | moment("subtract", "9 hours", "YY-MM-DD HH:mm:ss") }} 
+              {{ searchNotice.date | moment("YY-MM-DD HH:mm:ss") }} 
               </div>
             </div>
-            <div class="col-1 px-0"></div>
+            
           </div>
         </div>
       </div>
