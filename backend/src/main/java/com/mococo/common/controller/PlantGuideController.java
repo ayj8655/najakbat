@@ -68,7 +68,6 @@ public class PlantGuideController {
 	}
 
 	@RequestMapping(value = "/{cropNumber}", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물 정보 검색")
 	public ResponseEntity<?> searchPlantGuide(@PathVariable("cropNumber") String cropNumberString) throws IOException {
 		logger.info("작물 정보 검색");
@@ -90,7 +89,6 @@ public class PlantGuideController {
 	}
 
 	@RequestMapping(value = "/recipe/{cropNumber}", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")
 	@ApiOperation(value = "작물로 만들 수 있는 모든 요리 검색")
 	public ResponseEntity<?> searchAllRecipeByCropNumber(@PathVariable("cropNumber") String cropNumberString)
 			throws IOException {
