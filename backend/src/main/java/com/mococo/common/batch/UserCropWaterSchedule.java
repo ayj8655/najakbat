@@ -90,16 +90,19 @@ public class UserCropWaterSchedule {
 	// 물주기 알림에 대한 부분
 	//@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 한번 실행
 	//@Scheduled(cron = "0 0 * * * *") // 매시각 실행
-	@Scheduled(cron = "0 */2 * * * *") // 1분마다 실행 test용
+	@Scheduled(cron = "0 */1 * * * *") // 1분마다 실행 test용
 
 	public void taskEveryHour() throws Exception {
 		Calendar cal = Calendar.getInstance();
 		int nowH = cal.get(Calendar.HOUR_OF_DAY); // 현재 시각 24시간 형식
+		
 		System.out.println("매시각 실행 - 사용자마다 알림설정해놓은 시각에 알림 가도록한다.");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		String nowTime = sdf.format(new Date()); // 현재 년월일 정보 string으로
+		
+		
 		// user crop에서 수확이 끝나지 않은 작물 리스트 받기
 		List<UserCrop> usercrops = usercropService.findByFinishFalse();
 		Map<Integer, Integer> noticeMap = new HashMap<Integer, Integer>();
@@ -113,21 +116,27 @@ public class UserCropWaterSchedule {
 
 			String needTime = sdf.format(usercrop.getNeedDate());
 			// 물을 주지 않았고 현재시간이 세팅한 시간인 사람에게 물줘야하는 날에 알림을 보내줌
-			
+			System.out.println("유저작물 번호: "+ usercrop.getUserCropNumber());
+			System.out.println("물줘야하는날: "+ needTime);
+			System.out.println("현재 물 줬는지: "+ usercrop.isWater());
 			
 			if (!usercrop.isWater() && usersetting.get().getNoticeTime() == nowH && nowTime.equals(needTime)) {
-
+				System.out.println("물x 이고 물주는날");
 				// 알림을 보낼 시에는
 				// user number하나만 저장하여서 보낸다.
 				int userNumber = usercrop.getUserNumber();
 				noticeMap.put(userNumber, 0);
 				usercrop.setWater(false); // 알림이 갈 때 물주기 버튼의 불을 끈다.
 
+			}else {
+
+				System.out.println("오늘 물주는날 아님");
 			}
 
 		}
 		///////////////// 알림 보내는 부분
 		for (Integer userno : noticeMap.keySet()) {
+			System.out.println(userno+"번 유저에게 알림");
 			noticeService.insertNotice(userno, 0, title, content);
 		}
 
