@@ -18,10 +18,16 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCog, faEnvelope, faPencilAlt, faPlus, faTint } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+// moment
+import VueMoment from 'vue-moment' ;
+import moment from 'moment-timezone' ;
+import VueSimpleAlert from "vue-simple-alert";
+
+
+
 // Alert
 
 
-import VueSimpleAlert from "vue-simple-alert";
 
 
 Vue.use(vueAwesomeCountdown, 'vac')
@@ -37,6 +43,7 @@ Vue.use(ToggleButton)
 // Alert
 
 Vue.use(VueSimpleAlert);
+Vue.use(VueMoment, { moment, })
 
 // FontAwesome
 library.add(faCog, faEnvelope, faPencilAlt, faPlus, faTint)

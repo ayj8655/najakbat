@@ -296,12 +296,12 @@
           style="width: 100%"
           v-if="chartLoading"
         >
-          <v-progress-circular
+          <!-- <v-progress-circular
             width="7"
             size="70"
             indeterminate
             color="green"
-          ></v-progress-circular>
+          ></v-progress-circular> -->
         </div>
         <div
           id="content"
@@ -744,7 +744,7 @@ export default {
       avgPrice: 0,
       chartLoading: true, // 데이터를 불러오기 전까지는 progress circle을 사용
       chartLoading2: false,
-      chartData: { label: [], data: [] },
+      chartData: { labels: [], datasets: [{label: "가격정보", data: []},] },
       chartData2: {
         labels: [
           "아주 좋아요",
@@ -848,10 +848,10 @@ export default {
               )
               .then((response) => {
                 this.prices = response.data;
-                // console.log(this.prices);
+                console.log(this.prices);
                 this.prices.forEach((p, index) => {
-                  this.chartData.label[index] = p.date.substring(2, 10);
-                  this.chartData.data[index] = p.price;
+                  this.chartData.labels[index] = p.date.substring(2, 10);
+                  this.chartData.datasets[0].data[index] = p.price;
                   this.avgPrice += p.price;
                 });
                 this.avgPrice /= this.prices.length;
