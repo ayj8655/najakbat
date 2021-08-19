@@ -75,10 +75,13 @@ public class UserCropController {
 			int user_number = Integer.parseInt(userno);
 			Date now_time = new Date();
 			Calendar cal = Calendar.getInstance();
+			
 
 			UserCrop userCrop = new UserCrop();
 			userCrop.setCropNumber(crop_number);
+			cal.add(Calendar.HOUR_OF_DAY, 9); // 9 시간 더해서 넣기
 			userCrop.setPlantedDate(now_time);
+			cal.add(Calendar.HOUR_OF_DAY, -9);
 			userCrop.setUserNumber(user_number);
 			userCrop.setFinish(false);
 			
