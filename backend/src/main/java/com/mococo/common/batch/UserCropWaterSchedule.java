@@ -36,8 +36,8 @@ public class UserCropWaterSchedule {
 	// @Scheduled(cron = "0 */1 * * * *") // 1분마다 실행 test용
 	public void taskOneDay() throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String nowTime = sdf.format(new Date());
-
+		String nowTimeTemp = sdf.format(new Date()); // 오늘날짜
+		String nowTime ="";
 		// user crop에서 수확이 끝나지 않은 작물 리스트 받기
 		List<UserCrop> usercrops = usercropService.findByFinishFalse();
 		Calendar cal = Calendar.getInstance();
@@ -45,36 +45,42 @@ public class UserCropWaterSchedule {
 		System.out.println("자정 자동 실행");
 
 		for (UserCrop usercrop : usercrops) {
-			cal.setTime(usercrop.getNeedDate());
+			nowTime = nowTimeTemp; // 오늘날짜 초기화
+			cal.setTime(usercrop.getNeedDate()); // 캘린더 설정은 물주는 날짜
 
-			String needTime = sdf.format(cal.getTime());
+			String needTime = sdf.format(cal.getTime()); //물주는 날짜로 설정
+//			System.out.println("유저작물번호" + usercrop.getUserCropNumber());
+//			
+//			System.out.println();
 
-			// case: 물주는 날짜가 되면 TRUE인것들을 물준 여부 FALSE로 바꾼다.
+			// case: 물주는 날짜가 오늘이면 물줬던 것들을 물준 여부 FALSE로 바꾼다.
 			if (usercrop.isWater() && nowTime.equals(needTime)) {
-
+				//System.out.println("물주는날이라 false");
 				usercrop.setWater(false);
 				usercropService.updateCrop(usercrop);
 
 			}
 
-			// 물줘야하는 마지막날의 다음날이 된 경우
+			// 오늘이 물줘야하는 날 다음날이 됐다.
 			cal.add(Calendar.DATE, 1);
-			nowTime = sdf.format(cal.getTime());
+			needTime = sdf.format(cal.getTime()); //물줘야하는 다음날
 
 			// case: 물을 기한내에 주고 물주는날 다음날 된 경우 -> water true유지이고, 물주기만 cycle만큼 더해준다
 			if (usercrop.isWater() && nowTime.equals(needTime)) {
-
+				//System.out.println("줘야하는날 물 줬고 다음 날 됨");
 				cal.setTime(usercrop.getNeedDate());
 				cal.add(Calendar.DATE, usercrop.getWaterCycle());
 
 				usercrop.setNeedDate(cal.getTime());
+				usercropService.updateCrop(usercrop);
 
 			}
 
 			// case: 물을 기한내에 주지 못하고 물주는날 다음날 된 경우 -> water은 false 그대로 하고 need date를 그 날짜로
 			else if (!usercrop.isWater() && nowTime.equals(needTime)) {
-
+				//System.out.println("물x 담날됨");
 				usercrop.setNeedDate(cal.getTime());
+				usercropService.updateCrop(usercrop);
 
 			}
 		}
@@ -85,10 +91,10 @@ public class UserCropWaterSchedule {
 	//@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 한번 실행
 	// @Scheduled(cron = "0 0 * * * *") // 매시각 실행
 	 @Scheduled(cron = "0 */3 * * * *") // 1분마다 실행 test용
+
 	public void taskEveryHour() throws Exception {
 		Calendar cal = Calendar.getInstance();
 		int nowH = cal.get(Calendar.HOUR_OF_DAY); // 현재 시각 24시간 형식
-
 		System.out.println("매시각 실행 - 사용자마다 알림설정해놓은 시각에 알림 가도록한다.");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -107,7 +113,13 @@ public class UserCropWaterSchedule {
 
 			String needTime = sdf.format(usercrop.getNeedDate());
 			// 물을 주지 않았고 현재시간이 세팅한 시간인 사람에게 물줘야하는 날에 알림을 보내줌
-
+			
+			// 시간 -9처리하는 부분
+			nowH = nowH-9;
+			if(nowH <0 ) {
+				nowH +=12;
+			}
+			
 			if (!usercrop.isWater() && usersetting.get().getNoticeTime() == nowH && nowTime.equals(needTime)) {
 
 				// 알림을 보낼 시에는
@@ -121,7 +133,6 @@ public class UserCropWaterSchedule {
 		}
 		///////////////// 알림 보내는 부분
 		for (Integer userno : noticeMap.keySet()) {
-
 			noticeService.insertNotice(userno, 0, title, content);
 		}
 
