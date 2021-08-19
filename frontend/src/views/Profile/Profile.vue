@@ -2,57 +2,58 @@
   <div>
     <header-nav></header-nav>
     <Sidebar id="side-bar" />
-    <div v-if="getNickname" class="container">
-      
-      <div class="d-flex justify-content-start w-75 container p-0">
-        <div class="w-25" data-bs-toggle="modal" data-bs-target="#profilePhotoModal" v-if="this.userNum == this.$route.params.usernumber">
-          <img src="@/assets/profile_sample.png" class="w-100" alt="..." v-if="!getProfilePhoto">
-          <div class="box" v-else>
-            <img :src="getProfilePhoto" alt="" class="w-100">
+    <div v-if="!isNaN(this.$route.params.usernumber)" class="container">
+      <div v-if="userProfile!==null">
+        <div class="d-flex justify-content-start w-75 container p-0">
+          <div class="w-25" data-bs-toggle="modal" data-bs-target="#profilePhotoModal" v-if="this.userNum == this.$route.params.usernumber">
+            <img src="@/assets/profile_sample.png" class="w-100" alt="..." v-if="!getProfilePhoto">
+            <div class="box" v-else>
+              <img :src="getProfilePhoto" alt="" class="w-100">
+            </div>
+          </div>
+          <div v-else class="w-25">
+            <img src="@/assets/profile_sample.png" class="w-100" alt="..." v-if="!getProfilePhoto">
+            <div class="box" v-else>
+              <img :src="getProfilePhoto" alt="" class="w-100">
+            </div>
+          </div>
+          <input 
+            id="file-input" 
+            type="file" 
+            ref="files" 
+            style="display: none;"
+            v-on:change="fileSlc" 
+          />
+          <div class="row">
+            <div class="d-flex align-items-end">
+              <h2 class="ms-3 me-1 my-0">{{ userProfile.nickname }}</h2>
+              <router-link to="/user/modify"><font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" v-if="this.userNum == this.$route.params.usernumber" /></router-link>
+            </div>
+            <div class="d-flex align-items-start ms-3 mt-1">
+              <router-link v-if="getNickname == this.userNick" to="/message">
+              <font-awesome-icon :icon="['fas', 'envelope']" size="lg" class="message-color"/>
+              </router-link>
+              <font-awesome-icon v-else :icon="['fas', 'envelope']" size="lg" class="message-color" data-bs-toggle="modal" data-bs-target="#messagereply" @click="syncNickname(getNickname)"/>
+              <!-- <router-link v-else> -->
+              <!-- </router-link> -->
+              <span class="message-style ms-2" v-if="this.userNum == this.$route.params.usernumber">쪽지함</span>
+              <span class="message-style ms-2" v-else>쪽지보내기</span>
+            </div>
           </div>
         </div>
-        <div v-else class="w-25">
-          <img src="@/assets/profile_sample.png" class="w-100" alt="..." v-if="!getProfilePhoto">
-          <div class="box" v-else>
-            <img :src="getProfilePhoto" alt="" class="w-100">
-          </div>
+        <hr class="profile-line container my-3">
+        <div class="container w-75 d-flex justify-content-between my-3">
+          <span @click="changeComponent(0)" v-bind:class="[componentNum === 0 ? 'select-font' : 'select-font-none']">나의 활동</span>
+          <span class="select-font-none">|</span>
+          <span @click="changeComponent(1)" v-bind:class="[componentNum === 1 ? 'select-font' : 'select-font-none']">내가 쓴 게시글</span>
+          <span class="select-font-none">|</span>
+          <span @click="changeComponent(2)" v-bind:class="[componentNum === 2 ? 'select-font' : 'select-font-none']">좋아요한 게시글</span>
         </div>
-        <input 
-          id="file-input" 
-          type="file" 
-          ref="files" 
-          style="display: none;"
-          v-on:change="fileSlc" 
-        />
-        <div class="row">
-          <div class="d-flex align-items-end">
-            <h2 class="ms-3 me-1 my-0">{{ getNickname }}</h2>
-            <router-link to="/user/modify"><font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" v-if="this.userNum == this.$route.params.usernumber" /></router-link>
-          </div>
-          <div class="d-flex align-items-start ms-3 mt-1">
-            <router-link v-if="getNickname == this.userNick" to="/message">
-            <font-awesome-icon :icon="['fas', 'envelope']" size="lg" class="message-color"/>
-            </router-link>
-            <font-awesome-icon v-else :icon="['fas', 'envelope']" size="lg" class="message-color" data-bs-toggle="modal" data-bs-target="#messagereply" @click="syncNickname(getNickname)"/>
-            <!-- <router-link v-else> -->
-            <!-- </router-link> -->
-            <span class="message-style ms-2" v-if="this.userNum == this.$route.params.usernumber">쪽지함</span>
-            <span class="message-style ms-2" v-else>쪽지보내기</span>
-          </div>
+        <div class="container">
+          <UserActivity v-if="componentNum === 0" :userNumber="userProfile.userNumber" :userNickname="getNickname" />
+          <MyCommunityList v-else-if="componentNum === 1" :userNumber="userProfile.userNumber" />
+          <LikeCommunity v-else :userNumber="userProfile.userNumber" />
         </div>
-      </div>
-      <hr class="profile-line container my-3">
-      <div class="container w-75 d-flex justify-content-between my-3">
-        <span @click="changeComponent(0)" v-bind:class="[componentNum === 0 ? 'select-font' : 'select-font-none']">나의 활동</span>
-        <span class="select-font-none">|</span>
-        <span @click="changeComponent(1)" v-bind:class="[componentNum === 1 ? 'select-font' : 'select-font-none']">내가 쓴 게시글</span>
-        <span class="select-font-none">|</span>
-        <span @click="changeComponent(2)" v-bind:class="[componentNum === 2 ? 'select-font' : 'select-font-none']">좋아요한 게시글</span>
-      </div>
-      <div class="container">
-        <UserActivity v-if="componentNum === 0" :userNumber="getUserNumber" :userNickname="getNickname" />
-        <MyCommunityList v-else-if="componentNum === 1" :userNumber="getUserNumber" />
-        <LikeCommunity v-else :userNumber="getUserNumber" />
       </div>
     </div>
     <div v-else>
@@ -104,6 +105,7 @@
 
   <!-- Profile Photo Modal -->
   <div
+    v-if="userProfile"
       class="modal fade"
       id="profilePhotoModal"
       tabindex="-1"
@@ -142,6 +144,7 @@
               ref="file"
               style="display: none"
               v-on:change="fileSlc"
+              v-if="this.$store.state.userNumber==this.$route.params.usernumber"
             />
           </div>
           <div class="modal-footer">
@@ -191,9 +194,11 @@ export default {
     deletePhoto() {
       var targetPhotoNum = this.$store.state.profile.profilePhoto.photoNumber
       axios.delete(`user/photo/delete?photoNumber=${targetPhotoNum}&userNumber=${this.userNum}`)
-      .then(res => {
-        res
-        this.$store.dispatch('getProfile', this.$route.params.usernumber)
+      .then((res) => {
+        if(res.status==200) {
+          this.$store.dispatch('getProfile', this.$route.params.usernumber);
+          this.userProfile = this.$store.state.profile;
+        }
       })
       .catch(err => {
         console.error(err);
@@ -210,7 +215,8 @@ export default {
         })
         .then(res => {
           res
-          this.$store.dispatch('getProfile', this.$route.params.usernumber)
+          this.$store.dispatch('getProfile', this.$route.params.usernumber);
+          
         })
         .catch(err => {
           console.error(err);
@@ -257,19 +263,19 @@ export default {
       'messageReceiverNickname'
     ]),
     getNickname() {
-      if(this.profile.nickname) {
-        return this.profile.nickname
+      if(this.userProfile.nickname) {
+        return this.userProfile.nickname
       }
       else {
         return false
       }
     },
     getUserNumber() {
-      return this.profile.userNumber
+      return this.userProfile.userNumber
     },
     getProfilePhoto() {
-      if (this.profile.profilePhoto) {
-         var ProfileUrl = "https://mococobucket.s3.ap-northeast-2.amazonaws.com/profile/" + this.profile.profilePhoto.saveFile
+      if (this.userProfile.profilePhoto) {
+         var ProfileUrl = "https://mococobucket.s3.ap-northeast-2.amazonaws.com/profile/" + this.userProfile.profilePhoto.saveFile
         return ProfileUrl
       }
       else {
@@ -278,7 +284,49 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('getProfile', this.$route.params.usernumber)
+    // console.log(this.userProfile);
+    // // console.log(this.$route.params.usernumber);
+    // // console.log(this.$store.state.userNumber);
+    // if(!isNaN(this.$route.params.usernumber)) {
+    //   let usernumber = this.$route.params.usernumber;
+    //   // console.log(usernumber);
+    //   if(usernumber==this.$store.state.userNumber) {
+    //     if(this.$store.state.profile===null) this.$store.dispatch('getProfile', this.$store.state.userNumber);
+    //     this.userProfile = this.$store.state.profile;
+    //     console.log(this.userProfile);
+    //   } else {
+        axios.get(`user/${this.$route.params.usernumber}`)
+        .then((res) => {
+          // console.log(res.data);
+          this.userProfile = res.data;
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      // }
+    // }
+  },
+  watch: {
+    $route(to, from) { 
+      if (to.path.includes("profile") && from.path.includes("profile") && to.path != from.path) {
+        // window.location.reload();
+        this.userProfile = null;
+        // if(!isNaN(this.$route.params.usernumber)) {
+        //   if(this.$route.params.usernumber==this.$store.state.userNumber) {
+        //     if(this.$store.state.profile===null) this.$store.dispatch('getProfile', this.$route.params.usernumber);
+        //     this.userProfile = this.$store.state.profile;
+        //   } else {
+            axios.get(`user/${this.$route.params.usernumber}`)
+            .then((res) => {
+              this.userProfile = res.data;
+            })
+            .catch(err => {
+              console.error(err);
+            })
+        //   }
+        // }
+      } 
+    },
   },
 };
 </script>
@@ -393,8 +441,14 @@ export default {
 }
 
 .box {
-    width: 100%;
+    width: 75px;
+    height: 75px;
+    border: 1px solid #a9a9a9;
     border-radius: 70%;
     overflow: hidden;
+}
+.box img {
+  width:100%;
+  min-height: 100%;
 }
 </style>

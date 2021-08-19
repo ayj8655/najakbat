@@ -10,7 +10,7 @@
         /></router-link>
       </div>
       <div v-else>
-        <router-link :to="'/profile/' + this.myProfileNumber"
+        <router-link :to="'/profile/' + this.$store.state.userNumber"
           ><img src="@/assets/profile_sample.png" alt="프로필"
         /></router-link>
       </div>
