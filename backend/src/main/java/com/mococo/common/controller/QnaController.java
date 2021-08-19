@@ -1,6 +1,7 @@
 package com.mococo.common.controller;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +56,11 @@ public class QnaController {
 		try {
 			logger.info("질문 등록");
 			Qna qna = new Qna();
-			qna.setDate(new Date());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.add(Calendar.HOUR_OF_DAY, 9);
+			Date time = cal.getTime();
+			qna.setDate(time);
 			qna.setQnaType(qnatype);
 			qna.setQuestion(question);
 			qna.setUserNickname(usernickname);

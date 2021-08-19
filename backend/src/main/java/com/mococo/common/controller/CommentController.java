@@ -1,6 +1,7 @@
 package com.mococo.common.controller;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -87,7 +88,10 @@ public class CommentController {
 			@RequestParam("postno") int postno) throws IOException {
 		logger.info("댓글 등록");
 
-		Date time = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.HOUR_OF_DAY, 9);
+		Date time = cal.getTime();
 
 		comment.setDate(time);
 		try {

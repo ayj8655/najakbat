@@ -2,6 +2,7 @@ package com.mococo.common.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -317,7 +318,12 @@ public class PostController {
 		post.setTitle(title);
 		post.setUserNickname(user_nickname);
 		post.setUserNumber(user_number);
-		Date time = new Date();
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.HOUR_OF_DAY, 9);
+		Date time = cal.getTime();
+		
 		post.setDate(time);
 
 		try {
