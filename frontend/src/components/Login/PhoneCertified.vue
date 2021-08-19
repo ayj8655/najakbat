@@ -60,7 +60,7 @@ export default {
     return {
       counting: false,
       numberConfirmation: false,
-      certifiedNumber: "123123",
+      certifiedNumber: "23467364",
       certifiedInput: null,
       certifiedPhone: false,
       missCertifiedNumber: true,
@@ -76,15 +76,16 @@ export default {
           if (res.data === 'success') {
             this.counting = true;
             this.numberConfirmation = true;
-            // axios.post('http://localhost:8080/user/pass/phone', {
-            //     phone: this.$props.phoneNum
-            // })
-            // .then(res => {
-            //     this.certifiedNumber = res.data
-            // })
-            // .catch(err => {
-            //     console.error(err);
-            // })
+            console.log(this.$props.phoneNum);
+            axios.post('http://localhost:8080/user/pass/phone', {
+                phone: this.$props.phoneNum
+            })
+            .then(res => {
+                this.certifiedNumber = res.data
+            })
+            .catch(err => {
+                console.error(err);
+            })
           } else {
             this.$fire({
             text: "이미 가입된 번호입니다",
