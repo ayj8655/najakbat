@@ -63,9 +63,8 @@ public class PostController {
 			List<Post> posts = postService.findByKeywordContains(keyword);
 			
 			List<PostPhoto> photos = new ArrayList<>();
-			for (Object p : posts) {
-				Map<String, Object> map = (Map) p;
-				Integer postno = (Integer) map.get("postNumber");
+			for (Post p : posts) {
+				Integer postno = p.getPostNumber();
 
 				List<PostPhoto> postphotos = postphotoService.findAllByPostNumber(postno);
 

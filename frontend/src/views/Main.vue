@@ -53,11 +53,11 @@
         <h3>커뮤니티 인기 게시글</h3>
         <p>인기 있는 게시글을 추천 받아 보세요!</p>
         <div>
-          <vueper-slides id="post-slide" fixed-height="250px" autoplay>
+          <vueper-slides id="post-slide" fractions progress fixed-height="350px" autoplay>
             <vueper-slide v-for="(post, index) in posts" :key="index" style="background-color: #b6c790;">
               <template v-slot:content>
-                <div id="post-box" class="m-5">
-                  <list-row :post="post"></list-row>
+                <div class="post-box m-5">
+                  <list-row :post="post" :photo="null"></list-row>
                 </div>
               </template>
             </vueper-slide>
@@ -91,6 +91,9 @@ export default {
       tops: [],
       crops: [],
       posts: [],
+      photos: [],
+      flags: [],
+      tallerFlag : false,
     };
   },
   created() {
@@ -108,8 +111,23 @@ export default {
       // console.log(this.cropInThisMonth);
     });
     axios.get("post/top?size=10").then((data)=> {
-      this.posts = data.data;
-      // console.log(this.posts);
+      this.posts = data.data.postList;
+      let photosList = data.data.photosList;
+      // console.log(photosList);
+      this.posts.forEach((p, index) => {
+        if(!this.photos[index]) {
+          this.photos[index] = null;
+          this.flags[index] = false;
+          if(photosList.length) {
+            for (let i = 0; i < photosList.length; i++) {
+              if(p.postNumber==photosList[i].post.postNumber) {
+                this.photos[index] = "https://mococobucket.s3.ap-northeast-2.amazonaws.com/post/" + photosList[i].saveFile;
+                this.flags[index] = true;
+              }
+            }
+          }
+        }
+      });
     });
   },
   methods: {
@@ -154,7 +172,7 @@ h3 {
   font-weight: bold;
 }
 #foot {
-  height: 150px;
+  /* height: 150px; */
 }
 #menubar {
   position: fixed;
@@ -186,10 +204,10 @@ h3 {
 
 #post-slide {
   z-index: 0;
+  /* min-height: 500px; */
 }
-
-#post-box {
-  min-height: 150px;
+.post-box {
+  min-height: 250px;
   border: 5px solid #b6c790;
   border-radius: 15px;
   background: #ffffff;

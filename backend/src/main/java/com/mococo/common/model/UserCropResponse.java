@@ -20,5 +20,6 @@ public class UserCropResponse {
 	private int cropNumber;
 	private int remainDate;
 	private int waterDate;
+	private UserCropPhoto userCropPhoto;
 	private boolean isWater;
 }

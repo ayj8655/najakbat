@@ -39,7 +39,8 @@
           >
             <div class="row">
               <div class="col-4" @click="movePage(ucrop.userCropNumber)">
-                <img id="thumbnail" :src="findCropImg(ucrop)" />
+                <img v-if="ucrop.userCropPhoto" id="thumbnail" :src="ucrop.userCropPhoto.saveFile">
+                <img v-else id="thumbnail" :src="findCropImg(ucrop)" />
               </div>
               <div class="col-8">
                 <strong @click="movePage(ucrop.userCropNumber)">{{ ucrop.cropNickname }}</strong>
@@ -206,6 +207,12 @@ export default {
             .get(`user/crop/list?userNumber=${this.pickCrop.userNumber}`)
             .then((res) => {
               this.usercrops = res.data;
+              // console.log(this.usercrops);
+              this.usercrops.forEach(u => {
+                if(u.userCropPhoto!==null) {
+                  u.userCropPhoto.saveFile = "https://mococobucket.s3.ap-northeast-2.amazonaws.com/usercrop/" + u.userCropPhoto.saveFile;
+                }
+              });
             })
             .catch((err) => {
               console.error(err);
@@ -218,7 +225,6 @@ export default {
       axios.get("guide/plant/summary").then((data) => {
         this.crops = data.data;
         this.crops.push({cropNumber: 0, image: "기타.jpg", name: "기타"})
-        // console.log(this.crops);
         this.crops.forEach((c, index) => {
           this.cropImg[index] = this.crops[index].image
             ? require("@/assets/crop/" + this.crops[index].image)

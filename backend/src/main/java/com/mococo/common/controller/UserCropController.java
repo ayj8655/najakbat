@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.mococo.common.model.User;
 import com.mococo.common.model.UserCrop;
 import com.mococo.common.model.UserCropDetailResponse;
 import com.mococo.common.model.UserCropRecord;
@@ -31,6 +33,8 @@ import com.mococo.common.service.UserCropService;
 import com.mococo.common.service.UserRecordService;
 import com.mococo.common.service.WaterRecordService;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -202,12 +206,13 @@ public class UserCropController {
 				res.setRemainDate((int) diffDays); // 수확까지 남은 날짜
 
 				cmpDate.setTime(crop.getNeedDate());
-
+				if(crop.getUserCropPhoto()!=null) {
+					res.setUserCropPhoto(crop.getUserCropPhoto());
+				}
 				diffSec = (cmpDate.getTimeInMillis() - getToday.getTimeInMillis()) / 1000;
 				diffDays = diffSec / (24 * 60 * 60); // 물 주기 d-day
 
 				res.setWaterDate((int) diffDays); // 물주기까지 남은날짜
-
 				res.setWater(crop.isWater());
 				resList.add(res);
 			}
@@ -227,6 +232,7 @@ public class UserCropController {
 
 		try {
 			List<UserCrop> userCropList = userCropService.findAllByUserNumber(userNumber);
+			
 
 			return new ResponseEntity<>(userCropList, HttpStatus.OK);
 
@@ -371,7 +377,7 @@ public class UserCropController {
 			
 			// 1: user crop number로 조회해오기. - usercrop, usercropresponse
 			Optional<UserCrop> uc = userCropService.findByUserCropNumber(userCropNumber);
-			
+			UserCrop usercrop = uc.get();
 			urdr.setUserNumber(uc.get().getUserNumber());
 			
 			urdr.setCropNumber(uc.get().getCropNumber());
@@ -401,6 +407,9 @@ public class UserCropController {
 			urdr.setWaterDate((int) diffDays); // 물주기까지 몇일 set
 			urdr.setWater(uc.get().isWater());  //물준 여부 set
 			
+			if(usercrop.getUserCropPhoto()!=null) {
+				urdr.setUserCropPhoto(usercrop.getUserCropPhoto());
+			}
 			
 			return new ResponseEntity<>(urdr, HttpStatus.OK);
 
@@ -516,7 +525,70 @@ public class UserCropController {
 		}
 	}
 	
-	
+
+	@RequestMapping(value = "/photo/insert", method = RequestMethod.POST, consumes = { "multipart/form-data" })
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "내 작물 사진 등록", notes = "usercrop번호를 받아 등록잘되었는지 user 리턴. 실패시 FAIL", response = User.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "usercropNumber", value = "등록하고싶은 usercropNumber", required = true) })
+	public ResponseEntity<?> insertUserCropPhoto(@RequestParam(value = "usercropNumber") int usercropNumber,
+			@RequestParam(value = "image", required = false) MultipartFile file) throws IOException {
+		logger.info("내 작물 사진 등록");
+
+		try {
+			Optional<UserCrop> usercrop = userCropService.insertUserCropPhoto(usercropNumber, file);
+
+			if (usercrop.isPresent()) {
+				return new ResponseEntity<>(usercrop, HttpStatus.OK);
+			}
+			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/photo/update", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "내 작물 사진 수정", notes = "usercrop번호를 받아 수정잘되었는지 success 리턴.", response = User.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "usercropNumber", value = "수정하고싶은 usercropNumber", required = true) })
+	public ResponseEntity<?> updateUserCropPhoto(@RequestParam(value = "usercropNumber") int usercropNumber,
+			@RequestParam(value = "photoNumber") int photoNumber,
+			@RequestParam(value = "image", required = false) MultipartFile file) throws IOException {
+		logger.info("내 작물 사진 수정");
+
+		try {
+			Optional<UserCrop> usercrop = userCropService.updateUserCropPhoto(usercropNumber, photoNumber, file);
+
+			if (usercrop.isPresent()) {
+				return new ResponseEntity<>(usercrop, HttpStatus.OK);
+			}
+			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value = "/photo/delete", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")
+	@ApiOperation(value = "내 작물 사진 삭제", notes = "usercrop번호를 받아 삭제잘되었는지 success 리턴.", response = User.class)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "usercropNumber", value = "삭제하고싶은 usercropNumber", required = true) })
+	public ResponseEntity<?> deleteUserCropPhoto(@RequestParam(value = "usercropNumber") int usercropNumber,
+			@RequestParam(value = "photoNumber") int photoNumber) throws IOException {
+		logger.info("내 작물 사진 삭제");
+
+		try {
+			boolean ret =userCropService.deleteUserCropPhoto(usercropNumber, photoNumber);
+
+			if (ret == true) {
+				return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+			}
+			return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+
+			return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	
 	
 	

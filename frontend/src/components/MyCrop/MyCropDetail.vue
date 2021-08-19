@@ -1,19 +1,23 @@
 <template>
   <div class="container" id="bg">
     <div id="head" align="left">
-      <span id="left"
-        ><img src="@/assets/modal_back.png" width="25px" @click="moveBack"
+      <span id="left" class="m-2"
+        ><img
+          class="m-2"
+          src="@/assets/modal_back.png"
+          width="25px"
+          @click="moveBack"
       /></span>
       <span id="right">
         <button
-          class="btn btn-success"
+          class="btn btn-success m-2"
           data-bs-toggle="modal"
           data-bs-target="#harvModal"
         >
           수확
         </button>
         <button
-          class="btn btn-danger"
+          class="btn btn-danger m-2"
           data-bs-toggle="modal"
           data-bs-target="#delModal"
         >
@@ -21,10 +25,22 @@
         </button>
       </span>
     </div>
-    <div id="thumbnail-area" align="center">
-      <div><img src="@/assets/leaf_darkgreen.png" width="60px" /></div>
+    <div align="center">
+      <div id="thumbnail-area">
+          <img v-if="this.userCropPhoto" id="thumbnail" :src="userCropPhoto" />
+          <img v-else id="thumbnail" :src="crop.image" />
+        <div >
+          <!-- <img src="@/assets/leaf_darkgreen.png" width="100px" /> -->
+        </div>
+      </div>
       <!-- <div><img :src="crop.image" width="100px" /></div> -->
     </div>
+    <span id="setting" data-bs-toggle="modal" data-bs-target="#updatePhotoModal"
+      ><font-awesome-icon
+        :icon="['fas', 'cog']"
+        size="lg"
+        class="setting-color mb-1"
+    /></span>
     <div class="m-2">
       <font-awesome-icon
         v-if="ucrop.water"
@@ -222,27 +238,30 @@
         <div id="record-content">
           <div id="record-content-item" v-if="this.record.length > 0">
             <div align="left">
-                <div style="display: inline-block; margin: 2px 5px;"
-                  :class="['color-' + this.record[0].state, { circle: true }]"
-                />
+              <div
+                style="display: inline-block; margin: 2px 5px"
+                :class="['color-' + this.record[0].state, { circle: true }]"
+              />
               <span v-text="changeState(record[0].state)" />
             </div>
             <div id="date" align="right">{{ this.record[0].recordDate }}</div>
           </div>
           <div id="record-content-item" v-if="this.record.length > 1">
             <div align="left">
-                <div style="display: inline-block; margin: 2px 5px;"
-                  :class="['color-' + this.record[1].state, { circle: true }]"
-                />
+              <div
+                style="display: inline-block; margin: 2px 5px"
+                :class="['color-' + this.record[1].state, { circle: true }]"
+              />
               <span v-text="changeState(record[1].state)" />
             </div>
             <div id="date" align="right">{{ this.record[1].recordDate }}</div>
           </div>
           <div id="record-content-item" v-if="this.record.length > 2">
             <div align="left">
-                <div style="display: inline-block; margin: 2px 5px;" 
-                  :class="['color-' + this.record[2].state, { circle: true }]"
-                />
+              <div
+                style="display: inline-block; margin: 2px 5px"
+                :class="['color-' + this.record[2].state, { circle: true }]"
+              />
               <span v-text="changeState(record[2].state)" />
             </div>
             <div id="date" align="right">{{ this.record[2].recordDate }}</div>
@@ -261,8 +280,7 @@
       <div class="m-2" id="contents-area">
         <div id="content" class="text-lg-center pa-5" style="width: 100%">
           <pie-chart class="mt-3" :chartData="chartData2" />
-          <div class="mt-3 mb-3">
-          </div>
+          <div class="mt-3 mb-3"></div>
         </div>
       </div>
     </div>
@@ -522,7 +540,10 @@
                 style="border: 2px solid #aaaaaa; border-radius: 5px"
               >
                 <div class="m-2" align="left">
-                  <div :class="['color-' + r.state, { circle: true }]"  style="display: inline-block; margin: 0 5px" />
+                  <div
+                    :class="['color-' + r.state, { circle: true }]"
+                    style="display: inline-block; margin: 0 5px"
+                  />
                   <span v-text="changeState(r.state)"></span>
                 </div>
                 <div class="m-2" id="date" align="right">
@@ -545,6 +566,54 @@
                 상태기록 등록하기
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="updatePhotoModal"
+      tabindex="-1"
+      aria-labelledby="updatePhotoModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updatePhotoModalLabel">
+              내 농작물 사진 관리
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="thumbnail-select">
+            <label for="file-input"></label>
+            <div>
+              <button class="btn btn-success m-2" v-if="this.userCropPhoto">
+                <label for="file-input">사진 바꾸기</label>
+              </button>
+              <button class="btn btn-success m-2" v-else>
+                <label for="file-input">사진 등록하기</label>
+              </button>
+              <button class="btn btn-danger m-2" data-bs-dismiss="modal" v-if="this.userCropPhoto" @click="deleteUCrop">
+                사진 삭제하기
+              </button>
+            </div>
+            <input
+              id="file-input"
+              type="file"
+              ref="file"
+              style="display: none"
+              v-on:change="fileSlc"
+            />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">완료</button>
           </div>
         </div>
       </div>
@@ -636,6 +705,7 @@ import axios from "axios";
 import Calendar from "./include/Calendar.vue";
 import LineChart from "./include/LineChart";
 import PieChart from "./include/PieChart";
+import router from "@/router";
 
 export default {
   components: { Calendar, LineChart, PieChart },
@@ -671,119 +741,165 @@ export default {
       chartLoading: true, // 데이터를 불러오기 전까지는 progress circle을 사용
       chartLoading2: false,
       chartData: { label: [], data: [] },
-      chartData2: { 
-        labels: ["아주 좋아요", "이파리가 시들었어요", "이파리 색이 이상해요", "병해충이 발생했어요", "단단하지 않고 물렁해요", "기타"],
+      chartData2: {
+        labels: [
+          "아주 좋아요",
+          "이파리가 시들었어요",
+          "이파리 색이 이상해요",
+          "병해충이 발생했어요",
+          "단단하지 않고 물렁해요",
+          "기타",
+        ],
         datasets: [
           {
-            borderwidth: 1, 
-            borderColor:['#869F77', '#C8D7A6', '#EDDE8E', '#FDE9EA', '#E7B5AC', '#999999'], 
-            backgroundColor:['#A8B99D', '#D7E4BA', '#FDF2B8', '#FDE9EA', '#E7B5AC', '#CAC8C8'], 
-            data:[0, 0, 0, 0, 0, 0],
+            borderwidth: 1,
+            borderColor: [
+              "#869F77",
+              "#C8D7A6",
+              "#EDDE8E",
+              "#FDE9EA",
+              "#E7B5AC",
+              "#999999",
+            ],
+            backgroundColor: [
+              "#A8B99D",
+              "#D7E4BA",
+              "#FDF2B8",
+              "#FDE9EA",
+              "#E7B5AC",
+              "#CAC8C8",
+            ],
+            data: [0, 0, 0, 0, 0, 0],
             label: "상태기록 통계",
             hoverOffset: 4,
-          }
-        ] 
+          },
+        ],
       },
+      userCropPhoto: null,
+      file: null,
+      photoChangedFlag: false,
     };
   },
   mounted() {
     this.init();
   },
   created() {
-    axios.get(`user/crop/detail?userCropNumber=${this.ucropno}`).then((res) => {
-      this.ucrop = res.data;
-      this.nameForEdit = this.ucrop.cropNickname;
-      this.descForEdit = this.ucrop.description;
-      this.plantedDate = this.ucrop.plantedDate.substring(0, 10);
-      this.targetDate = this.ucrop.targetDate.substring(0, 10);
-      if (this.ucrop.cropNumber > 0) {
-        axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
-          // console.log(this.crop);
-          this.crop = data.data;
-          this.crop.image = require("@/assets/crop/" + this.crop.image);
-          this.lowTemp = this.crop.temperature.split("~")[0] + "℃";
-          this.highTemp = this.crop.temperature.split("~")[1] + "℃";
-          this.suns.forEach((s, index) => {
-            this.suns[index] =
-              index < this.crop.sun
-                ? require("@/assets/sun.png")
-                : require("@/assets/sun_off.png");
-          });
-          this.waters.forEach((w, index) => {
-            this.waters[index] =
-              index < this.crop.water
-                ? require("@/assets/water_on.png")
-                : require("@/assets/water_off.png");
-          });
-        });
-        axios
-          .get(`user/crop/state3m?userCropNumber=${this.ucropno}`)
-          .then((response) => {
-            // let keys
-            // console.log(response);
-            // if(response.data=="") return;
-            for (let index = 0; index <= 5; index++) {
-              this.chartData2.datasets[0].data[index] = this.getDataInObj(response.data, index);
-            }
-            // console.log(this.chartData2);
-            this.chartLoading2 = true;
-          });
-        axios
-          .get(`guide/plant/price/thirty?cropNumber=${this.ucrop.cropNumber}`)
-          .then((response) => {
-            this.prices = response.data;
-            // console.log(this.prices);
-            this.prices.forEach((p, index) => {
-              this.chartData.label[index] = p.date.substring(2, 10);
-              this.chartData.data[index] = p.price;
-              this.avgPrice += p.price;
+    axios.get("user/my").then((res) => {
+      var myNum = res.data.userNumber;
+      axios
+        .get(`user/crop/detail?userCropNumber=${this.ucropno}`)
+        .then((res) => {
+          if (myNum != res.data.userNumber) {
+            router.go(-1);
+          }
+          this.ucrop = res.data;
+          // console.log(this.ucrop);
+          if (Object.keys(this.ucrop).includes("userCropPhoto") &&  this.ucrop.userCropPhoto !== null) {
+            this.userCropPhoto =
+              "https://mococobucket.s3.ap-northeast-2.amazonaws.com/usercrop/" +
+              this.ucrop.userCropPhoto.saveFile;
+          }
+          this.nameForEdit = this.ucrop.cropNickname;
+          this.descForEdit = this.ucrop.description;
+          this.plantedDate = this.ucrop.plantedDate.substring(0, 10);
+          this.targetDate = this.ucrop.targetDate.substring(0, 10);
+          if (this.ucrop.cropNumber > 0) {
+            axios.get(`guide/plant/${this.ucrop.cropNumber}`).then((data) => {
+              // console.log(this.crop);
+              this.crop = data.data;
+              this.crop.image = require("@/assets/crop/" + this.crop.image);
+              this.lowTemp = this.crop.temperature.split("~")[0] + "℃";
+              this.highTemp = this.crop.temperature.split("~")[1] + "℃";
+              this.suns.forEach((s, index) => {
+                this.suns[index] =
+                  index < this.crop.sun
+                    ? require("@/assets/sun.png")
+                    : require("@/assets/sun_off.png");
+              });
+              this.waters.forEach((w, index) => {
+                this.waters[index] =
+                  index < this.crop.water
+                    ? require("@/assets/water_on.png")
+                    : require("@/assets/water_off.png");
+              });
             });
-            this.avgPrice /= this.prices.length;
-            let priceStr = String(this.avgPrice);
-            if (!priceStr.includes(".")) priceStr += ".";
-            let overDot = priceStr.split(".")[0];
-            let underDot = priceStr.split(".")[1];
-            if (overDot.length > 3) {
-              overDot =
-                overDot.substring(0, overDot.length - 3) +
-                "," +
-                overDot.substring(overDot.length - 3, overDot.length);
-            }
-            this.avgPrice = "";
-            this.avgPrice =
-              underDot.length > 0 ? overDot + "." + underDot : overDot;
-            // console.log(this.avgPrice);
-            this.chartLoading = false;
-          });
-      }
-      // axios
-      // .get(`user/crop/record/month?userCropNumber=${this.$route.params.no}`)
-      // .then((data) => {
-      //   this.daysForCalendar = data.data;
-      // });
-      axios
-        .get(`user/crop/record?userCropNumber=${this.ucropno}`)
-        .then((data) => {
-          this.record = data.data;
-          this.record.forEach((r) => {
-            r.recordDate = this.changeDate(r.recordDate);
-          });
-          // console.log(this.record);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      axios
-        .get(`user/crop/water?userCropNumber=${this.ucropno}`)
-        .then((data) => {
-          this.water = data.data;
-          // console.log(this.water);
-          this.water.forEach((w) => {
-            w.recordDate = this.changeDate(w.recordDate);
-          });
-        })
-        .catch((err) => {
-          console.log(err);
+            axios
+              .get(`user/crop/state3m?userCropNumber=${this.ucropno}`)
+              .then((response) => {
+                // let keys
+                // console.log(response);
+                // if(response.data=="") return;
+                for (let index = 0; index <= 5; index++) {
+                  this.chartData2.datasets[0].data[index] = this.getDataInObj(
+                    response.data,
+                    index
+                  );
+                }
+                // console.log(this.chartData2);
+                this.chartLoading2 = true;
+              });
+            axios
+              .get(
+                `guide/plant/price/thirty?cropNumber=${this.ucrop.cropNumber}`
+              )
+              .then((response) => {
+                this.prices = response.data;
+                // console.log(this.prices);
+                this.prices.forEach((p, index) => {
+                  this.chartData.label[index] = p.date.substring(2, 10);
+                  this.chartData.data[index] = p.price;
+                  this.avgPrice += p.price;
+                });
+                this.avgPrice /= this.prices.length;
+                let priceStr = String(this.avgPrice);
+                if (!priceStr.includes(".")) priceStr += ".";
+                let overDot = priceStr.split(".")[0];
+                let underDot = priceStr.split(".")[1];
+                if (overDot.length > 3) {
+                  overDot =
+                    overDot.substring(0, overDot.length - 3) +
+                    "," +
+                    overDot.substring(overDot.length - 3, overDot.length);
+                }
+                if (underDot.length > 2) {
+                  underDot = underDot.substring(0, 2);
+                }
+                this.avgPrice = "";
+                this.avgPrice =
+                  underDot.length > 0 ? overDot + "." + underDot : overDot;
+                // console.log(this.avgPrice);
+                this.chartLoading = false;
+              });
+          }
+          // axios
+          // .get(`user/crop/record/month?userCropNumber=${this.$route.params.no}`)
+          // .then((data) => {
+          //   this.daysForCalendar = data.data;
+          // });
+          axios
+            .get(`user/crop/record?userCropNumber=${this.ucropno}`)
+            .then((data) => {
+              this.record = data.data;
+              this.record.forEach((r) => {
+                r.recordDate = this.changeDate(r.recordDate);
+              });
+              // console.log(this.record);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          axios
+            .get(`user/crop/water?userCropNumber=${this.ucropno}`)
+            .then((data) => {
+              this.water = data.data;
+              // console.log(this.water);
+              this.water.forEach((w) => {
+                w.recordDate = this.changeDate(w.recordDate);
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         });
     });
     axios.get("user/my").then((res) => {
@@ -965,9 +1081,9 @@ export default {
       let objKeys = Object.keys(obj);
       let objValues = Object.values(obj);
       let result = 0;
-      if(objKeys.includes(String(num))) {
+      if (objKeys.includes(String(num))) {
         objKeys.forEach((k, index) => {
-          if(k==num) {
+          if (k == num) {
             // console.log(objValues[index]);
             result = objValues[index];
           }
@@ -975,10 +1091,59 @@ export default {
       }
       return Number(result);
     },
-    // dateClass(ymd, date) {
-    //   const day = date.getDate();
-    //   return day >= 10 && day <= 20 ? "table-info" : "";
-    // },
+    fileSlc() {
+      this.file = this.$refs.file.files[0];
+      const formData = new FormData();
+      formData.append("usercropNumber", this.ucropno);
+      formData.append("image", this.file);
+      if (this.userCropPhoto) {
+        formData.append("photoNumber", this.ucrop.userCropPhoto.photoNumber);
+        axios
+          .put(`user/crop/photo/update`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          })
+          .then((data) => {
+            // console.log(data);
+            if (data.status == 200) this.reloadUCrop();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        // formData.append("photoNumber", this.ucropno);
+        axios
+          .post(`user/crop/photo/insert`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          })
+          .then((data) => {
+            // console.log(data);
+            if (data.status == 200) {
+              this.reloadUCrop();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
+    reloadUCrop() {
+      axios
+        .get(`user/crop/detail?userCropNumber=${this.ucropno}`)
+        .then((res) => {
+          this.ucrop = res.data;
+          this.userCropPhoto =
+            "https://mococobucket.s3.ap-northeast-2.amazonaws.com/usercrop/" +
+            this.ucrop.userCropPhoto.saveFile;
+      // console.log(this.userCropPhoto);
+        });
+    },
+    deleteUCrop() {
+      axios
+        .delete(`user/crop/photo/delete?usercropNumber=${this.ucropno}&photoNumber=${this.ucrop.userCropPhoto.photoNumber}`)
+        .then((res) => {
+          if (res.data == "success") this.userCropPhoto = null;
+        });
+    },
   },
 };
 </script>
@@ -986,7 +1151,7 @@ export default {
 <style scoped>
 #bg {
   min-height: 812px;
-  background-color: #4A643B;
+  background-color: #4a643b;
 }
 #bg > * {
   font-family: Noto Sans KR;
@@ -996,15 +1161,24 @@ export default {
   float: right;
   display: inline-block;
 }
-#thumbnail-area > div {
+#thumbnail-area {
   align: center;
+  display: block; 
+  overflow: hidden; 
   background-color: #ffffff;
-  width: 100px;
-  height: 100px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
 }
-#thumbnail-area img {
-  margin-top: 20px;
+/* #thumbnail-area img {
+  margin-top: 30px;
+} */
+#thumbnail {
+  /* align: center; */
+  display: block; /* Otherwise it keeps some space around baseline */
+  width: 100%; /* Scale up to fill container width */
+  min-height: 100%; /* Scale up to fill container height */
+  -ms-interpolation-mode: bicubic; /* Scaled images look a bit better in IE now */
 }
 .water-color {
   color: #0bc3fd;
@@ -1104,18 +1278,27 @@ h4 {
 }
 
 .color-1 {
-  background-color: #D7E4BA;
-  }
+  background-color: #d7e4ba;
+}
 .color-2 {
-  background-color: #FDF2B8;
+  background-color: #fdf2b8;
 }
 .color-3 {
-  background-color: #FDE9EA;
+  background-color: #fde9ea;
 }
 .color-4 {
-  background-color: #E7B5AC;
+  background-color: #e7b5ac;
 }
 .color-5 {
-  background-color: #CAC8C8;
+  background-color: #cac8c8;
+}
+.setting-color {
+  color: #999999;
+}
+#setting {
+  position: absolute;
+  top: 200px;
+  left: 50%;
+  margin-left: 30px;
 }
 </style>
