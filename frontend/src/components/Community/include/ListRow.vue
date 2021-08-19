@@ -28,7 +28,7 @@
     <div id="thumbnail-area" v-if="this.photo">
       <img :src="photo">
     </div>
-    <div id="keyword-area" v-if="this.keywords!='null'">
+    <div id="keyword-area" v-if="this.keywords[0] != ''">
       <div id="keyword-result" class="m-2">
         <!-- <p>키워드: </p> -->
         <div

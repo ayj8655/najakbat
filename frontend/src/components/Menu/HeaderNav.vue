@@ -5,9 +5,9 @@
     </div>
     <div id="right">
       <div v-if="!isLogin">
-        <router-link to="/login"
-          ><img id="icon" src="@/assets/login.png" alt="로그인"
-        /></router-link>
+          <router-link to="/login"
+            ><img id="icon" src="@/assets/Login2.png" alt="로그인" class="w-15"
+          /></router-link>
       </div>
       <div v-else>
         <router-link :to="'/profile/' + this.$store.state.userNumber"
@@ -17,13 +17,12 @@
               <img id="profile-pic" :src="profilePhoto" alt="">
           </div>
         </router-link>
+        <router-link v-if="notiImg" to="/myalerts">
+          <img id="icon" v-if="isAlert" src="@/assets/noti_green.png" />
+          <img id="icon" v-else src="@/assets/noti_new.png"/>
+          </router-link>
+        <router-link v-else to="/myalerts"><img id="icon" src="@/assets/noti.png" /></router-link>
       </div>
-
-      <router-link v-if="notiImg" to="/myalerts">
-        <img id="icon" v-if="isAlert" src="@/assets/noti_green.png" />
-        <img id="icon" v-else src="@/assets/noti_new.png"/>
-        </router-link>
-      <router-link v-else to="/myalerts"><img id="icon" src="@/assets/noti.png" /></router-link>
     </div>
   </div>
 </template>
@@ -141,5 +140,9 @@ export default {
     margin: 5px;
     padding: 5px;
   }
+}
+
+.log-btn {
+  width: 25%;
 }
 </style>
