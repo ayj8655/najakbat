@@ -87,7 +87,8 @@ public class CommentService {
 
 	public boolean deleteComment(int no) {
 		Optional<Comment> ret = commentDAO.findCommentByCommentNumber(no);
-		List<Comment> list = commentDAO.findAllByParent(no);
+		List<Comment> list = commentDAO.findAllByParent(no); // 해당 댓글의 대댓글들을 리스트로 받아서 지우기
+		
 		
 		
 		// delete할 post가 없는 경우
@@ -100,6 +101,15 @@ public class CommentService {
 				commentDAO.deleteById(c.getCommentNumber());
 			}
 			
+		}
+		Comment comment = ret.get();
+		// 대댓글을 지웠으면 그 부모의 comment_count-1을한다.
+		if(comment.getParent()!=0) {
+			int parent = comment.getParent();
+			Optional<Comment> parentComment = commentDAO.findCommentByCommentNumber(parent);
+			Comment parentcomment = parentComment.get();
+			parentcomment.setCommentCount(parentcomment.getCommentCount()-1);
+			commentDAO.update(parentcomment);
 		}
 		
 		return true;
