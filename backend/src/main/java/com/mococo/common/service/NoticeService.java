@@ -79,7 +79,6 @@ public class NoticeService {
 	public void insertNotice(int userNumber, int postNumber, String title, String content) throws ParseException {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
-		cal.add(Calendar.HOUR_OF_DAY, 9);
 		Date date = cal.getTime();
 		Notice notice = new Notice(0, userNumber, postNumber, 0, date, title, content);
 
