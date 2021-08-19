@@ -39,4 +39,5 @@ public interface CommentDAO extends JpaRepository<Comment, Integer> {
 	List<Comment> findAllByPostNumber(int no);
 
 	Optional<Comment> findCommentByParent(int parent);
+	List<Comment> findAllByParent(int parent);
 }

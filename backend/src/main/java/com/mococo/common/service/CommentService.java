@@ -87,13 +87,21 @@ public class CommentService {
 
 	public boolean deleteComment(int no) {
 		Optional<Comment> ret = commentDAO.findCommentByCommentNumber(no);
+		List<Comment> list = commentDAO.findAllByParent(no);
+		
 		
 		// delete할 post가 없는 경우
 		if(!ret.isPresent()) {
 			return false;
 		}
-		
 		commentDAO.deleteById(no);
+		if(list!=null) {
+			for(Comment c : list) {
+				commentDAO.deleteById(c.getCommentNumber());
+			}
+			
+		}
+		
 		return true;
 	}
 
