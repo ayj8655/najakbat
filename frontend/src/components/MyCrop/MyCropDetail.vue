@@ -239,7 +239,7 @@
           <span>more ></span>
         </div>
         <div id="record-content">
-          <div id="record-content-item" v-if="this.record.length > 0">
+          <div id="record-content-item" class="m-0 mt-2" v-if="this.record.length > 0">
             <div align="left">
               <div
                 style="display: inline-block; margin: 2px 5px"
@@ -249,7 +249,7 @@
             </div>
             <div id="date" align="right">{{ this.record[0].recordDate }}</div>
           </div>
-          <div id="record-content-item" v-if="this.record.length > 1">
+          <div id="record-content-item" class="m-0 mt-2" v-if="this.record.length > 1">
             <div align="left">
               <div
                 style="display: inline-block; margin: 2px 5px"
@@ -259,7 +259,7 @@
             </div>
             <div id="date" align="right">{{ this.record[1].recordDate }}</div>
           </div>
-          <div id="record-content-item" v-if="this.record.length > 2">
+          <div id="record-content-item" class="m-0 mt-2" v-if="this.record.length > 2">
             <div align="left">
               <div
                 style="display: inline-block; margin: 2px 5px"
@@ -1202,10 +1202,11 @@ export default {
 #gray-box {
   /* border: 2px solid #446631; */
   color: #ffffff;
-  background-color: #aaaaaa;
+  background-color: #b49e9e;
   border-radius: 5px;
   min-height: 100px;
   padding: 20px;
+  opacity: 0.8;
 }
 #gray-box-2 {
   /* border: 2px solid #446631; */
