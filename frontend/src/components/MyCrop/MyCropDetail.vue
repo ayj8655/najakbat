@@ -355,7 +355,7 @@
         </div>
       </div>
     </div>
-    <!-- <div>
+    <!-- <div> 
       <h4>커뮤니티</h4>
     </div> -->
     <div id="foot"></div>
