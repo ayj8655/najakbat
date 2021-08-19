@@ -37,7 +37,7 @@
                 {{searchNotice.content}}
               </div>
               <div class="date mx-1">
-                {{ searchNotice.date | moment("subtract", "9 hours", "YY-MM-DD HH:mm:ss") }} 
+                {{ searchNotice.date | moment("YY-MM-DD HH:mm:ss") }} 
               </div>
             </div>
 
@@ -62,7 +62,7 @@
                 {{searchNotice.content}}
               </div>
               <div class="date mx-1">
-              {{ searchNotice.date | moment("subtract", "9 hours", "YY-MM-DD HH:mm:ss") }} 
+              {{ searchNotice.date | moment("YY-MM-DD HH:mm:ss") }} 
               </div>
             </div>
             
