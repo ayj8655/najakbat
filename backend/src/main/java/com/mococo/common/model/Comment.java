@@ -42,6 +42,6 @@ public class Comment {
 	private Date date;
 	private boolean isDelete;
 	
-	@ManyToMany(mappedBy = "comments", fetch= FetchType.EAGER)
+	@ManyToMany(mappedBy = "comments", fetch= FetchType.LAZY)
 	private List<User> users = new ArrayList<>();
 }

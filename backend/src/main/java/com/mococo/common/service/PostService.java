@@ -122,7 +122,10 @@ public class PostService {
 		}
 
 		boolean isRecommend = false;
-		for (User user : ret.get().getUsers()) {
+		Post post = ret.get();
+		List<User> users = post.getUsers();
+		
+		for (User user : users) {
 			// 이미 추천되어있으면 추천 취소
 			if (user.getUserNumber() == userno) {
 				isRecommend = true;
