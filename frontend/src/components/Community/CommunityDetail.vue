@@ -23,7 +23,7 @@
           </div>
           <div class="mt-2 mb-2" id="title">{{ this.post.title }}</div>
           <div>
-            <span id="left">{{ this.post.userNickname }}</span>
+            <span id="left" @click="movePage">{{ this.post.userNickname }}</span>
             <span id="right">
               <img src="@/assets/view.png" width="15px" />{{ this.post.view }} |
               <span v-text="changeDate(post.date)" />
@@ -189,6 +189,9 @@ export default {
     }
   },
   methods: {
+    movePage() {
+      this.$router.push(`/profile/${this.post.userNumber}`);
+    },
     pushLogin() {
       router.push({ name: "Login" });
     },
