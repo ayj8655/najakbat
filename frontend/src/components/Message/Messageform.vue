@@ -1,6 +1,6 @@
 <template>
 <div class="mb-2">
-<img src="../../assets/send.png" width="40px" height="30px" type="button" class="p-0 px-1" data-bs-toggle="modal" data-bs-target="#exampleModal10"/>
+<img src="../../assets/send.png" width="40px" height="30px" class="p-0 px-1" data-bs-toggle="modal" data-bs-target="#exampleModal10"/>
 <!-- {{ alluserInfo }} -->
 
 <!-- Modal -->
