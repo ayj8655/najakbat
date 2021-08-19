@@ -47,9 +47,10 @@ export default {
             let dataset = [] 
             let pos = 0 
                 let colors = this.colorSets[pos] 
-                dataset.push({ label: this.chartData.label, borderWidth: 2, borderColor: colors.back, backgroundColor: colors.back, pointBorderColor: colors.fore, pointBackgroundColor: colors.fore, fill: false, data: this.chartData.data }) 
+                dataset.push({ labels: this.chartData.labels, label: this.chartData.datasets[0].label, borderWidth: 2, borderColor: colors.back, backgroundColor: colors.back, pointBorderColor: colors.fore, pointBackgroundColor: colors.fore, fill: false, data: this.chartData.datasets[0].data }) 
                 pos++ 
-            this.datacollection = { labels: this.chartData.label, datasets: dataset } 
+            console.log(dataset);
+            this.datacollection = { labels: this.chartData.labels, datasets: dataset } 
             this.render() 
         }, 
         render() { 
