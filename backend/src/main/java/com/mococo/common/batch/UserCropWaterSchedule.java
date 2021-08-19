@@ -89,8 +89,8 @@ public class UserCropWaterSchedule {
 
 	// 물주기 알림에 대한 부분
 	//@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 한번 실행
-	// @Scheduled(cron = "0 0 * * * *") // 매시각 실행
-	 @Scheduled(cron = "0 */2 * * * *") // 1분마다 실행 test용
+	@Scheduled(cron = "0 0 * * * *") // 매시각 실행
+	//@Scheduled(cron = "0 */2 * * * *") // 1분마다 실행 test용
 
 	public void taskEveryHour() throws Exception {
 		Calendar cal = Calendar.getInstance();
