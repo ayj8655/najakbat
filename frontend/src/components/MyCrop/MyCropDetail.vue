@@ -848,7 +848,7 @@ export default {
               )
               .then((response) => {
                 this.prices = response.data;
-                console.log(this.prices);
+                // console.log(this.prices);
                 this.prices.forEach((p, index) => {
                   this.chartData.labels[index] = p.date.substring(2, 10);
                   this.chartData.datasets[0].data[index] = p.price;
@@ -1188,10 +1188,11 @@ export default {
 } */
 #thumbnail {
   /* align: center; */
-  display: block; /* Otherwise it keeps some space around baseline */
+  display: inline-block; /* Otherwise it keeps some space around baseline */
   width: 100%; /* Scale up to fill container width */
   min-height: 100%; /* Scale up to fill container height */
-  -ms-interpolation-mode: bicubic; /* Scaled images look a bit better in IE now */
+  /* -ms-interpolation-mode: bicubic;  */
+  /* Scaled images look a bit better in IE now */
 }
 .water-color {
   color: #0bc3fd;
