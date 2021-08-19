@@ -7,13 +7,15 @@
           <input type="text" class="form-control mb-3" id="username" placeholder="아이디를 입력하세요" v-model="username">
           <label for="password" class="form-label d-flex align-items-start">비밀번호</label>
           <input type="password" class="form-control mb-3" id="password" placeholder="비밀번호를 입력하세요" v-model="password">
-          <div class="d-flex flex-row-reverse">
-            <router-link to="/signup">회원가입</router-link>
-            <router-link to="/findid">아이디 찾기</router-link>
-            <router-link to="/findpassword">비밀번호 찾기</router-link>
-          </div>
         </div>
-        <button class="btn btn-success" :disabled="!this.username || !this.password" @click.prevent="[login([username, password]), loginError()]">로그인 하기</button>
+        <div class="d-grid gap-2 w-75 container">
+          <button class="btn btn-outline-success" :disabled="!this.username || !this.password" @click.prevent="[login([username, password]), loginError()]">로그인 하기</button>
+          <button class="btn btn-success" @click="goToSignup">회원가입</button>
+        </div>
+        <div class="mt-3">
+          <span class="mx-1" @click="goToId">아이디 찾기</span> |
+          <span class="mx-1" @click="goToPassword">비밀번호 찾기</span>
+        </div>
     </div>
   </div>
 </template>
@@ -35,6 +37,15 @@ export default {
     ...mapActions([
       'login'
     ]),
+    goToSignup() {
+      router.push({name: 'Signup'})
+    },
+    goToId() {
+      router.push({name: 'FindId'})
+    },
+    goToPassword() {
+      router.push({name: 'FindPassword'})
+    },
     loginError() {
       setTimeout(() => {
         if (!this.loginCertificate) {
