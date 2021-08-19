@@ -6,13 +6,13 @@
     <transition name="slide-fade">
       <div class="container greenbg w-75" v-if="sidebar" v-click-outside="onClickOutside">
         <div class="container infos w-100 px-0 mt-5">
-          <div class="container row d-flex mx-4">
+          <div class="container row d-flex mx-4" v-if="nickname">
             <router-link :to="'/profile/' + profileNumber" class="col-1 p-0 ps-2">
             <img src="@/assets/profile_sample.png" class="profile" @click="sidebarOff">
             </router-link>
             <div class="container col-5 d-flex flex-column mx-5 mt-2 pe-1">
-              <div class="nickname">{{ nickname }}</div>
-              <div class="email">email@gmail.com</div>
+              <div class="nickname">{{ nickname }}님</div>
+              <div class="nickname">안녕하세요</div>
             </div>
           </div>
         </div>
@@ -20,17 +20,27 @@
           <router-link  to="/Settings" class="text-design p-3 bd-highlight">설정</router-link>
           <router-link  to="/DirectQuery" class="text-design p-3 bd-highlight">1:1 문의</router-link>
           <router-link v-if="profileNumber == 1" to="/Admin" class="text-design p-3 bd-highlight">관리자 페이지</router-link>
-          <div class="p-3 text-design bd-highlight" data-bs-toggle="modal" data-bs-target="#logout">
-            <!-- Button trigger modal -->
-            <div class="">
-              로그아웃
+          <div v-if="nickname">
+            <div class="p-3 text-design bd-highlight" data-bs-toggle="modal" data-bs-target="#logout">
+              <!-- Button trigger modal -->
+              <div class="">
+                로그아웃
+              </div>
             </div>
           </div>
-          <div class="text-design p-3 bd-highlight" data-bs-toggle="modal" data-bs-target="#withdrawl">
-            <!-- Button trigger modal -->
-            <div class="" >
-              탈퇴하기
+          <div class="p-3 text-design bd-highlight" v-else @click="goLogin">
+            로그인
+          </div>
+          <div v-if="nickname">
+            <div class="text-design p-3 bd-highlight" data-bs-toggle="modal" data-bs-target="#withdrawl">
+              <!-- Button trigger modal -->
+              <div class="" >
+                탈퇴하기
+              </div>
             </div>
+          </div>
+          <div class="p-3 text-design bd-highlight" v-else @click="goSign">
+            회원가입
           </div>
         </div>
       </div>
@@ -80,6 +90,7 @@
 import vClickOutside from 'v-click-outside'
 import { mapActions } from 'vuex'
 import { mapState } from 'vuex'
+import router from "@/router"
 // import Logout from '@/components/Sidebar/include/Logout.vue'
 
 export default {
@@ -98,6 +109,12 @@ export default {
     }
   },
   methods: {
+    goLogin() {
+      router.push({name: 'Login'})
+    },
+    goSign() {
+      router.push({name: 'Signup'})
+    },
     onClickOutside () {
       this.$store.state.sidebar = false
     },
