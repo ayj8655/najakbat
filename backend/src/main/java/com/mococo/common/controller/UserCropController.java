@@ -256,7 +256,11 @@ public class UserCropController {
 			ucr.setState(state);
 			ucr.setRecordDate(new Date());
 			ucr.setDetail(detail);
-			ucr.setRecordDate(new Date());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.add(Calendar.HOUR_OF_DAY, 9);
+			Date date = cal.getTime();
+			ucr.setRecordDate(date);
 			boolean result = userCropRecordService.insertCropRecord(ucr);
 
 			if (result) {
@@ -292,7 +296,11 @@ public class UserCropController {
 		logger.info("해당 작물에 물을 준 것으로 처리");
 
 		try {
-			WaterRecord waterRecord = new WaterRecord(userCropNumber, new Date());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.add(Calendar.HOUR_OF_DAY, 9);
+			Date date = cal.getTime();
+			WaterRecord waterRecord = new WaterRecord(userCropNumber, date);
 
 			Optional<UserCrop> usercrop = userCropService.findByUserCropNumber(userCropNumber);
 			
