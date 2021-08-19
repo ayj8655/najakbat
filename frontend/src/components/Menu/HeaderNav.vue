@@ -1,25 +1,29 @@
 <template>
   <div class="nav" v-show="this.flag">
     <div id="left">
-      <router-link to="/"><img src="@/assets/mococo.png" /></router-link>
+      <router-link to="/"><img id="icon" src="@/assets/mococo.png" /></router-link>
     </div>
     <div id="right">
       <div v-if="!isLogin">
         <router-link to="/login"
-          ><img src="@/assets/login.png" alt="로그인"
+          ><img id="icon" src="@/assets/login.png" alt="로그인"
         /></router-link>
       </div>
       <div v-else>
         <router-link :to="'/profile/' + this.$store.state.userNumber"
-          ><img src="@/assets/profile_sample.png" alt="프로필"
-        /></router-link>
+          >
+          <div v-if="!profilePhoto"><img id="icon" src="@/assets/profile_sample.png" alt="프로필"/></div>
+          <div class="box" v-else>
+              <img id="profile-pic" :src="profilePhoto" alt="">
+          </div>
+        </router-link>
       </div>
 
       <router-link v-if="notiImg" to="/myalerts">
-        <img v-if="isAlert" src="@/assets/noti_green.png" />
-        <img v-else src="@/assets/noti_new.png"/>
+        <img id="icon" v-if="isAlert" src="@/assets/noti_green.png" />
+        <img id="icon" v-else src="@/assets/noti_new.png"/>
         </router-link>
-      <router-link v-else to="/myalerts"><img src="@/assets/noti.png" /></router-link>
+      <router-link v-else to="/myalerts"><img id="icon" src="@/assets/noti.png" /></router-link>
     </div>
   </div>
 </template>
@@ -36,7 +40,8 @@ export default {
       notiImg: null,
       myProfileNumber: null,
       isAlert: false,
-      isLogin: this.$store.state.accessToken
+      isLogin: this.$store.state.accessToken,
+      profilePhoto: null,
     };
   },
   created() {
@@ -51,9 +56,13 @@ export default {
       // : require("@/assets/noti.png");
     if (this.$store.state.accessToken) {
       axios
-        .get("user/my")
+        .get(`user/${this.$store.state.userNumber}`)
         .then((res) => {
-          this.myProfileNumber = res.data["userNumber"];
+          this.myProfileNumber = res.data.userNumber;
+          // console.log(res);
+          if(res.data.profilePhoto) {
+            this.profilePhoto = "https://mococobucket.s3.ap-northeast-2.amazonaws.com/profile/" + res.data.profilePhoto.saveFile;
+          }
         })
         .catch((err) => {
           console.error(err);
@@ -100,10 +109,25 @@ export default {
     right: 0;
     display: inline-block;
   }
-  img {
+  #icon {
     width: 15%;
     margin: 5px;
     padding: 5px;
+  }
+  .box {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #a9a9a9;
+    border-radius: 70%;
+    overflow: hidden;
+    display: inline-block;
+    float: right;
+    right: 0;
+    margin: 5px;
+}
+  .box img {
+    width:100%;
+    min-height: 100%;
   }
 }
 @media (min-width: 601px) {

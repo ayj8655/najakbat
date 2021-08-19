@@ -1,5 +1,8 @@
 <template>
-  <div class="container" id="bg">
+  <div class="container px-0" id="bg">
+    <div id="bgcolor">
+
+ 
     <div id="head" align="left">
       <span id="left" class="m-2"
         ><img
@@ -10,14 +13,14 @@
       /></span>
       <span id="right">
         <button
-          class="btn btn-success m-2"
+          class="btn btn-sm btn-success m-2"
           data-bs-toggle="modal"
           data-bs-target="#harvModal"
         >
           수확
         </button>
         <button
-          class="btn btn-danger m-2"
+          class="btn btn-sm btn-danger m-2"
           data-bs-toggle="modal"
           data-bs-target="#delModal"
         >
@@ -184,13 +187,13 @@
       </div>
     </div>
     <div class="row m-2 mt-3">
-      <h4>기록</h4>
-      <div class="col-6" v-if="this.water.length">
+      <h4 class="px-0">기록</h4>
+      <div class="col-6 ps-0" v-if="this.water.length">
         <div id="more" data-bs-toggle="modal" data-bs-target="#waterModal">
           <span>more ></span>
         </div>
         <div id="water-content">
-          <div id="water-content-item" v-if="this.water.length > 0">
+          <div id="water-content-item" class="m-0" v-if="this.water.length > 0">
             <div class="m-2" align="left">
               <img
                 src="@/assets/water_on.png"
@@ -201,7 +204,7 @@
             </div>
             <div id="date" align="right">{{ this.water[0].recordDate }}</div>
           </div>
-          <div id="water-content-item" v-if="this.water.length > 1">
+          <div id="water-content-item" class="m-0" v-if="this.water.length > 1">
             <div class="m-2" align="left">
               <img
                 src="@/assets/water_on.png"
@@ -212,7 +215,7 @@
             </div>
             <div id="date" align="right">{{ this.water[1].recordDate }}</div>
           </div>
-          <div id="water-content-item" v-if="this.water.length > 2">
+          <div id="water-content-item" class="m-0" v-if="this.water.length > 2">
             <div class="m-2" align="left">
               <img
                 src="@/assets/water_on.png"
@@ -225,7 +228,7 @@
           </div>
         </div>
       </div>
-      <div class="col-6" v-else>
+      <div class="col-6 ps-0" v-else>
         <div id="more" data-bs-toggle="modal" data-bs-target="#waterModal">
           <span>more ></span>
         </div>
@@ -698,6 +701,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
@@ -1151,7 +1155,16 @@ export default {
 <style scoped>
 #bg {
   min-height: 812px;
-  background-color: #4a643b;
+  z-index: -1;
+  background-image: url('../../assets/backgroundimage.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  /* background-color: rgba(0, 51, 32, 0.8); */
+  /* position: fixed; */
+}
+#bgcolor {
+  background-color: rgba(0, 51, 32, 0.6);
 }
 #bg > * {
   font-family: Noto Sans KR;
