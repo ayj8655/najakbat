@@ -10,7 +10,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mococo.common.dao.UserCropDAO;
 import com.mococo.common.dao.UserCropRecordDAO;
+import com.mococo.common.model.UserCrop;
 import com.mococo.common.model.UserCropRecord;
 
 @Service
@@ -18,6 +20,9 @@ public class UserCropRecordService {
 
 	@Autowired
 	UserCropRecordDAO userCropRecordDAO;
+	
+	@Autowired
+	UserCropDAO userCropDAO;
 
 	public boolean insertCropRecord(UserCropRecord userCropRecord) {
 		Optional<UserCropRecord> userCropRecordOpt = userCropRecordDAO
@@ -51,10 +56,17 @@ public class UserCropRecordService {
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date());
 		Date end = c.getTime();
-
+		Optional<UserCrop> uc = userCropDAO.findById(userCropNumber);
+		UserCrop usercrop = uc.get();
 		c.add(Calendar.MONTH, -3);
 
 		Date start = c.getTime();
+
+		// 심은날이 3개월전보다 나중이면
+		if(usercrop.getPlantedDate().after(start)) {
+			start = usercrop.getPlantedDate();
+		}
+		
 		List<UserCropRecord> list = userCropRecordDAO.findByUserCropNumberAndRecordDateBetween(userCropNumber, start, end);
 		Map<Integer, Integer> map = new HashMap<>();
 		for(UserCropRecord urc : list) {
