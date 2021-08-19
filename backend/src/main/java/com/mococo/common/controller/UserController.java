@@ -345,18 +345,10 @@ public class UserController {
 //	}
 
 	// 핸드폰번호 받음 -> 랜덤숫자만듦 -> 메시지 보냄 -> 숫자 프론트에 보냄
-	@RequestMapping(value = "/pass/phone", method = RequestMethod.POST)
-	@ApiOperation(value = "핸드폰인증", notes = "사용자 이름과 핸드폰 번호를 입력하면 맞는사용자인지 확인후 성공 또는 실패 반환", response = String.class)
-	public ResponseEntity<String> phoneAuthenticate(@RequestBody User user) throws IOException {
+	@RequestMapping(value = "/pass/signupPhone", method = RequestMethod.POST)
+	@ApiOperation(value = "회원가입 핸드폰 인증", notes = "번호입력받으면 인증번호 생성 후 핸드폰에 메시지를 보내고 인증번호를 프론트로 전송한다", response = String.class)
+	public ResponseEntity<String> signupPhone(@RequestBody User user) throws IOException {
 		logger.info("핸드폰인증");
-
-		User findUser = userService.findByUserNameAndPhone(user.getUserName(), user.getPhone());
-
-		if (findUser == null) {
-			System.out.println("찾은유저가없음");
-			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
-		}
-		System.out.println("찾은유저가있음");
 
 		String userPhone = user.getPhone();
 
@@ -385,6 +377,49 @@ public class UserController {
 		}
 
 	}
+	
+	
+	// 유저와 핸드폰번호 일치하는지 확인 후 -> 랜덤숫자만듦 -> 메시지 보냄 -> 숫자 프론트에 보냄
+		@RequestMapping(value = "/pass/phone", method = RequestMethod.POST)
+		@ApiOperation(value = "핸드폰인증", notes = "사용자 이름과 핸드폰 번호를 입력하면 맞는사용자인지 확인후 성공 또는 실패 반환", response = String.class)
+		public ResponseEntity<String> phoneAuthenticate(@RequestBody User user) throws IOException {
+			logger.info("핸드폰인증");
+
+			User findUser = userService.findByUserNameAndPhone(user.getUserName(), user.getPhone());
+
+			if (findUser == null) {
+				System.out.println("찾은유저가없음");
+				return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+			}
+			System.out.println("찾은유저가있음");
+
+			String userPhone = user.getPhone();
+
+			Random rd = new Random();// 랜덤 객체 생성
+			int ran = (rd.nextInt(888888) + 111111);// 111111~999999 사이 랜덤값
+
+			String randomNumber = Integer.toString(ran);
+
+			System.out.println(userPhone);
+			System.out.println(randomNumber);
+
+			try {// 가져온 핸드폰번호로 랜덤넘버를 메시지로 보낸다
+				boolean ret = userService.sendMessage(userPhone, randomNumber);
+
+				if (!ret) {
+					logger.info("인증번호 전송 실패");
+					return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+				}
+
+				System.out.println("인증번호 전송 성공");// 랜덤넘버 프론트로 전달
+				return new ResponseEntity<String>(randomNumber, HttpStatus.OK);
+
+			} catch (Exception e) {
+				System.out.println("인증번호 전송 오류");
+				return new ResponseEntity<String>(ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
+		}
 
 	//아이디랑 핸드폰 확인후 비밀번호 변경
 	@RequestMapping(value = "/pass/pwFind", method = RequestMethod.POST)
