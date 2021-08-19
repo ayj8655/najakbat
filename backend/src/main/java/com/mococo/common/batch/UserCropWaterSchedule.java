@@ -122,6 +122,10 @@ public class UserCropWaterSchedule {
 			System.out.println("설정 시간: "+ usersetting.get().getNoticeTime() );
 			System.out.println("현재 물 줬는지: "+ usercrop.isWater());
 			
+			nowH += 9;
+			if(nowH>23) {
+				nowH -= 24;
+			}
 			if (!usercrop.isWater() && usersetting.get().getNoticeTime() == nowH && nowTime.equals(needTime)) {
 				System.out.println("물x 이고 물주는날");
 				// 알림을 보낼 시에는
