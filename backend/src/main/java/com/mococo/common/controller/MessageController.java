@@ -1,6 +1,7 @@
 package com.mococo.common.controller;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +65,11 @@ public class MessageController {
 			message.setUserSender(sender);
 			message.setUserReceiver(receiver);
 			message.setContent(content);
-			message.setTime(new Date());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.add(Calendar.HOUR_OF_DAY, 9);
+			Date time = cal.getTime();
+			message.setTime(time);
 			boolean result = messageService.insertMessage(message);
 
 			if (result) {

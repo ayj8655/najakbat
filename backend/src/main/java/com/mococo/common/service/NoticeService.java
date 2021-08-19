@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +77,10 @@ public class NoticeService {
 	}
 
 	public void insertNotice(int userNumber, int postNumber, String title, String content) throws ParseException {
-		Date date = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.HOUR_OF_DAY, 9);
+		Date date = cal.getTime();
 		Notice notice = new Notice(0, userNumber, postNumber, 0, date, title, content);
 
 		noticeDAO.save(notice);
