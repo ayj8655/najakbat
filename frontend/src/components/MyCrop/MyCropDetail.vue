@@ -27,11 +27,10 @@
     </div>
     <div align="center">
       <div id="thumbnail-area">
-        <div v-if="this.userCropPhoto">
-          <img id="thumbnail" :src="userCropPhoto" />
-        </div>
-        <div v-else>
-          <img src="@/assets/leaf_darkgreen.png" width="100px" />
+          <img v-if="this.userCropPhoto" id="thumbnail" :src="userCropPhoto" />
+          <img v-else id="thumbnail" :src="crop.image" />
+        <div >
+          <!-- <img src="@/assets/leaf_darkgreen.png" width="100px" /> -->
         </div>
       </div>
       <!-- <div><img :src="crop.image" width="100px" /></div> -->
@@ -795,10 +794,11 @@ export default {
           }
           this.ucrop = res.data;
           // console.log(this.ucrop);
-          if (this.ucrop.userCropPhoto !== null)
+          if (Object.keys(this.ucrop).includes("userCropPhoto") &&  this.ucrop.userCropPhoto !== null) {
             this.userCropPhoto =
-              "https://mococobucket.s3.ap-northeast-2.amazonaws.com/post/" +
+              "https://mococobucket.s3.ap-northeast-2.amazonaws.com/usercrop/" +
               this.ucrop.userCropPhoto.saveFile;
+          }
           this.nameForEdit = this.ucrop.cropNickname;
           this.descForEdit = this.ucrop.description;
           this.plantedDate = this.ucrop.plantedDate.substring(0, 10);
@@ -1132,7 +1132,7 @@ export default {
         .then((res) => {
           this.ucrop = res.data;
           this.userCropPhoto =
-            "https://mococobucket.s3.ap-northeast-2.amazonaws.com/post/" +
+            "https://mococobucket.s3.ap-northeast-2.amazonaws.com/usercrop/" +
             this.ucrop.userCropPhoto.saveFile;
       console.log(this.userCropPhoto);
         });
@@ -1161,17 +1161,20 @@ export default {
   float: right;
   display: inline-block;
 }
-#thumbnail-area > div {
+#thumbnail-area {
   align: center;
+  display: block; 
+  overflow: hidden; 
   background-color: #ffffff;
   width: 160px;
   height: 160px;
   border-radius: 50%;
 }
-#thumbnail-area img {
+/* #thumbnail-area img {
   margin-top: 30px;
-}
+} */
 #thumbnail {
+  /* align: center; */
   display: block; /* Otherwise it keeps some space around baseline */
   width: 100%; /* Scale up to fill container width */
   min-height: 100%; /* Scale up to fill container height */

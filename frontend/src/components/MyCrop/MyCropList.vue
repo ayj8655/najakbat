@@ -210,7 +210,7 @@ export default {
               // console.log(this.usercrops);
               this.usercrops.forEach(u => {
                 if(u.userCropPhoto!==null) {
-                  u.userCropPhoto.saveFile = "https://mococobucket.s3.ap-northeast-2.amazonaws.com/post/" + u.userCropPhoto.saveFile;
+                  u.userCropPhoto.saveFile = "https://mococobucket.s3.ap-northeast-2.amazonaws.com/usercrop/" + u.userCropPhoto.saveFile;
                 }
               });
             })
