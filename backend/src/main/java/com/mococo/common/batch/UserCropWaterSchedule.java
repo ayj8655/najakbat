@@ -114,11 +114,6 @@ public class UserCropWaterSchedule {
 			String needTime = sdf.format(usercrop.getNeedDate());
 			// 물을 주지 않았고 현재시간이 세팅한 시간인 사람에게 물줘야하는 날에 알림을 보내줌
 			
-			// 시간 -9처리하는 부분
-			nowH = nowH-9;
-			if(nowH <0 ) {
-				nowH +=12;
-			}
 			
 			if (!usercrop.isWater() && usersetting.get().getNoticeTime() == nowH && nowTime.equals(needTime)) {
 
