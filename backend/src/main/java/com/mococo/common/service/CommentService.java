@@ -109,7 +109,7 @@ public class CommentService {
 			Optional<Comment> parentComment = commentDAO.findCommentByCommentNumber(parent);
 			Comment parentcomment = parentComment.get();
 			parentcomment.setCommentCount(parentcomment.getCommentCount()-1);
-			commentDAO.update(parentcomment);
+			commentDAO.save(parentcomment);
 		}
 		
 		return true;
