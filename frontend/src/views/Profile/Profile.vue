@@ -3,15 +3,31 @@
     <header-nav></header-nav>
     <Sidebar id="side-bar" />
     <div v-if="getNickname" class="container">
+      
       <div class="d-flex justify-content-start w-75 container p-0">
-        <label for="file-input" class="w-25">
-          <img src="@/assets/profile_sample.png" class="w-100" alt="...">
-        </label>
-        <input id="file-input" type="file" ref="files" style="display: none;" />
+        <div class="w-25" data-bs-toggle="modal" data-bs-target="#profilePhotoModal" v-if="this.userNum == this.$route.params.usernumber">
+          <img src="@/assets/profile_sample.png" class="w-100" alt="..." v-if="!getProfilePhoto">
+          <div class="box" v-else>
+            <img :src="getProfilePhoto" alt="" class="w-100">
+          </div>
+        </div>
+        <div v-else class="w-25">
+          <img src="@/assets/profile_sample.png" class="w-100" alt="..." v-if="!getProfilePhoto">
+          <div class="box" v-else>
+            <img :src="getProfilePhoto" alt="" class="w-100">
+          </div>
+        </div>
+        <input 
+          id="file-input" 
+          type="file" 
+          ref="files" 
+          style="display: none;"
+          v-on:change="fileSlc" 
+        />
         <div class="row">
           <div class="d-flex align-items-end">
             <h2 class="ms-3 me-1 my-0">{{ getNickname }}</h2>
-            <router-link to="/user/modify"><font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" /></router-link>
+            <router-link to="/user/modify"><font-awesome-icon :icon="['fas', 'cog']" size="lg" class="setting-color mb-1" v-if="this.userNum == this.$route.params.usernumber" /></router-link>
           </div>
           <div class="d-flex align-items-start ms-3 mt-1">
             <router-link v-if="getNickname == this.userNick" to="/message">
@@ -47,43 +63,93 @@
     <div id="foot"></div>
     <menubar id="menubar"></menubar>
   </div>
+
   <!-- modal -->
   <div class="modal fade" id="messagereply" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="container modaldesign">
-    <div class="modal-content">
-      <div class="">
-        <div class="modal-title" align="center" id="exampleModalLabel">
-          <!-- <div class="dropdown" align="center"> -->
-          <div class="p-2 pb-2" align="center">
-            <h2 class="mb-0">{{ this.messageReceiverNickname }}</h2>
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="container modaldesign">
+      <div class="modal-content">
+        <div class="">
+          <div class="modal-title" align="center" id="exampleModalLabel">
+            <!-- <div class="dropdown" align="center"> -->
+            <div class="p-2 pb-2" align="center">
+              <h2 class="mb-0">{{ this.messageReceiverNickname }}</h2>
+            </div>
+            에게 보내는 쪽지
           </div>
-          에게 보내는 쪽지
+          <!-- <button type="button" class="btn-close mx-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
         </div>
-        <!-- <button type="button" class="btn-close mx-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
-      </div>
-      <div class="modal-body pt-2">
-        <div class="form-group" align="left">
-          <textarea
-            @click="findNumber"
-            class="form-control"
-            rows="15"
-            id="content"
-            name="content"
-            v-model="content"
-            placeholder="쪽지 내용을 입력하세요."
-          ></textarea>
+        <div class="modal-body pt-2">
+          <div class="form-group" align="left">
+            <textarea
+              @click="findNumber"
+              class="form-control"
+              rows="15"
+              id="content"
+              name="content"
+              v-model="content"
+              placeholder="쪽지 내용을 입력하세요."
+            ></textarea>
+          </div>
         </div>
-      </div>
-      <div class="">
-        <button type="button" v-if="content" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage (messageReceiverNickname)">보내기</button>
-        <button type="button" v-else disabled class="btn buttoncolor mb-3 mx-2" @click="postingMessage (messageReceiverNickname)">보내기</button>
-        <button type="button" class="btn btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
+        <div class="">
+          <button type="button" v-if="content" data-bs-dismiss="modal" class="btn buttoncolor mb-3 mx-2" @click="postingMessage (messageReceiverNickname)">보내기</button>
+          <button type="button" v-else disabled class="btn buttoncolor mb-3 mx-2" @click="postingMessage (messageReceiverNickname)">보내기</button>
+          <button type="button" class="btn btn-secondary mb-3 mx-2" data-bs-dismiss="modal">취소</button>
+        </div>
       </div>
     </div>
+    </div>
   </div>
-  </div>
-</div>
+
+  <!-- Profile Photo Modal -->
+  <div
+      class="modal fade"
+      id="profilePhotoModal"
+      tabindex="-1"
+      aria-labelledby="profilePhotoModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="profilePhotoModalLabel">
+              내 프로필 사진 관리
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="thumbnail-select">
+            <label for="file-input"></label>
+            <div>
+              <button class="btn btn-success m-2" v-if="getProfilePhoto">
+                <label for="file-input">사진 바꾸기</label>
+              </button>
+              <button class="btn btn-success m-2" v-else>
+                <label for="file-input">사진 등록하기</label>
+              </button>
+              <button class="btn btn-danger m-2" data-bs-dismiss="modal" v-if="getProfilePhoto" @click="deletePhoto">
+                사진 삭제하기
+              </button>
+            </div>
+            <input
+              id="file-input"
+              type="file"
+              ref="file"
+              style="display: none"
+              v-on:change="fileSlc"
+            />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">완료</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -96,6 +162,7 @@ import LikeCommunity from "@/components/Profile/LikeCommunity.vue"
 import UserActivity from "@/components/Profile/UserActivity.vue"
 import Sidebar from "@/components/Sidebar/Sidebar.vue";
 import { mapState } from 'vuex'
+import axios from 'axios';
 
 export default {
   components: { 
@@ -114,10 +181,57 @@ export default {
       content: '',
       receiver: '',
       userNick: localStorage.getItem('userNickname'),
-      userNum: localStorage.getItem('userNumber')
+      userNum: localStorage.getItem('userNumber'),
     };
   },
   methods: {
+    getTargetProfile() {
+
+    },
+    deletePhoto() {
+      var targetPhotoNum = this.$store.state.profile.profilePhoto.photoNumber
+      axios.delete(`user/photo/delete?photoNumber=${targetPhotoNum}&userNumber=${this.userNum}`)
+      .then(res => {
+        res
+        this.$store.dispatch('getProfile', this.$route.params.usernumber)
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    },
+    fileSlc() {
+      let inputFiles = this.$refs.files.files;
+      if (this.$store.state.profile.profilePhoto) {
+        const formData = new FormData();
+        var targetPhotoNum = this.$store.state.profile.profilePhoto.photoNumber
+        formData.append("image", inputFiles[0]);
+        axios.put(`user/photo/update?photoNumber=${targetPhotoNum}&userNumber=${this.userNum}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then(res => {
+          res
+          this.$store.dispatch('getProfile', this.$route.params.usernumber)
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      }
+      else {
+        const formData = new FormData();
+        formData.append("userNumber", this.userNum);
+        formData.append("image", inputFiles[0]);
+        axios.post('user/photo/insert', formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          })
+        .then(res => {
+          res
+          this.$store.dispatch('getProfile', this.$route.params.usernumber)
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      }
+    },
     changeComponent(num) {
       this.componentNum = num
     },
@@ -125,7 +239,6 @@ export default {
       // console.log(nickname)
       // this.$store.dispatch('getReceiverNumber', nickname)
       this.receiver = this.ReceiverNumber
-      console.log(this.receiver)
       this.$store.dispatch('messagePost', [this.content, this.$store.state.ReceiverNumber])
     },
     syncNickname(nickname) {
@@ -154,6 +267,15 @@ export default {
     getUserNumber() {
       return this.profile.userNumber
     },
+    getProfilePhoto() {
+      if (this.profile.profilePhoto) {
+         var ProfileUrl = "https://mococobucket.s3.ap-northeast-2.amazonaws.com/profile/" + this.profile.profilePhoto.saveFile
+        return ProfileUrl
+      }
+      else {
+        return null
+      }
+    }
   },
   created() {
     this.$store.dispatch('getProfile', this.$route.params.usernumber)
@@ -268,5 +390,11 @@ export default {
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: normal;
+}
+
+.box {
+    width: 100%;
+    border-radius: 70%;
+    overflow: hidden;
 }
 </style>
