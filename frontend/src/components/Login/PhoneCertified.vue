@@ -76,8 +76,7 @@ export default {
           if (res.data === 'success') {
             this.counting = true;
             this.numberConfirmation = true;
-            console.log(this.$props.phoneNum);
-            axios.post('http://localhost:8080/user/pass/phone', {
+            axios.post('http://localhost:8080/user/pass/signupPhone', {
                 phone: this.$props.phoneNum
             })
             .then(res => {
@@ -102,7 +101,7 @@ export default {
       this.counting = false;
     },
     checkCertifiedInput() {
-      if (this.certifiedNumber === this.certifiedInput) {
+      if (this.certifiedNumber == this.certifiedInput) {
         this.certifiedPhone = true;
         this.$emit("phonecertified", true);
       } else {
