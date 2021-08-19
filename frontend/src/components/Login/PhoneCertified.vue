@@ -76,7 +76,7 @@ export default {
           if (res.data === 'success') {
             this.counting = true;
             this.numberConfirmation = true;
-            axios.post('http://localhost:8080/user/pass/signupPhone', {
+            axios.post('user/pass/signupPhone', {
                 phone: this.$props.phoneNum
             })
             .then(res => {
