@@ -91,7 +91,6 @@ public class UserCropWaterSchedule {
 	//@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 한번 실행
 	//@Scheduled(cron = "0 0 * * * *") // 매시각 실행
 	@Scheduled(cron = "0 */1 * * * *") // 1분마다 실행 test용
-
 	public void taskEveryHour() throws Exception {
 		Calendar cal = Calendar.getInstance();
 		int nowH = cal.get(Calendar.HOUR_OF_DAY); // 현재 시각 24시간 형식
@@ -132,6 +131,7 @@ public class UserCropWaterSchedule {
 
 				System.out.println("오늘 물주는날 아님");
 			}
+			System.out.println("=================================");
 
 		}
 		///////////////// 알림 보내는 부분
