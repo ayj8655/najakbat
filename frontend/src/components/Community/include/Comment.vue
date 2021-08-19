@@ -5,7 +5,7 @@
     </div>
     <div :class="'col-' + this.col" v-if="isShow">
       <div class="head">
-        <span id="left"
+        <span id="left" @click="movePage"
           >{{ comment.userNickname
           }}<img id="messageBtn" src="@/assets/message.png" width="20px" data-bs-toggle="modal" data-bs-target="#exampleModal2" @click="syncNickname(comment.userNickname)"
         /></span>
