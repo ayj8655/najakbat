@@ -117,6 +117,7 @@ public class UserCropWaterSchedule {
 			// 물을 주지 않았고 현재시간이 세팅한 시간인 사람에게 물줘야하는 날에 알림을 보내줌
 			System.out.println("유저작물 번호: "+ usercrop.getUserCropNumber());
 			System.out.println("물줘야하는날: "+ needTime);
+			System.out.println("현재 시간: "+ new Date());
 			System.out.println("현재 물 줬는지: "+ usercrop.isWater());
 			
 			if (!usercrop.isWater() && usersetting.get().getNoticeTime() == nowH && nowTime.equals(needTime)) {
