@@ -3,24 +3,56 @@
     <div class="mt-3">
       <strong>{{ userNickname }}</strong>님의 활동
     </div>
-    <div class="row my-3">
-      <div class="col px-0">
-        <img src="@/assets/drop.png" width="30px" />
-        <p class="mb-0 mt-2"><strong>{{ userNickname }}</strong>님이</p> 
-        <p class="mb-0">키운 작물 개수</p>
-        총 <strong>{{ targetActivity.cropCount }}</strong>개
+    <div class="my-3 container" id="row">
+      <div class="px-0 items mx-2">
+        <img src="@/assets/drop.png" width="45px" />
+        <p class="mb-0">물 준 횟수</p>
+        <strong>{{ targetActivity.waterCount }}</strong>회
       </div>
-      <div class="col px-0">
-        <img src="@/assets/sprout.png" width="30px" />
-        <p class="mb-0 mt-2"><strong>{{ userNickname }}</strong>님의</p>
-        <p class="mb-0">수확 횟수</p>
-        총 <strong>{{ targetActivity.cropFinishCount }}</strong>회
+      <div class="px-0 items mx-2">
+        <img src="@/assets/sprout.png" width="45px" />
+        <p class="mb-0">작물 개수</p>
+        <strong>{{ targetActivity.cropCount }}</strong>개
       </div>
-      <div class="col px-0">
-        <img src="@/assets/money.png" width="30px" />
-        <p class="mb-0 mt-2"><strong>{{ userNickname }}</strong>님의</p> 
+      <div class="px-0 items mx-2">
+        <img src="@/assets/money.png" width="45px" />
         <p class="mb-0">추정이득</p>
         <strong>{{ targetActivity.gold }}</strong>원
+      </div>
+      <div class="px-0 items mx-2">
+        <img src="@/assets/재배횟수.png" width="45px" />
+        <p class="mb-0">재배 횟수</p>
+        <strong>{{ targetActivity.cropFinishCount }}</strong>회
+      </div>
+      <div class="px-0 items mx-2">
+        <img src="@/assets/댓글횟수.png" width="45px" />
+        <p class="mb-0">댓글 개수</p>
+        <strong>{{ targetActivity.commentCount }}</strong>개
+      </div>
+      <div class="px-0 items mx-2">
+        <img src="@/assets/답변횟수.png" width="45px" />
+        <p class="mb-0">답변 횟수</p>
+        <strong>{{ targetActivity.answerCount }}</strong>회
+      </div>
+      <div class="px-0 items mx-2">
+        <img src="@/assets/게시글개수.png" width="45px" />
+        <p class="mb-0">게시물 개수</p>
+        <strong>{{ targetActivity.postCount }}</strong>개
+      </div>
+      <div class="px-0 items mx-2">
+        <img src="@/assets/질문횟수.png" width="45px" />
+        <p class="mb-0">질문 횟수</p>
+        <strong>{{ targetActivity.requestCount }}</strong>회
+      </div>
+      <div class="px-0 items mx-2">
+        <img src="@/assets/나눔횟수.png" width="45px" />
+        <p class="mb-0">나눔 횟수</p>
+        <strong>{{ targetActivity.shareCount }}</strong>회
+      </div>
+      <div class="px-0 items mx-2">
+        <img src="@/assets/like.png" width="45px" />
+        <p class="mb-0">추천 횟수</p>
+        <strong>{{ targetActivity.recommendCount }}</strong>개
       </div>
     </div>
     <div>
@@ -108,7 +140,7 @@ export default {
       crops: [],
       usercrops: [],
       cropImg: [],
-      targetMission: null
+      targetMission: null,
     }
   },
   created() {
@@ -123,6 +155,7 @@ export default {
     axios.get(`user/record/${this.userNumber}`)
     .then(res => {
       this.targetActivity = res.data
+      console.log(this.targetActivity);
       this.targetMission = res.data
     })
     .catch(err => {
