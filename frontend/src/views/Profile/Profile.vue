@@ -4,7 +4,7 @@
     <Sidebar id="side-bar" />
     <div v-if="!isNaN(this.$route.params.usernumber)" class="container">
       <div v-if="userProfile!==null">
-        <div class="d-flex justify-content-start w-75 container p-0">
+        <div class="d-flex justify-content-start w-75 container p-0 mt-3">
           <div class="w-25" data-bs-toggle="modal" data-bs-target="#profilePhotoModal" v-if="this.userNum == this.$route.params.usernumber">
             <img src="@/assets/profile_sample.png" class="w-100" alt="..." v-if="!getProfilePhoto">
             <div class="box" v-else>
@@ -192,12 +192,12 @@ export default {
 
     },
     deletePhoto() {
-      var targetPhotoNum = this.$store.state.profile.profilePhoto.photoNumber
+      var targetPhotoNum = this.userProfile.profilePhoto.photoNumber
       axios.delete(`user/photo/delete?photoNumber=${targetPhotoNum}&userNumber=${this.userNum}`)
       .then((res) => {
         if(res.status==200) {
           this.$store.dispatch('getProfile', this.$route.params.usernumber);
-          this.userProfile = this.$store.state.profile;
+          this.userProfile.profilePhoto = null;
         }
       })
       .catch(err => {
@@ -229,8 +229,18 @@ export default {
         axios.post('user/photo/insert', formData, {
             headers: { "Content-Type": "multipart/form-data" },
           })
-        .then(res => {
-          res
+        .then((res) => {
+          // res
+          if(res.status==200) {
+            this.userProfile = null;
+            axios.get(`user/${this.$route.params.usernumber}`)
+            .then((res) => {
+              this.userProfile = res.data;
+            })
+            .catch(err => {
+              console.error(err);
+            })
+          }
           this.$store.dispatch('getProfile', this.$route.params.usernumber)
         })
         .catch(err => {
