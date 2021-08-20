@@ -80,7 +80,7 @@
     <hr class="profile-line container my-3">
     <div class="container">
       <strong>{{ userNickname }}</strong>님의 농작물
-      <div id="row" v-if="!usercrops">
+      <div id="row" v-if="usercrops">
         <div
           class="items m-2"
           v-for="(usercrop, index) in usercrops"
