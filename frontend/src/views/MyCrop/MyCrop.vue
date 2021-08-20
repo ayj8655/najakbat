@@ -47,10 +47,10 @@ export default {
   position: fixed;
 }
 #foot {
-  height: 100px;
+  height: 80px;
 }
 .foot-bg {
   /* background-color: #446631; */
-  background-color: #4A643B;
+  background-color: rgba(0, 51, 32, 0.6);
 }
 </style>

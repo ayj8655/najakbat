@@ -82,6 +82,7 @@ export default {
     // console.log(this.photo);
     if(this.post!==null) {
       this.keywords = this.post.keyword.split(",");
+      if(this.keywords[this.keywords.length-1]=="") this.keywords.splice(this.keywords.length-1, 1);
       switch (this.post.postType) {
         case 1:
           this.typeimg = require("@/assets/category_free.png");

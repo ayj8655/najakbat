@@ -162,7 +162,10 @@ export default {
         }
         this.title = data.title;
         this.content = data.content;
-        this.keyword = data.keyword;
+        this.keywordOrigin = data.keyword;
+        this.keywordOrigin.split(',').forEach((k, index) => {
+          this.keywords[index] = k;
+        });
         this.originFiles = data.photos.length ? data.photos : [];
       });
     }
@@ -184,7 +187,7 @@ export default {
       formData.append("type", this.postType);
       formData.append("title", this.title);
       formData.append("content", this.content);
-      formData.append("keyword", this.keywordOrigin);
+      formData.append("keyword", (this.keywordOrigin.length > 0 && this.keywordOrigin.indexOf(this.keywordOrigin.length-1)==',')? this.keywordOrigin.substring(0, this.keywordOrigin.length-1): this.keywordOrigin);
       formData.append("user_nickname", this.userNickname);
       formData.append("user_number", this.userNumber);
       this.files.forEach((f, i) => {
@@ -203,7 +206,7 @@ export default {
       formData.append("type", this.postType);
       formData.append("title", this.title);
       formData.append("content", this.content);
-      formData.append("keyword", (this.keywordOrigin.length>0)? this.keywordOrigin.substring(0, this.keywordOrigin.length-1): this.keywordOrigin);
+      formData.append("keyword", (this.keywordOrigin.length > 0 && this.keywordOrigin.indexOf(this.keywordOrigin.length-1)==',')? this.keywordOrigin.substring(0, this.keywordOrigin.length-1): this.keywordOrigin);
       formData.append("user_nickname", this.userNickname);
       formData.append("user_number", this.userNumber);
       if (this.files.length) {
@@ -265,7 +268,7 @@ export default {
             : this.keyword;
         if (key.length > 0 && this.keywords.indexOf(key)==-1) {
           this.keywords[this.keywords.length] = key;
-          this.keywordOrigin += key + ",";
+          this.keywordOrigin += (this.keywords.length==1)? key : "," + key;
         }
         this.keyword = "";
         // console.log(this.keywordOrigin);
@@ -274,9 +277,9 @@ export default {
     deleteKey(index) {
       this.keywords.splice(index, 1);
       this.keywordOrigin = "",
-      this.keywords.forEach(k => {
+      this.keywords.forEach((k, index) => {
+        if(index>0) this.keywordOrigin += ",";
         this.keywordOrigin += k;
-        this.keywordOrigin += ",";
       });
     }
   },

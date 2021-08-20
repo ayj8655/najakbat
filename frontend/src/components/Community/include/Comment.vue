@@ -193,11 +193,11 @@ export default {
     },
     deleteComment() {
       // console.log(this.comment.commentNumber);
-      if (confirm("정말로 삭제하시겠습니까?")) {
+      // if (confirm("정말로 삭제하시겠습니까?")) {
         axios.delete(`comment/${this.comment.commentNumber}`).then((data) => {
-          if (data.data == "success") window.location.reload();
+          if (data.data == "success") this.$emit("reload-comment");
         });
-      }
+      // }
     },
     recommendComment() {
       axios

@@ -49,7 +49,7 @@ export default {
                 let colors = this.colorSets[pos] 
                 dataset.push({ labels: this.chartData.labels, label: this.chartData.datasets[0].label, borderWidth: 2, borderColor: colors.back, backgroundColor: colors.back, pointBorderColor: colors.fore, pointBackgroundColor: colors.fore, fill: false, data: this.chartData.datasets[0].data }) 
                 pos++ 
-            console.log(dataset);
+            // console.log(dataset);
             this.datacollection = { labels: this.chartData.labels, datasets: dataset } 
             this.render() 
         }, 

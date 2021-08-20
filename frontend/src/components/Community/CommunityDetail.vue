@@ -150,8 +150,9 @@ export default {
     if (this.$store.state.accessToken) {
       axios.get(`post/${this.no}`).then(({ data }) => {
         this.post = data;
-        this.keywords = this.post.keyword.split(",");
         // console.log(this.post);
+        this.keywords = this.post.keyword.split(",");
+        if(this.keywords[this.keywords.length-1]=="") this.keywords.splice(this.keywords.length-1, 1);
         switch (this.post.postType) {
           case 1:
             this.typeimg = require("@/assets/category_free.png");
