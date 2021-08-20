@@ -276,7 +276,7 @@ export default {
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: normal;
-  font-size: 15px;
+  font-size: 12px;
   line-height: 25px;
 
   color: #999999;
@@ -286,7 +286,7 @@ export default {
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: normal;
-  font-size: 15px;
+  font-size: 12px;
   line-height: 25px;
 }
 .selectdesign {
