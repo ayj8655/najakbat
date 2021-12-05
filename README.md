@@ -1,14 +1,10 @@
 # **나만의 작은 텃밭**
 
-![https://img.shields.io/github/license/:user/:repo.svg](https://img.shields.io/github/license/:user/:repo.svg)
-
-![https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)
-
 </br>
 
 가정용 텃밭 관리 도우미 (모바일 중심 서비스) - 나만의 작은 텃밭
 
-![실시간 인기 작물 이미지](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/b851e416-008a-4f00-aac0-23bcf118ed02/Untitled-removebg-preview.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211128%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211128T092810Z&X-Amz-Expires=86400&X-Amz-Signature=91c9f7046b010f2259e387c0855c8a66b7c0d389353754f9a93a36625414dbe8&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled-removebg-preview.png%22&x-id=GetObject)
+![실시간 인기 작물 이미지](https://github.com/ayj8655/Readme_Images/blob/main/najacbat/%EB%A9%94%EC%9D%B8%EC%9D%B4%EB%AF%B8%EC%A7%80.png?raw=true)
 
 
 ---
@@ -41,7 +37,7 @@ UCC : [https://youtu.be/V2gcpwDS10c](https://youtu.be/V2gcpwDS10c)
 
 ## 기획 배경
 
-![기획배경](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/1d921a6c-6a18-4333-9ab7-c05dfb8cfdbf/image-removebg-preview.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211128%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211128T111842Z&X-Amz-Expires=86400&X-Amz-Signature=8b7b3091313a85279169bf465c803eb505e8a473ab4866c6aff4af77f796a680&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22image-removebg-preview.png%22&x-id=GetObject)
+![기획배경](https://github.com/ayj8655/Readme_Images/blob/main/najacbat/%EA%B8%B0%ED%9A%8D%EB%B0%B0%EA%B2%BD.png?raw=true)
 
 이로인한 식재료 구매 지출을 줄이기 위한 텃밭 문화의 생성
 
@@ -67,20 +63,20 @@ UCC : [https://youtu.be/V2gcpwDS10c](https://youtu.be/V2gcpwDS10c)
 
 와이어프레임
 
-![와이어프레임](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/2a90c0f5-14fc-47fc-9dcc-2347a5216869/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211128%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211128T100246Z&X-Amz-Expires=86400&X-Amz-Signature=f10d1da86daa1de87e54810173a7e373ec0ef3382127098ee8d827d90ded5c32&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
+![와이어프레임](https://github.com/ayj8655/Readme_Images/blob/main/najacbat/wireframe.png?raw=true)
 <br>
 
-ERD
+DB Table
 
-![ERD](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/3ee3b302-5d91-43c4-a881-a3c2a174e8e9/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211128%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211128T100503Z&X-Amz-Expires=86400&X-Amz-Signature=f3042c5b445953540f03242f9386463a586ed57e8f06479478bca1db7237d9e2&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
+![ERD](https://github.com/ayj8655/Readme_Images/blob/main/najacbat/db.png?raw=true)
 <br>
 
 
 JIRA
 
-![week4](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/b341d7cf-cf24-49d3-aeda-40b86ca583c6/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211128%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211128T100955Z&X-Amz-Expires=86400&X-Amz-Signature=fc2eafaac101022cfa8a5905e06a0e0e18d868db5540c8e2202244bdc7352349&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
+![week4](https://github.com/ayj8655/Readme_Images/blob/main/najacbat/%EC%A7%80%EB%9D%BC4%EC%A3%BC.png?raw=true)
 
-![week5](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6a37e6ef-514b-441d-a857-b59e94e92279/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211128%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211128T101102Z&X-Amz-Expires=86400&X-Amz-Signature=dfc5c3c8a9ce6a5278e91a5c6e7d0787466a30fbdb9e280856b58ef7f49750db&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
+![week5](https://github.com/ayj8655/Readme_Images/blob/main/najacbat/%EC%A7%80%EB%9D%BC5%EC%A3%BC.png?raw=true)
 
 ---
 ## **기술 스택**
